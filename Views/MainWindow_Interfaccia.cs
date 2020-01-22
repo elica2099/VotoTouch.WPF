@@ -235,7 +235,7 @@ namespace VotoTouch.WPF
         private void TornaInizio()
         {
             // dall'inizio
-            timAutoRitorno.Enabled = false;
+            timAutoRitorno.Stop();
             Stato = TAppStato.ssvBadge;
             CambiaStato();
         }

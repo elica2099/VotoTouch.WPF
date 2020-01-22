@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 
 namespace VotoTouch.WPF
@@ -133,8 +134,8 @@ namespace VotoTouch.WPF
         public int CurrPag = 1;
 
         // i ritardi/watchdog del touch
-        private Timer timTouch;
-        private Timer timTouchWatchDog;
+        private DispatcherTimer timTouch;
+        private DispatcherTimer timTouchWatchDog;
         private bool TouchEnabled;
         private int TouchWatch;
         //private TTotemConfig TotCfg;
@@ -199,10 +200,10 @@ namespace VotoTouch.WPF
             TouchEnabled = true;
             TouchWatch = 0;
             // ora i timer
-            timTouch = new Timer {Enabled = false, Interval = TIMER_TOUCH_INTERVAL};
+            timTouch = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(TIMER_TOUCH_INTERVAL)};
             timTouch.Tick += timTouch_Tick;
 
-            timTouchWatchDog = new Timer {Enabled = false, Interval = TIMER_TOUCHWATCH_INTERVAL};
+            timTouchWatchDog = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(TIMER_TOUCHWATCH_INTERVAL)};
             timTouchWatchDog.Tick += timTouchWatchDog_Tick;
 		}
 
@@ -404,8 +405,8 @@ namespace VotoTouch.WPF
             // DR12 OK
             // prima di tutto testo se TouchEnabled è false, se lo è, vuol dire che non è ancora
             // passato l'intervallo di sicurezza per evitare doppi click
-            timTouchWatchDog.Enabled = false;
-            timTouchWatchDog.Enabled = true;
+            timTouchWatchDog.Stop();
+            timTouchWatchDog.Start();
             if (!TouchEnabled)
             {
                 // lancia evento watchdog
@@ -594,7 +595,7 @@ namespace VotoTouch.WPF
                 }
                 // qua parte il ritardo del timer
                 TouchEnabled = false;
-                timTouch.Enabled = true;
+                timTouch.Start();
             }
             else
             {
@@ -676,7 +677,7 @@ namespace VotoTouch.WPF
         private void timTouch_Tick(object sender, EventArgs e)
         {
             TouchEnabled = true;
-            timTouch.Enabled = false;
+            timTouch.Stop();
         }
 
         private void timTouchWatchDog_Tick(object sender, EventArgs e)

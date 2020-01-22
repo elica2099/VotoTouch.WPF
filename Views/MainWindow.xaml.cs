@@ -41,6 +41,7 @@ namespace VotoTouch.WPF
         private DispatcherTimer timConfigura;
         private DispatcherTimer timAutoRitorno;
         private DispatcherTimer timPopup;
+        private DispatcherTimer timVotoAperto;
 
         // oggetti demo
         private Button btnBadgeUnVoto;
@@ -83,11 +84,8 @@ namespace VotoTouch.WPF
         public bool UscitaInVotazione;
         // public bool 
 	    public bool RitornaDaAnnulla = false;
-
         // Variabile temporanea voti espressi Nuova Versione (Array)
         public ArrayList FVotiExpr;
-        // risorse per l'internazionalizzazione
-        //ResourceManager rm;
 
         // Variabile temporanea Voti Espressi
         public int VotoEspresso;
@@ -100,15 +98,45 @@ namespace VotoTouch.WPF
         public MainWindow()
         {
             InitializeComponent();
-        }
 
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        { 
             // variabili demo e debug
             VTConfig.IsDebugMode = false;
             VTConfig.IsPaintTouch = false;
             VTConfig.IsDemoMode = false;
 
+            // inizializzazione di componenti
+            // i timer di disaccoppiamento funzioni (non potendo usare WM_USER!!!!)
+            // TODO: METTERE I MESSAGGI
+            // timer di lettura badge
+            timVotoAperto = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(VSDecl.TIM_CKVOTO_MIN)};
+            timVotoAperto.Tick += timVotoAperto_Tick;
+            // timer di lettura badge
+            timLetturaBadge = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
+            timLetturaBadge.Tick += timLetturaBadge_Tick;
+            // timer di cambio stato
+            timCambiaStato = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
+            timCambiaStato.Tick += timCambiaStato_Tick;
+            // timer di configurazione
+            timConfigura = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
+            timConfigura.Tick += timConfigura_Tick;
+            // timer di autoritorno
+            timAutoRitorno = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(VTConfig.TimeAutoRitornoVoto) };
+            timAutoRitorno.Tick += timAutoRitorno_Tick;
+            // popup multicandidati
+            timPopup = new DispatcherTimer { IsEnabled = false, Interval = TimeSpan.FromMilliseconds(6000) };
+            timPopup.Tick += timPopup_Tick;
+
+            // ritrovo il nome della macchina che mi servirà per interrogare il db
+            int i;
+            VTConfig.NomeTotem = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString();
+            for (i = 0; i < VTConfig.NomeTotem.Length; i++)
+                if (VTConfig.NomeTotem[i] == '\\') break;
+            VTConfig.NomeTotem = VTConfig.NomeTotem.Remove(0, i + 1);
+
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
             CtrlPrimoAvvio = PrimoAvvio;
             if (!CtrlPrimoAvvio)
 			{
@@ -146,12 +174,6 @@ namespace VotoTouch.WPF
             // inizializzo il splashscreen
             //splash.SetSplash(10, rm.GetString("SAPP_START_IMGSEARCH")); //Ricerco immagini...
            
-            // ritrovo il nome della macchina che mi servirà per interrogare il db
-			int i;
-            VTConfig.NomeTotem = System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString();
-            for (i = 0; i < VTConfig.NomeTotem.Length; i++)
-                if (VTConfig.NomeTotem[i] == '\\') break;
-            VTConfig.NomeTotem = VTConfig.NomeTotem.Remove(0, i + 1);
 
             // ok, per prima cosa verifico se c'è la cartella c:\data, se si ok
             // sennò devo considerare la cartella dell'applicazione, se non c'è esco
@@ -215,7 +237,6 @@ namespace VotoTouch.WPF
             // questa versione la configurazione è centralizzata sul db
             bool dataloc = File.Exists(Data_Path + "VTS_STANDALONE.txt");
             if (VTConfig.IsDemoMode)
-                //oDBDati = new CVotoMDBDati(DBConfig, dataloc, Data_Path);
                 oDBDati = new CVotoFileDati(DBConfig, dataloc, Data_Path);
             else
                 oDBDati = new CVotoDBDati(DBConfig, dataloc, Data_Path);
@@ -345,22 +366,6 @@ namespace VotoTouch.WPF
             Badge_Seriale = "";
             UscitaInVotazione = false;
 
-            // i timer di disaccoppiamento funzioni (non potendo usare WM_USER!!!!)
-            // timer di lettura badge
-            timLetturaBadge = new System.Windows.Forms.Timer {Enabled = false, Interval = 30};
-		    timLetturaBadge.Tick += timLetturaBadge_Tick;
-            // timer di cambio stato
-            timCambiaStato = new System.Windows.Forms.Timer {Enabled = false, Interval = 30};
-		    timCambiaStato.Tick += timCambiaStato_Tick;
-            // timer di configurazione
-            timConfigura = new System.Windows.Forms.Timer {Enabled = false, Interval = 30};
-		    timConfigura.Tick += timConfigura_Tick;
-            // timer di autoritorno
-            timAutoRitorno = new System.Windows.Forms.Timer {Enabled = false, Interval = VTConfig.TimeAutoRitornoVoto };
-		    timAutoRitorno.Tick += timAutoRitorno_Tick;
-            // popup multicandidati
-            timPopup = new System.Windows.Forms.Timer { Enabled = false, Interval = 6000 };
-            timPopup.Tick += timPopup_Tick;
 
             //pnSemaf.BackColor = Color.Transparent;
 
@@ -394,19 +399,19 @@ namespace VotoTouch.WPF
             oVotoTouch.PaintTouchOnScreen = VTConfig.IsPaintTouch;
 
             // se la votazione è aperta il timer di controllo voto batte di meno
-            timVotoApero.Interval = VTConfig.VotoAperto ? VSDecl.TIM_CKVOTO_MAX : VSDecl.TIM_CKVOTO_MIN;
+            timVotoAperto.Interval = TimeSpan.FromMilliseconds(VTConfig.VotoAperto ? VSDecl.TIM_CKVOTO_MAX : VSDecl.TIM_CKVOTO_MIN);
 
             // Attivo la macchina a stati (in FMain_MacchinaAStati.cs)
             CambiaStato();
 
-            timVotoApero.Enabled = true;
+            timVotoAperto.Start();
 
             frmMain_Shown();
         }
 
         private void frmMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            timVotoApero.Enabled = false;
+            timVotoAperto.Stop();
             // alcune cose sul database
             oDBDati.DBDisconnect();
             NewReader.Close();
@@ -469,7 +474,7 @@ namespace VotoTouch.WPF
         {
             lblMsgPopup.Text = messaggio;
             pnPopupRed.Visible = true;
-            timPopup.Enabled = true;
+            timPopup.Start();
         }
 
         //  PAINT AND RESIZE ------------------------
@@ -649,7 +654,7 @@ namespace VotoTouch.WPF
 
         private void timConfigura_Tick(object sender, EventArgs e)
         {
-            timConfigura.Enabled = false;
+            timConfigura.Stop();
             if (Stato == TAppStato.ssvBadge) MostraFinestraConfig();
         }
 
@@ -751,9 +756,7 @@ namespace VotoTouch.WPF
 
         #endregion
 
-        // ----------------------------------------------------------------
-		//    Varie
-		// ----------------------------------------------------------------
+        //  varie ----------------------------------------------------------------
 
         #region Varie
 
@@ -790,45 +793,53 @@ namespace VotoTouch.WPF
             return null;
         }
 
-        private void frmMain_KeyDown(object sender, KeyEventArgs e)
+        private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             // Ctrl + Q : USCITA
-            if ((e.Control && e.KeyCode == Keys.Q) || (e.Alt && e.KeyCode == Keys.Q))
+            if ((e.Key == Key.Q && Keyboard.Modifiers == ModifierKeys.Control) || 
+                (e.Key == Key.Q && Keyboard.Modifiers == ModifierKeys.Alt))
             {
-                if (MessageBox.Show(rm.GetString("SAPP_CLOSE"), "Question",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                    Application.Exit();
+                e.Handled = true;
+                if (MessageBox.Show(App.Instance.getLang("SAPP_CLOSE"), "Question",
+                    MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
+                    Application.Current.Shutdown();
             }
 
             // Ctrl + S : Configurazione
-            if (e.Control && e.KeyCode == Keys.S) 
+            if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control) 
             {
+                e.Handled = true;
                 if (Stato == TAppStato.ssvBadge) MostraFinestraConfig();
             }
             
             // Stato
-            if ((e.Alt && e.KeyCode == Keys.S) || (e.Control && e.KeyCode == Keys.W))
+            if ((e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Alt) || 
+                (e.Key == Key.W && Keyboard.Modifiers == ModifierKeys.Control))
             {
+                e.Handled = true;
                 MostraPannelloStato();
             }
 
             // Stato Azionista
-            if (e.Alt && e.KeyCode == Keys.A)
+            if (e.Key == Key.A && Keyboard.Modifiers == ModifierKeys.Alt)
             {
+                e.Handled = true;
                 MostaPannelloStatoAzionista();
             }
 
             // Unità di test programma
-            if (e.Alt && e.KeyCode == Keys.T)
+            if (e.Key == Key.T && Keyboard.Modifiers == ModifierKeys.Alt)
             {
+                e.Handled = true;
                 FTest formTest = new FTest(oDBDati, this);
                 formTest.ShowDialog();
                 formTest = null;
             }
 
             // Ctrl + 2 Va sul secondo schermo
-            if (e.Control && e.KeyCode == Keys.F2)
+            if (e.Key == Key.F2 && Keyboard.Modifiers == ModifierKeys.Control)
             {
+                e.Handled = true;
                 if (Screen.AllScreens.Length > 1)
                 {
                     // Important !
@@ -844,26 +855,27 @@ namespace VotoTouch.WPF
             }
 
             // Ctrl + 1 Massimizza la finestra
-            if (e.Control && e.KeyCode == Keys.F1)
+            if (e.Key == Key.F1 && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                this.WindowState = FormWindowState.Maximized;
+                e.Handled = true;
+                this.WindowState = WindowState.Maximized;
             }
 
             // Ctrl + F8 mette la risoluzione a 1280*1024
-            if (e.Control && e.KeyCode == Keys.F8)
+            if (e.Key == Key.F8 && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                this.WindowState = FormWindowState.Normal;
+                e.Handled = true;
+                this.WindowState = WindowState.Normal;
                 this.Width = 1280;
                 this.Height = 1024;
-                //this.
             }
             // Ctrl + F9 mette la risoluzione a 1024*768
-            if (e.Control && e.KeyCode == Keys.F9)
+            if (e.Key == Key.F9 && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                this.WindowState = FormWindowState.Normal;
+                e.Handled = true;
+                this.WindowState = WindowState.Normal;
                 this.Width = 1024;
                 this.Height = 768;
-                //this.
             }
 
         }
@@ -986,13 +998,13 @@ namespace VotoTouch.WPF
              // ricarico le liste
             if (Stato == TAppStato.ssvVotoStart)
             {
-                if (MessageBox.Show(rm.GetString("SAPP_CLOSE"), "Question",
-                     MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                    Application.Exit();
+                if (MessageBox.Show(App.Instance.getLang("SAPP_CLOSE"), "Question",
+                     MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
+                    Application.Current.Shutdown();
             }
             else
-                MessageBox.Show(rm.GetString("SAPP_CLOSE_ERR"), "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(App.Instance.getLang("SAPP_CLOSE_ERR"), "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void btnRicaricaListe_Click(object sender, EventArgs e)
@@ -1002,23 +1014,23 @@ namespace VotoTouch.WPF
             {
                 if (MessageBox.Show("Questa operazione ricaricherà le liste/votazioni rileggendole " +
                     "dal database?\n Vuoi veramente continuare?", "Question",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
                 {
-                    Rectangle FFormRect = new Rectangle(0, 0, this.Width, this.Height);
+                    Rect FFormRect = new Rect(0, 0, this.Width, this.Height);
                     bool pippo = Votazioni.CaricaListeVotazioni(Data_Path, FFormRect, false);
                     if (pippo)
                         MessageBox.Show("Liste/votazioni caricate correttamente.", "information",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBoxButton.OK, MessageBoxImage.Information);
                     else
                         MessageBox.Show("Problemi nel caricamento Liste/votazioni.", "Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBoxButton.OK, MessageBoxImage.Error);
 
                 }
 
             }
             else
                 MessageBox.Show("Impossibile effettuare questa operazione durante la votazione.", "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void btnCloseInfo_Click(object sender, EventArgs e)

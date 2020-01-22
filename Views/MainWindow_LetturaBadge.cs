@@ -27,12 +27,12 @@ namespace VotoTouch.WPF
         public void onDataReceived(object source, string dato)
         {
             Badge_Seriale = dato;
-            timLetturaBadge.Enabled = true;
+            timLetturaBadge.Start();
         }
 
         private void timLetturaBadge_Tick(object sender, EventArgs e)
         {
-            timLetturaBadge.Enabled = false;
+            timLetturaBadge.Stop();
             // ora chiamo l'evento
             Serial_NewRead(Badge_Seriale);
         }
@@ -83,7 +83,7 @@ namespace VotoTouch.WPF
             // poi verifico se è stato premuto
             if (AText == VSDecl.CONFIGURA)
             {
-                timConfigura.Enabled = true;
+                timConfigura.Start();
                 return;
             }
             // pannello stato

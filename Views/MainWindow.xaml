@@ -8,6 +8,7 @@
         Title="MainWindow" 
         Closing="frmMain_Closing"
         Loaded="MainWindow_Loaded"
+        PreviewKeyDown="MainWindow_OnPreviewKeyDown"
         Height="600" Width="900">
     <Grid>
         

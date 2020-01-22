@@ -24,12 +24,12 @@ namespace VotoTouch.WPF
         private void CambiaStato()
         {
             // disaccoppia la funzione attraverso un timer che chiama un evento
-            timCambiaStato.Enabled = true;
+            timCambiaStato.Start();
         }
 
         private void timCambiaStato_Tick(object sender, EventArgs e)
         {
-            timCambiaStato.Enabled = false;
+            timCambiaStato.Stop();
             CambiaStatoDaTimer();
         }
 
@@ -40,7 +40,7 @@ namespace VotoTouch.WPF
             switch (Stato)
             {
                 case TAppStato.ssvBadge:
-                    timAutoRitorno.Enabled = false;
+                    timAutoRitorno.Stop();
                     oVotoTouch.CalcolaTouchSpecial(null);
                     //oVotoTouch.CalcolaTouchSpecial(Stato, false);
                     SettaComponenti(false);
@@ -69,7 +69,7 @@ namespace VotoTouch.WPF
                         // ok, ora setto la variabile locale di configurazione
                         VTConfig.VotoAperto = AperturaVotoEsterno;
                         // se la votazione è aperta il timer di controllo voto batte di meno
-                        timVotoApero.Interval = VTConfig.VotoAperto ? VSDecl.TIM_CKVOTO_MAX : VSDecl.TIM_CKVOTO_MIN;
+                        timVotoAperto.Interval = TimeSpan.FromMilliseconds(VTConfig.VotoAperto ? VSDecl.TIM_CKVOTO_MAX : VSDecl.TIM_CKVOTO_MIN);
                     }
 
                     // a seconda dello stato, mostro il semaforo e metto l'immagine corretta
@@ -190,7 +190,7 @@ namespace VotoTouch.WPF
                         // ora devo vediricare se è attivo AttivaAutoRitornoVoto
                         if (VTConfig.AttivaAutoRitornoVoto)
                         {
-                            timAutoRitorno.Enabled = true;
+                            timAutoRitorno.Start();
                         }
                     }
 
@@ -222,7 +222,7 @@ namespace VotoTouch.WPF
             }
         }
 
-        private void timVotoApero_Tick(object sender, EventArgs e)
+        private void timVotoAperto_Tick(object sender, EventArgs e)
         {
             // dr11 ok
             bool vtaperto;
@@ -249,7 +249,7 @@ namespace VotoTouch.WPF
 
         private void timAutoRitorno_Tick(object sender, EventArgs e)
         {
-            timAutoRitorno.Enabled = false;
+            timAutoRitorno.Stop();
 
             // esco
             TornaInizio();
@@ -257,7 +257,7 @@ namespace VotoTouch.WPF
 
         private void timPopup_Tick(object sender, EventArgs e)
         {
-            timPopup.Enabled = false;
+            timPopup.Stop();
             pnPopupRed.Visible = false;
         }
 
