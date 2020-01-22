@@ -1,0 +1,88 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!-- App -->
+    <sys:String x:Key="appDBError">Errore generale nella connessione al database (troppi tentativi effettuati), l'applicazione verrà terminata</sys:String>
+
+	<!-- General -->
+    <sys:String x:Key="genCancel">Annulla</sys:String>
+    <sys:String x:Key="genInsert">Inserisci</sys:String>
+    <sys:String x:Key="genClose">Chiudi</sys:String>
+    <sys:String x:Key="genUndo">Annulla</sys:String>
+    <sys:String x:Key="genRedo">Ripeti</sys:String>
+    <sys:String x:Key="genBack">Salva/Indietro</sys:String>
+    <sys:String x:Key="genCut">Taglia</sys:String>
+    <sys:String x:Key="genCopy">Copia</sys:String>
+    <sys:String x:Key="genPaste">Incolla</sys:String>
+    <sys:String x:Key="genAdd">Aggiungi</sys:String>
+    <sys:String x:Key="genSave">Salva</sys:String>
+    <sys:String x:Key="genAll">Tutti</sys:String>
+    <sys:String x:Key="genSharesAbbr">az:</sys:String>
+    <sys:String x:Key="genDelete">Cancella</sys:String>
+    <sys:String x:Key="genEdit">Modifica</sys:String>
+    <sys:String x:Key="genSort">Ordina</sys:String>
+    <sys:String x:Key="genPrint">Stampa</sys:String>
+    <sys:String x:Key="genShares">Azioni</sys:String>
+    <sys:String x:Key="genVotes">Voti</sys:String>
+
+    <sys:String x:Key="mnuPrint">Stampa...</sys:String>
+    <sys:String x:Key="mnuExit">Esci</sys:String>
+    <sys:String x:Key="mnuEdit">Modifica</sys:String>
+    <sys:String x:Key="mnuAction">Comandi</sys:String>
+    <sys:String x:Key="mnuTools">Strumenti</sys:String>
+    <sys:String x:Key="mnuOptions">Opzioni...</sys:String>
+    <sys:String x:Key="mnuLanguage_IT">Italiano</sys:String>
+    <sys:String x:Key="mnuLanguage_EN">Inglese</sys:String>
+    <sys:String x:Key="mnuLanguage_DE">Tedesco</sys:String>
+    <sys:String x:Key="mnuConfigDB">Configura DB</sys:String>
+    <sys:String x:Key="mnuExport">Esporta...</sys:String>
+	<sys:String x:Key="mnuAutoConfig">AutoConfigura ...</sys:String>
+
+	<sys:String x:Key="SAPP_CLOSE">Chiudere l'applicazione?</sys:String>
+	<sys:String x:Key="SAPP_CLOSE_ERR">Impossibile effettuare questa operazione durante la votazione.</sys:String>
+	<sys:String x:Key="SAPP_DEMO">Simulazione di Voto</sys:String>
+	<sys:String x:Key="SAPP_DEMO_1DIR">Tocca per provare con 1 diritto di voto</sys:String>
+	<sys:String x:Key="SAPP_DEMO_3DIR">Tocca per provare con 3 diritti di voto</sys:String>
+	<sys:String x:Key="SAPP_DEMO_3END">Tocca per ritornare alla videata iniziale</sys:String>
+	<sys:String x:Key="SAPP_ERR_BDABIL"> - Badge non abilitato al voto, chiamare operatore</sys:String>
+	<sys:String x:Key="SAPP_ERR_BDG	Badge">: </sys:String>
+	<sys:String x:Key="SAPP_ERR_BDGANN"> - Badge Annullato</sys:String>
+	<sys:String x:Key="SAPP_ERR_BDGCONV"> - Errore nella conversione Badge</sys:String>
+	<sys:String x:Key="SAPP_ERR_BDGEST"> - Il Badge non esiste</sys:String>
+	<sys:String x:Key="SAPP_ERR_BDGIMP"> - Codice Impianto diverso</sys:String>
+	<sys:String x:Key="SAPP_ERR_BDGPRES"> - Badge non presente.</sys:String>
+	<sys:String x:Key="SAPP_ERR_BDGUSCITA">Lettura codice di uscita (</sys:String>
+	<sys:String x:Key="SAPP_ERR_BDGVOT"> - Il Badge ha già votato</sys:String>
+	<sys:String x:Key="SAPP_ERR_BDGZERO"> - Tutti i soci hanno già votato</sys:String>
+	<sys:String x:Key="SAPP_ERR_MAXDELEGHE"> - Numero di deleghe troppo elevato, recarsi alla postazione Voto Differenziato</sys:String>
+	<sys:String x:Key="SAPP_NOVOTO">Non Voglio Votare</sys:String>
+	<sys:String x:Key="SAPP_SKASTENUTO">Astenuto</sys:String>
+	<sys:String x:Key="SAPP_SKASTENUTOTUTTI">Astenuto a tutte le Liste</sys:String>
+	<sys:String x:Key="SAPP_SKBIANCA">Scheda Bianca</sys:String>
+	<sys:String x:Key="SAPP_SKCONTRARIO">Contrario</sys:String>
+	<sys:String x:Key="SAPP_SKCONTRARIOTUTTI">Contrario a tutte le Liste</sys:String>
+	<sys:String x:Key="SAPP_START_CTRL">Applicazione già in esecuzione</sys:String>
+	<sys:String x:Key="SAPP_START_ERRCFG">Problemi nel caricamento della configurazione, verificare: \n - la mappatura dei dischi\n - il file votosegretospa.ini</sys:String>
+	<sys:String x:Key="SAPP_START_ERRCOM1">Problema nel collegamento con la Pistola Barcode. La porta COM</sys:String>
+	<sys:String x:Key="SAPP_START_ERRCOM2">non esiste o presenta problemi.\n Il lettore barcode è stato disabilitato, premere Ctrl+S per configurarlo nuovamente</sys:String>
+	<sys:String x:Key="SAPP_START_ERRCONN">Problemi nella connessione al database</sys:String>
+	<sys:String x:Key="SAPP_START_ERRDB">Problemi nel caricamento configurazione db</sys:String>
+	<sys:String x:Key="SAPP_START_ERRMAP">Problema nella mappatura dei dischi di rete. Il disco M: non è disponibile, effettuare la mappatura corretta e riavviare l'applicazione</sys:String>
+	<sys:String x:Key="SAPP_START_IMGSEARCH">Ricerco immagini...</sys:String>
+	<sys:String x:Key="SAPP_START_INIT">Inizializzo applicazione...</sys:String>
+	<sys:String x:Key="SAPP_START_INITBARCODE">Inizializzo lettore barcode...</sys:String>
+	<sys:String x:Key="SAPP_START_INITCFG">Carico configurazione...</sys:String>
+	<sys:String x:Key="SAPP_START_INITDB">Inizializzo database...</sys:String>
+	<sys:String x:Key="SAPP_START_INITPREF">Carico preferenze...</sys:String>
+	<sys:String x:Key="SAPP_START_INITSEM">Inizializzo Semaforo...</sys:String>
+	<sys:String x:Key="SAPP_START_INITTOUCH">Inizializzo Touch...</sys:String>
+	<sys:String x:Key="SAPP_START_INITVAR">Inizializzo variabili...</sys:String>
+	<sys:String x:Key="SAPP_START_INITVOT">	Carico liste e votazioni...</sys:String>
+	<sys:String x:Key="SAPP_VOTE_1DIRITTOPER">1 diritto di voto per</sys:String>
+	<sys:String x:Key="SAPP_VOTE_D_DIRITTI"> Diritti di voto</sys:String>
+	<sys:String x:Key="SAPP_VOTE_D_RASO">In voto:</sys:String>
+	<sys:String x:Key="SAPP_VOTE_DIRITTIPER"> diritti di voto per</sys:String>
+
+
+</ResourceDictionary>
