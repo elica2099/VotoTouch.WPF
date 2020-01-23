@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace VotoTouch.WPF
 {
@@ -239,5 +242,67 @@ namespace VotoTouch.WPF
             Stato = TAppStato.ssvBadge;
             CambiaStato();
         }
+
+		//    PARTE DEMO MODE ------------------------------------------------------------------
+
+        #region Demo mode
+
+        public void InizializzaControlliDemo()
+        {
+            Font myFont = new Font("Impact", 32, FontStyle.Bold);
+            // devo aggiungere due bottoni
+            btnBadgeUnVoto = new Button();
+            btnBadgeUnVoto.FlatStyle = FlatStyle.Flat;
+            btnBadgeUnVoto.Text = rm.GetString("SAPP_DEMO_1DIR");   // "Tocca per provare con 1 diritto di voto";
+            btnBadgeUnVoto.Font = myFont;
+            btnBadgeUnVoto.Click += new EventHandler(btnBadgeUnVoto_Click);
+            btnBadgeUnVoto.Visible = false;
+            this.Controls.Add(btnBadgeUnVoto);
+
+            btnBadgePiuVoti = new Button();
+            btnBadgePiuVoti.FlatStyle = FlatStyle.Flat;
+            btnBadgePiuVoti.Text = rm.GetString("SAPP_DEMO_3DIR");  // "Tocca per provare con 3 diritti di voto";
+            btnBadgePiuVoti.Font = myFont;
+            btnBadgePiuVoti.Click += new EventHandler(btnBadgePiuVoti_Click);
+            btnBadgePiuVoti.Visible = false;
+            this.Controls.Add(btnBadgePiuVoti);
+
+            btnFineVotoDemo = new Button();
+            btnFineVotoDemo.FlatStyle = FlatStyle.Flat;
+            btnFineVotoDemo.Text = rm.GetString("SAPP_DEMO_3END"); // "Tocca per ritornare alla videata iniziale";
+            btnFineVotoDemo.Font = myFont;
+            btnFineVotoDemo.Click += new EventHandler(btnFineVotoDemo_Click);
+            btnFineVotoDemo.Visible = false;
+            this.Controls.Add(btnFineVotoDemo);
+        }
+
+        public void onChangeSemaphore(object source, TStatoSemaforo ASemStato)
+        {
+            // evento inutile
+        }
+
+        void btnBadgeUnVoto_Click(object sender, EventArgs e)
+        {
+            //1 voto
+            //MessageBox.Show("Un diritto di voto", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            BadgeLetto("1000");
+
+        }
+
+        void btnBadgePiuVoti_Click(object sender, EventArgs e)
+        {
+            //3 voti
+            //MessageBox.Show("Tre diritti di voto", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            BadgeLetto("1001");
+        }
+
+        void btnFineVotoDemo_Click(object sender, EventArgs e)
+        {
+            BadgeLetto("999999");
+        }
+
+
+        #endregion
+
     }
 }

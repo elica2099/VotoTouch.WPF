@@ -26,11 +26,18 @@ namespace VotoTouch.WPF
     //    static public class TTotemConfig
     public static class VTConfig
     {
+        // PATH DEL PROGRAMMA
+        public static string Exe_Path  = "";                // path del'eseguibile
+        public static string Data_Path  = "";                // path della cartella data
+        public static string Img_Path  = "";                // path della cartella immagini
+
         // CONFIGURAZIONE DINAMICA
-        public static bool IsDemoMode;
         public static string NomeTotem;
-        public static bool IsDebugMode;
-        public static bool IsPaintTouch;
+        public static bool IsDemoMode = false;
+        public static bool IsDebugMode = false;
+        public static bool IsPaintTouch = false;
+        public static bool IsAdmin = false;
+        public static bool IsStandalone = false;
 
         // CONFIGURAZIONE GENERALE
         public static int ModoAssemblea;
@@ -75,7 +82,6 @@ namespace VotoTouch.WPF
         public static string AstenutoATutti;
 
 
-
         static VTConfig()
         {
             SalvaLinkVoto = true;
@@ -88,7 +94,6 @@ namespace VotoTouch.WPF
             AbilitaDifferenziatoSuRichiesta = false;
             TimeAutoRitornoVoto = VSDecl.TIME_AUTOCLOSEVOTO;
             AbilitaDirittiNonVoglioVotare = false;
-            IsDemoMode = false;
             NomeTotem = "";
             ContrarioATutti = App.Instance.getLang("SAPP_SKCONTRARIOTUTTI");
             AstenutoATutti = App.Instance.getLang("SAPP_SKASTENUTOTUTTI");
@@ -193,13 +198,13 @@ namespace VotoTouch.WPF
         public const string MSG_CANC_VOTO_C = "Sei proprio sicuro di Cancellare i voti dal DB ? \n Badge: ";
 
         // path Immagini assoluti
-        public const string DATA_PATH_ABS = "\\Data\\";
-        public const string IMG_PATH_ABS = "\\Data\\VtsNETImg\\";
+        public const string DATA_PATH_ABS = @"\Data\";
+        public const string IMG_PATH_ABS = @"\Data\VtsNETImg\";
         // path immagine da server
-        public const string SOURCE_IMG_PATH = "\\Data\\VtsNETImg\\";
+        public const string SOURCE_IMG_PATH = @"\Data\VtsNETImg\";
         // path immagine locale
-        public const string IMG_PATH_LOC = "\\VtsNETImgLocali\\";
-        public const string IMG_PATH_LOC_ABS = "\\Data\\VtsNETImgLocali\\";
+        public const string IMG_PATH_LOC = @"\VtsNETImgLocali\";
+        public const string IMG_PATH_LOC_ABS = @"\Data\VtsNETImgLocali\";
         public const string IMG_type = ".png";
 
         public const string IMG_Badge = "badge";

@@ -67,7 +67,6 @@ namespace VotoTouch.WPF
         // strutture
         public ConfigDbData DBConfig;           // database
         public TAppStato Stato;                 // macchina a stato
-        public string Data_Path;                // path della cartella data
         public string   LogVotiNomeFile;        // nome file del log
         public bool CtrlPrimoAvvio;             // serve per chiudere la finestra in modo corretto
         
@@ -98,13 +97,23 @@ namespace VotoTouch.WPF
         public MainWindow()
         {
             InitializeComponent();
+            
+            // data_path
+            CheckDataFolder();
+            // variabili speciali demo/debug....
+            VTConfig.IsDebugMode = File.Exists(VTConfig.Data_Path + "VTS_DEBUG.txt");
+            VTConfig.IsPaintTouch = File.Exists(VTConfig.Data_Path + "VTS_PAINT_TOUCH.txt");
+            VTConfig.IsDemoMode = File.Exists(VTConfig.Data_Path + "VTS_DEMO.txt");
+            VTConfig.IsAdmin = File.Exists(VTConfig.Data_Path + "VTS_ADMIN.txt");
+            VTConfig.IsStandalone = File.Exists(VTConfig.Data_Path + "VTS_STANDALONE.txt");
 
-            // variabili demo e debug
-            VTConfig.IsDebugMode = false;
-            VTConfig.IsPaintTouch = false;
-            VTConfig.IsDemoMode = false;
+            // resize
+            this.SizeChanged += OnWindowSizeChanged;
+
+            //
 
             // inizializzazione di componenti
+
             // i timer di disaccoppiamento funzioni (non potendo usare WM_USER!!!!)
             // TODO: METTERE I MESSAGGI
             // timer di lettura badge
@@ -173,37 +182,34 @@ namespace VotoTouch.WPF
 #endif
             // inizializzo il splashscreen
             //splash.SetSplash(10, rm.GetString("SAPP_START_IMGSEARCH")); //Ricerco immagini...
-           
-
+            
             // ok, per prima cosa verifico se c'è la cartella c:\data, se si ok
             // sennò devo considerare la cartella dell'applicazione, se non c'è esco
             oVotoImg = new CVotoImages();
             oVotoImg.MainForm = this;
-            CtrlPrimoAvvio = oVotoImg.CheckDataFolder(ref Data_Path);
+            CtrlPrimoAvvio = oVotoImg.CheckImageFolder();
 		    pnPopupRed.Left = 5;
             pnPopupRed.Top = 5;
 
-            btnCancVoti.Visible = File.Exists(Data_Path + "VTS_ADMIN.txt");
+            btnCancVoti.Visible = VTConfig.IsAdmin;
 
             // identificazione della versione demo, nella cartella data o nella sua cartella
-            if (File.Exists(Data_Path + "VTS_DEMO.txt"))
+            if (VTConfig.IsDemoMode)
             {
                 // Ok è la versione demo
-                VTConfig.IsDemoMode = true;
-                // start the logging
-                Logging.generateInternalLogFileName(Data_Path, "VotoTouch_" + VTConfig.NomeTotem);
+                Logging.generateInternalLogFileName(VTConfig.Data_Path, "VotoTouch_" + VTConfig.NomeTotem);
                 Logging.WriteToLog("---- DEMO MODE ----");
                 // ok, ora creo la classe che logga i voti
-                LogVotiNomeFile = LogVote.GenerateDefaultLogFileName(Data_Path, "VotoT_" + VTConfig.NomeTotem);
+                LogVotiNomeFile = LogVote.GenerateDefaultLogFileName(VTConfig.Data_Path, "VotoT_" + VTConfig.NomeTotem);
             }
             else
             {
                 // ok, qua devo vedere i due casi:
                 // il primo è VTS_STANDALONE.txt presente il che vuol dire che ho la configurazione
                 // in locale, caricando comunque un file GEAS.sql da data
-                if (File.Exists(Data_Path + "VTS_STANDALONE.txt"))
+                if (VTConfig.IsStandalone)
                 {
-                    Logging.generateInternalLogFileName(Data_Path, "VotoTouch_" + VTConfig.NomeTotem);
+                    Logging.generateInternalLogFileName(VTConfig.Data_Path, "VotoTouch_" + VTConfig.NomeTotem);
                     Logging.WriteToLog("---- STANDALONE MODE ----");
                 }
                 else
@@ -226,20 +232,17 @@ namespace VotoTouch.WPF
             Logging.WriteToLog("<start> Inizio Applicazione");
             //splash.SetSplash(20, rm.GetString("SAPP_START_INITDB"));    // "Inizializzo database...");
 
-            // identificazione DebugMode
-            VTConfig.IsDebugMode = File.Exists(Data_Path + "VTS_DEBUG.txt");
-            VTConfig.IsPaintTouch = File.Exists(Data_Path + "VTS_PAINT_TOUCH.txt");
 
             // classe lbConferma
 		    //lbConferma = new LabelCandidati {Visible = false, Parent = this};
 
 		    // Inizializzo la classe del database, mi servirà prima delle altre classi perché in
             // questa versione la configurazione è centralizzata sul db
-            bool dataloc = File.Exists(Data_Path + "VTS_STANDALONE.txt");
+            //bool dataloc = File.Exists(VTConfig.Data_Path + "VTS_STANDALONE.txt");
             if (VTConfig.IsDemoMode)
-                oDBDati = new CVotoFileDati(DBConfig, dataloc, Data_Path);
+                oDBDati = new CVotoFileDati(DBConfig, VTConfig.IsStandalone, VTConfig.Data_Path);
             else
-                oDBDati = new CVotoDBDati(DBConfig, dataloc, Data_Path);
+                oDBDati = new CVotoDBDati(DBConfig, VTConfig.IsStandalone, VTConfig.Data_Path);
 
             //oDBDati.FDBConfig = DBConfig;
             //oDBDati.NomeTotem = NomeTotem;
@@ -274,7 +277,7 @@ namespace VotoTouch.WPF
                 // carica le votazioni, le carica comunque all'inizio
                 Rect FFormRect = new Rect(0, 0, Width, Height);
                 Votazioni = new TListaVotazioni(oDBDati);
-                Votazioni.CaricaListeVotazioni(Data_Path, FFormRect, true);
+                Votazioni.CaricaListeVotazioni(VTConfig.Data_Path, FFormRect, true);
 
                 // ok, finisce
                 if (DBOk == 0)
@@ -358,7 +361,7 @@ namespace VotoTouch.WPF
 
             // classe del tema
             oVotoTheme = new CVotoTheme();
-            oVotoTheme.CaricaTemaDaXML(oVotoImg.Img_path);
+            oVotoTheme.CaricaTemaDaXML(VTConfig.Img_Path);
 
             IsVotazioneDifferenziata = false;               // non è differenziata
             Badge_Letto = 0;
@@ -561,6 +564,14 @@ namespace VotoTouch.WPF
             }
         }
          
+        protected void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            //double newWindowHeight = e.NewSize.Height;
+            //double newWindowWidth = e.NewSize.Width;
+            //double prevWindowHeight = e.PreviousSize.Height;
+            //double prevWindowWidth = e.PreviousSize.Width;
+        }
+
         private void frmMain_Resize(object sender, EventArgs e)
         {
             // immagine del salvataggio
@@ -647,6 +658,56 @@ namespace VotoTouch.WPF
             }
 		    return 0;
 		}
+
+        // DataPath  ----------------------------------------------------------------
+
+        private bool CheckDataFolder()
+        {
+            // ok, per prima cosa verifico se c'è la cartella c:\data, se si ok
+            // sennò devo considerare la cartella dell'applicazione, se non c'è esco
+            string SourceExePath = System.IO.Path.GetDirectoryName( new Uri( 
+                System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath );
+            VTConfig.Exe_Path = SourceExePath + @"\";
+
+            // se ci solo nel immagini in c:\data\VtsNETImg
+            if (System.IO.Directory.Exists("c:" + VSDecl.DATA_PATH_ABS) &&      // "\\Data\\";
+                System.IO.Directory.Exists("c:" + VSDecl.IMG_PATH_ABS))         // "\\Data\\VtsNETImg\\";
+            {
+                // allora i path sono quelli assoluti  c:\data\VtsNETImg
+                VTConfig.Data_Path = "c:" + VSDecl.DATA_PATH_ABS;
+                VTConfig.Img_Path = "c:" + VSDecl.IMG_PATH_ABS;
+            }
+            else
+            {
+                // controllo se esistono le cartelle locali nella cartella applicazione cioè la 
+                // cartella \\VtsNETImgLocali\\ nel caso il VotoSegreto es. fosse sotto c:\Programmi
+                if (System.IO.Directory.Exists(SourceExePath + VSDecl.IMG_PATH_LOC))  // "\\VtsNETImgLocali\\";
+                {
+                    // metto i corretti path
+                    VTConfig.Data_Path = SourceExePath + @"\";
+                    VTConfig.Img_Path = SourceExePath + VSDecl.IMG_PATH_LOC;
+                }
+                else
+                {
+                    // l'ultimo controllo che faccio è sulla cartella c:\Data\VtsNETImgLocali\
+                    if (System.IO.Directory.Exists("c:" + VSDecl.IMG_PATH_LOC_ABS))
+                    {
+                        // metto i corretti path
+                        VTConfig.Data_Path = @"c:\data\";
+                        VTConfig.Img_Path = SourceExePath + VSDecl.IMG_PATH_LOC_ABS;
+                    }
+                    else
+                    {
+                        // Non ho trovato nessuna cartella, quindi mi creo il ramo c:\\Data\\VtsNETImg\\
+                        Directory.CreateDirectory("c:" + VSDecl.DATA_PATH_ABS);
+                        Directory.CreateDirectory("c:" + VSDecl.IMG_PATH_ABS);
+                        VTConfig.Data_Path = "c:" + VSDecl.DATA_PATH_ABS;
+                        VTConfig.Img_Path = "c:" + VSDecl.IMG_PATH_ABS;
+                    }
+                }
+            }
+            return true;
+        }
 
         // CONFIGURAZIONE  ----------------------------------------------------------------
 
@@ -795,89 +856,90 @@ namespace VotoTouch.WPF
 
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            // Ctrl + Q : USCITA
-            if ((e.Key == Key.Q && Keyboard.Modifiers == ModifierKeys.Control) || 
-                (e.Key == Key.Q && Keyboard.Modifiers == ModifierKeys.Alt))
+            switch (e.Key)
             {
-                e.Handled = true;
-                if (MessageBox.Show(App.Instance.getLang("SAPP_CLOSE"), "Question",
-                    MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
-                    Application.Current.Shutdown();
-            }
-
-            // Ctrl + S : Configurazione
-            if (e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Control) 
-            {
-                e.Handled = true;
-                if (Stato == TAppStato.ssvBadge) MostraFinestraConfig();
-            }
-            
-            // Stato
-            if ((e.Key == Key.S && Keyboard.Modifiers == ModifierKeys.Alt) || 
-                (e.Key == Key.W && Keyboard.Modifiers == ModifierKeys.Control))
-            {
-                e.Handled = true;
-                MostraPannelloStato();
-            }
-
-            // Stato Azionista
-            if (e.Key == Key.A && Keyboard.Modifiers == ModifierKeys.Alt)
-            {
-                e.Handled = true;
-                MostaPannelloStatoAzionista();
-            }
-
-            // Unità di test programma
-            if (e.Key == Key.T && Keyboard.Modifiers == ModifierKeys.Alt)
-            {
-                e.Handled = true;
-                FTest formTest = new FTest(oDBDati, this);
-                formTest.ShowDialog();
-                formTest = null;
-            }
-
-            // Ctrl + 2 Va sul secondo schermo
-            if (e.Key == Key.F2 && Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                e.Handled = true;
-                if (Screen.AllScreens.Length > 1)
+                // Ctrl + Q : USCITA
+                case Key.Q when Keyboard.Modifiers == ModifierKeys.Control:
+                case Key.Q when Keyboard.Modifiers == ModifierKeys.Alt:
                 {
-                    // Important !
-                    this.StartPosition = FormStartPosition.Manual;
-                    this.WindowState = FormWindowState.Normal;
-                    // Get the second monitor screen
-                    Screen screen = GetSecondaryScreen();
-                    // set the location to the top left of the second screen
-                    this.Location = screen.WorkingArea.Location;
-                    // set it fullscreen
-                    this.Size = new Size(screen.WorkingArea.Width, screen.WorkingArea.Height);
+                    e.Handled = true;
+                    if (MessageBox.Show(App.Instance.getLang("SAPP_CLOSE"), "Question",
+                            MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
+                        Application.Current.Shutdown();
+                    break;
                 }
+
+                // Ctrl + S : Configurazione
+                case Key.S when Keyboard.Modifiers == ModifierKeys.Control:
+                {
+                    e.Handled = true;
+                    if (Stato == TAppStato.ssvBadge) MostraFinestraConfig();
+                    break;
+                }
+
+                // Stato
+                case Key.S when Keyboard.Modifiers == ModifierKeys.Alt:
+                case Key.W when Keyboard.Modifiers == ModifierKeys.Control:
+                    e.Handled = true;
+                    MostraPannelloStato();
+                    break;
+
+                // Stato Azionista
+                case Key.A when Keyboard.Modifiers == ModifierKeys.Alt:
+                    MostaPannelloStatoAzionista();
+                    break;
+
+                // Ctrl + 1 Massimizza la finestra
+                case Key.F1 when Keyboard.Modifiers == ModifierKeys.Control:
+                    e.Handled = true;
+                    this.WindowState = WindowState.Maximized;
+                    break;
+
+                // Ctrl + F2 Va sul secondo schermo
+                case Key.F2 when Keyboard.Modifiers == ModifierKeys.Control:
+                    e.Handled = true;
+                    if (Screen.AllScreens.Length > 1)
+                    {
+                        // Important !
+                        this.StartPosition = FormStartPosition.Manual;
+                        this.WindowState = FormWindowState.Normal;
+                        // Get the second monitor screen
+                        Screen screen = GetSecondaryScreen();
+                        // set the location to the top left of the second screen
+                        this.Location = screen.WorkingArea.Location;
+                        // set it fullscreen
+                        this.Size = new Size(screen.WorkingArea.Width, screen.WorkingArea.Height);
+                    }
+                    break;
+
+                // Ctrl + F8 mette la risoluzione a 1280*1024
+                case Key.F8 when Keyboard.Modifiers == ModifierKeys.Control:
+                    e.Handled = true;
+                    this.WindowState = WindowState.Normal;
+                    this.Width = 1280;
+                    this.Height = 1024;
+                    break;
+
+                // Ctrl + F9 mette la risoluzione a 1024*768
+                case Key.F9 when Keyboard.Modifiers == ModifierKeys.Control:
+                    e.Handled = true;
+                    this.WindowState = WindowState.Normal;
+                    this.Width = 1024;
+                    this.Height = 768;
+                    break;
+
             }
 
-            // Ctrl + 1 Massimizza la finestra
-            if (e.Key == Key.F1 && Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                e.Handled = true;
-                this.WindowState = WindowState.Maximized;
-            }
+            //// Unità di test programma
+            //if (e.Key == Key.T && Keyboard.Modifiers == ModifierKeys.Alt)
+            //{
+            //    e.Handled = true;
+            //    FTest formTest = new FTest(oDBDati, this);
+            //    formTest.ShowDialog();
+            //    formTest = null;
+            //}
 
-            // Ctrl + F8 mette la risoluzione a 1280*1024
-            if (e.Key == Key.F8 && Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                e.Handled = true;
-                this.WindowState = WindowState.Normal;
-                this.Width = 1280;
-                this.Height = 1024;
-            }
-            // Ctrl + F9 mette la risoluzione a 1024*768
-            if (e.Key == Key.F9 && Keyboard.Modifiers == ModifierKeys.Control)
-            {
-                e.Handled = true;
-                this.WindowState = WindowState.Normal;
-                this.Width = 1024;
-                this.Height = 768;
-            }
-
+    
         }
 
         private void MostraPannelloStato()
@@ -1088,68 +1150,6 @@ namespace VotoTouch.WPF
 
         #endregion
 
-		// ----------------------------------------------------------------
-		//    PARTE DEMO MODE
-		// ----------------------------------------------------------------
-
-        #region Demo mode
-
-        public void InizializzaControlliDemo()
-        {
-            Font myFont = new Font("Impact", 32, FontStyle.Bold);
-            // devo aggiungere due bottoni
-            btnBadgeUnVoto = new Button();
-            btnBadgeUnVoto.FlatStyle = FlatStyle.Flat;
-            btnBadgeUnVoto.Text = rm.GetString("SAPP_DEMO_1DIR");   // "Tocca per provare con 1 diritto di voto";
-            btnBadgeUnVoto.Font = myFont;
-            btnBadgeUnVoto.Click += new EventHandler(btnBadgeUnVoto_Click);
-            btnBadgeUnVoto.Visible = false;
-            this.Controls.Add(btnBadgeUnVoto);
-
-            btnBadgePiuVoti = new Button();
-            btnBadgePiuVoti.FlatStyle = FlatStyle.Flat;
-            btnBadgePiuVoti.Text = rm.GetString("SAPP_DEMO_3DIR");  // "Tocca per provare con 3 diritti di voto";
-            btnBadgePiuVoti.Font = myFont;
-            btnBadgePiuVoti.Click += new EventHandler(btnBadgePiuVoti_Click);
-            btnBadgePiuVoti.Visible = false;
-            this.Controls.Add(btnBadgePiuVoti);
-
-            btnFineVotoDemo = new Button();
-            btnFineVotoDemo.FlatStyle = FlatStyle.Flat;
-            btnFineVotoDemo.Text = rm.GetString("SAPP_DEMO_3END"); // "Tocca per ritornare alla videata iniziale";
-            btnFineVotoDemo.Font = myFont;
-            btnFineVotoDemo.Click += new EventHandler(btnFineVotoDemo_Click);
-            btnFineVotoDemo.Visible = false;
-            this.Controls.Add(btnFineVotoDemo);
-        }
-
-        public void onChangeSemaphore(object source, TStatoSemaforo ASemStato)
-        {
-            // evento inutile
-        }
-
-        void btnBadgeUnVoto_Click(object sender, EventArgs e)
-        {
-            //1 voto
-            //MessageBox.Show("Un diritto di voto", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            BadgeLetto("1000");
-
-        }
-
-        void btnBadgePiuVoti_Click(object sender, EventArgs e)
-        {
-            //3 voti
-            //MessageBox.Show("Tre diritti di voto", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            BadgeLetto("1001");
-        }
-
-        void btnFineVotoDemo_Click(object sender, EventArgs e)
-        {
-            BadgeLetto("999999");
-        }
-
-
-        #endregion
 
         private void button2_Click(object sender, EventArgs e)
         {
