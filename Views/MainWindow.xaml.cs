@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using VotoTouch.WPF.Views.Tools;
+using VotoTouch.WPF.Views.UserControls;
 
 namespace VotoTouch.WPF
 {
@@ -811,12 +812,12 @@ namespace VotoTouch.WPF
                 case Key.S when Keyboard.Modifiers == ModifierKeys.Alt:
                 case Key.W when Keyboard.Modifiers == ModifierKeys.Control:
                     e.Handled = true;
-                    MostraPannelloStato();
+                    MostraPannelloStato(true, false);
                     break;
 
                 // Stato Azionista
                 case Key.A when Keyboard.Modifiers == ModifierKeys.Alt:
-                    MostaPannelloStatoAzionista();
+                    MostraPannelloStato(false, true);
                     break;
 
                 // Ctrl + 1 Massimizza la finestra
@@ -859,7 +860,6 @@ namespace VotoTouch.WPF
                     break;
 
             }
-
             //// Unità di test programma
             //if (e.Key == Key.T && Keyboard.Modifiers == ModifierKeys.Alt)
             //{
@@ -868,85 +868,28 @@ namespace VotoTouch.WPF
             //    formTest.ShowDialog();
             //    formTest = null;
             //}
-
-    
         }
 
-        private void MostraPannelloStato()
+        private void MostraPannelloStato(bool ShowVotazioni, bool ShowAzionista)
         {
-            TNewLista a;
-            int z;
-            
-            //lbVersion.Visible = true;
-            Panel4.Left = this.Width - Panel4.Width - 5;
-            Panel4.Top = 5;
-            label1.Text = "Informazioni sulla Versione;";
-
-            lbVersion.Items.Clear();
-            lbVersion.Items.Add(VSDecl.VTS_VERSION);
-#if _DBClose
-            lbVersion.Items.Add("DBClose version");
-#endif
-            lbVersion.Items.Add("Configurazione");
-            lbVersion.Items.Add("Usalettore: " + VTConfig.UsaLettore.ToString() + " Porta: " + VTConfig.PortaLettore.ToString());
-            lbVersion.Items.Add("UsaSemaforo: " + VTConfig.UsaSemaforo.ToString() + " IP: " + VTConfig.IP_Com_Semaforo.ToString());
-            lbVersion.Items.Add("IDSeggio: " + VTConfig.IDSeggio.ToString() + " NomeComputer: " + VTConfig.NomeTotem);
-            lbVersion.Items.Add("ControllaPresenze: " + VTConfig.ControllaPresenze.ToString());
-            lbVersion.Items.Add("     0: Non controllare, 1: Blocca");
-            lbVersion.Items.Add("     2: Forza Ingresso (ora) 3: Forza ingresso Geas");
-            lbVersion.Items.Add("MaxDeleghe: " + VTConfig.MaxDeleghe);
-            lbVersion.Items.Add("AbilitaDifferenziataSuRichiesta: " + VTConfig.AbilitaDifferenziatoSuRichiesta.ToString());
-            lbVersion.Items.Add("CodiceUscita: " + VTConfig.CodiceUscita);
-            lbVersion.Items.Add("SalvaLinkVoto: " + VTConfig.SalvaLinkVoto.ToString());
-            lbVersion.Items.Add("SalvaVotoNonConfermato: " + VTConfig.SalvaVotoNonConfermato.ToString());
-            lbVersion.Items.Add("SalvaVoto In geas: " + VTConfig.SalvaVotoInGeas.ToString());
-            lbVersion.Items.Add("IDSchedaUscitaForzata: " + VTConfig.IDSchedaUscitaForzata.ToString());
-            lbVersion.Items.Add("AbilitaDirittiNonVoglioVotare: " + VTConfig.AbilitaDirittiNonVoglioVotare.ToString());
-            lbVersion.Items.Add("TimerAutoritorno: " + VTConfig.AttivaAutoRitornoVoto.ToString());
-            lbVersion.Items.Add("Tempo TimerAutoritorno (ms): " + VTConfig.TimeAutoRitornoVoto.ToString());
-            lbVersion.Items.Add("");
-            // le votazioni
-            foreach (TNewVotazione fVoto in Votazioni.Votazioni)
+            // prima testo se c'è
+            UStatusPanel stp = (UStatusPanel) this.mainGrid.FindName("statusPanel");
+            if (stp != null)
             {
-                lbVersion.Items.Add("Voto: " + fVoto.IDVoto.ToString() + ", Tipo: " +
-                    fVoto.TipoVoto.ToString() + ", " + fVoto.Descrizione);
-                lbVersion.Items.Add("   NListe: " + fVoto.NListe + ", MaxScelte: " +
-                    fVoto.MaxScelte);
-                lbVersion.Items.Add("   SKBianca: " + fVoto.SkBianca.ToString() +
-                    ", SKNonVoto: " + fVoto.SkNonVoto);
-                // Le liste
-                for (z = 0; z < fVoto.NListe; z++)
-                {
-                    a = (TNewLista)fVoto.Liste[z];
-                    lbVersion.Items.Add("    Lista:" + a.IDLista.ToString() + ", IdSk:" +
-                        a.IDScheda.ToString() + ", " + a.DescrLista + ", p" +
-                        a.Pag.ToString() + " " + a.PagInd + "  cda: " + a.PresentatodaCDA.ToString());
-                }
+                stp.Visibility = Visibility.Hidden;
+                stp = null;
             }
-            Panel4.Visible = true;
-
-        }
-
-        private void MostaPannelloStatoAzionista()
-        {
-            Panel4.Left = this.Width - Panel4.Width - 5;
-            Panel4.Top = 5;
-            label1.Text = "Informazioni sull'Azionista";
-
-            lbVersion.Items.Clear();
-            lbVersion.Items.Add(VSDecl.VTS_VERSION);
-#if _DBClose
-            lbVersion.Items.Add("DBClose version");
-#endif
-            foreach (TAzionista c in Azionisti.Azionisti)
+            // ora lo creo
+            UStatusPanel statusPanel = new UStatusPanel(ShowVotazioni ? Votazioni : null, ShowAzionista ? Azionisti : null)
             {
-                lbVersion.Items.Add("Badge: " + c.IDBadge.ToString() + " " + c.RaSo.Trim());
-                lbVersion.Items.Add("   IDazion:" + c.IDAzion.ToString() + " *** IDVotaz: " + c.IDVotaz.ToString());
-                lbVersion.Items.Add("   ProgDeleg:" + c.ProgDeleg.ToString() + " Coaz:" + c.CoAz +
-                            " AzOrd: " + c.NVoti.ToString());
-
-            }
-            Panel4.Visible = true;
+                Name = "statusPanel",
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0,20,20,0),
+                Visibility = Visibility.Visible
+            };
+            mainGrid.Children.Add(statusPanel);
+            mainGrid.RegisterName(statusPanel.Name, statusPanel);
         }
 
         public void onTouchWatchDog(object source, int VParam)

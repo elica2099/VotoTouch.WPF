@@ -31,7 +31,6 @@ namespace VotoTouch.WPF.Views.UserControls
         {
             if (e.Key == Key.Enter)
             {
-
                 App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, edtBadge.Text, null, null);
                 e.Handled = true;
             }
