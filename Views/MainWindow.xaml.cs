@@ -30,7 +30,7 @@ namespace VotoTouch.WPF
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IInterClassMessenger
     {
         public delegate void EventDataReceived(object source, string messaggio);
         public event EventDataReceived evtDataReceived;
@@ -110,11 +110,29 @@ namespace VotoTouch.WPF
             // resize
             this.SizeChanged += OnWindowSizeChanged;
 
-            //
+            // inizializzazione Classe del TouchScreen
+            oVotoTouch = new CVotoTouchScreen(); //ref TotCfg);
+            oVotoTouch.ShowPopup += new ehShowPopup(oVotoTouch_ShowPopup);
+            oVotoTouch.PremutoVotaNormale += new ehPremutoVotaNormale(onPremutoVotaNormale);
+            oVotoTouch.PremutoVotaDifferenziato += new ehPremutoVotaDifferenziato(onPremutoVotaDifferenziato);
+            oVotoTouch.PremutoConferma += new ehPremutoConferma(onPremutoConferma);
+            oVotoTouch.PremutoAnnulla += new ehPremutoAnnulla(onPremutoAnnulla);
+            oVotoTouch.PremutoVotoValido += new ehPremutoVotoValido(onPremutoVotoValido);
+            oVotoTouch.PremutoSchedaBianca += new ehPremutoSchedaBianca(onPremutoSchedaBianca);
+            oVotoTouch.PremutoNonVoto += new ehPremutoNonVoto(onPremutoNonVoto);
+            oVotoTouch.PremutoInvalido += new ehPremutoInvalido(onPremutoInvalido);
+            oVotoTouch.PremutoTab += new ehPremutoTab(onPremutoTab);
+            oVotoTouch.TouchWatchDog += new ehTouchWatchDog(onTouchWatchDog);
+            oVotoTouch.PremutoMultiAvanti += new ehPremutoMultiAvanti(onPremutoVotoValidoMulti);
+            oVotoTouch.PremutoMulti += new ehPremutoMulti(onPremutoVotoMulti);
+            oVotoTouch.PremutoBottoneUscita += new ehPremutoBottoneUscita(onPremutoBottoneUscita);
+            oVotoTouch.PremutoContrarioTutti += new ehPremutoContrarioTutti(onPremutoContrarioTutti);
+            oVotoTouch.PremutoAstenutoTutti += new ehPremutoAstenutoTutti(onPremutoAstenutoTutti);
+            // inizializzazione classe del tema
+            oVotoTheme = new CVotoTheme();
+            oVotoTheme.CaricaTemaDaXML(VTConfig.Img_Path);
 
-            // inizializzazione di componenti
-
-            // i timer di disaccoppiamento funzioni (non potendo usare WM_USER!!!!)
+            // creazione timer di disaccoppiamento funzioni
             // TODO: METTERE I MESSAGGI
             // timer di lettura badge
             timVotoAperto = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(VSDecl.TIM_CKVOTO_MIN)};
@@ -142,6 +160,20 @@ namespace VotoTouch.WPF
                 if (VTConfig.NomeTotem[i] == '\\') break;
             VTConfig.NomeTotem = VTConfig.NomeTotem.Remove(0, i + 1);
 
+            // inizializza alcune variabili
+            IsVotazioneDifferenziata = false;               // non è differenziata
+            Badge_Letto = 0;
+            Badge_Seriale = "";
+            UscitaInVotazione = false;
+
+            // finestra di start
+            FWSStart FStart = new FWSStart(this);
+            if (FStart.ShowDialog() == false)
+            {
+                Application.Current.Shutdown();
+                return;
+            }
+            FStart = null;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -153,20 +185,11 @@ namespace VotoTouch.WPF
 				Application.Current.Shutdown();
 				return;
 			}
-			
-            // finestra di start
-            FWSStart FStart = new FWSStart(this);
-            if (FStart.ShowDialog() == false)
-            {
-                CtrlPrimoAvvio = false;
-                return;
-            }
-            FStart = null;
-
-            //splash = new SplashScreen();
-            //splash.Show();
-            //splash.SetSplash(0, rm.GetString("SAPP_START_INIT")); //Inizializzo applicazione...
-            //splash.Update();
+            
+            // registrazione dei metodi interclasse (IInterClassMessenger)
+            #region InterClassMessages
+            //App.ICMsn.RegisterMessage(this, CDecl.ICM_MAIN_CHANGEVIEW);
+            #endregion
 
             // Massimizzo la finestra
 #if DEBUG
@@ -180,18 +203,13 @@ namespace VotoTouch.WPF
             labelMousee.Visible = false;
             WindowState = FormWindowState.Maximized;
 #endif
-            // inizializzo il splashscreen
-            //splash.SetSplash(10, rm.GetString("SAPP_START_IMGSEARCH")); //Ricerco immagini...
-            
-            // ok, per prima cosa verifico se c'è la cartella c:\data, se si ok
-            // sennò devo considerare la cartella dell'applicazione, se non c'è esco
-            oVotoImg = new CVotoImages();
-            oVotoImg.MainForm = this;
+            // gestione immagini
+            oVotoImg = new CVotoImages {MainForm = this};
             CtrlPrimoAvvio = oVotoImg.CheckImageFolder();
-		    pnPopupRed.Left = 5;
-            pnPopupRed.Top = 5;
+		    //pnPopupRed.Left = 5;
+            //pnPopupRed.Top = 5;
 
-            btnCancVoti.Visible = VTConfig.IsAdmin;
+            //btnCancVoti.Visible = VTConfig.IsAdmin;
 
             // identificazione della versione demo, nella cartella data o nella sua cartella
             if (VTConfig.IsDemoMode)
@@ -230,25 +248,16 @@ namespace VotoTouch.WPF
             }
             // loggo l'inizio dell'applicazione
             Logging.WriteToLog("<start> Inizio Applicazione");
-            //splash.SetSplash(20, rm.GetString("SAPP_START_INITDB"));    // "Inizializzo database...");
-
 
             // classe lbConferma
 		    //lbConferma = new LabelCandidati {Visible = false, Parent = this};
 
-		    // Inizializzo la classe del database, mi servirà prima delle altre classi perché in
-            // questa versione la configurazione è centralizzata sul db
-            //bool dataloc = File.Exists(VTConfig.Data_Path + "VTS_STANDALONE.txt");
+		    // Inizializzo la classe del database
             if (VTConfig.IsDemoMode)
                 oDBDati = new CVotoFileDati(DBConfig, VTConfig.IsStandalone, VTConfig.Data_Path);
             else
                 oDBDati = new CVotoDBDati(DBConfig, VTConfig.IsStandalone, VTConfig.Data_Path);
-
-            //oDBDati.FDBConfig = DBConfig;
-            //oDBDati.NomeTotem = NomeTotem;
-            //// se è standalone prende i dati in locale
-            //oDBDati.ADataLocal = System.IO.File.Exists(Data_Path + "VTS_STANDALONE.txt");
-            //oDBDati.AData_path = Data_Path;
+            // carico la configurazione
             if (!oDBDati.CaricaConfig())
             {
                 Logging.WriteToLog("<dberror> Problemi nel caricamento della configurazione DB, mappatura");
@@ -257,28 +266,21 @@ namespace VotoTouch.WPF
                 CtrlPrimoAvvio = false;
                 return;
             }
-
             // vado avanti con il database mi connetto
-            //splash.SetSplash(30, rm.GetString("SAPP_START_INITCFG"));    //"Carico configurazione..."
             if (oDBDati.DBConnect() != null)
             {
                 int DBOk = 0;  // variabile di controllo sul caricamento
                 // leggo la configurazione del badge/impianto
                 DBOk += oDBDati.CaricaConfigDB(ref VTConfig.BadgeLen, ref VTConfig.CodImpianto);
-                //splash.SetSplash(40, rm.GetString("SAPP_START_INITPREF"));   //"Carico preferenze..."
                 // leggo la configurazione generale
                 DBOk += oDBDati.DammiConfigDatabase(); //ref TotCfg);
                 // leggo la configurazione del singolo totem
                 DBOk += oDBDati.DammiConfigTotem(); //, ref TotCfg);
-                //splash.SetSplash(50, rm.GetString("SAPP_START_INITVOT"));  //"Carico liste e votazioni..."
-
                 if (VTConfig.VotoAperto) Logging.WriteToLog("Votazione già aperta");
-
                 // carica le votazioni, le carica comunque all'inizio
                 Rect FFormRect = new Rect(0, 0, Width, Height);
                 Votazioni = new TListaVotazioni(oDBDati);
                 Votazioni.CaricaListeVotazioni(VTConfig.Data_Path, FFormRect, true);
-
                 // ok, finisce
                 if (DBOk == 0)
                 {
@@ -298,77 +300,19 @@ namespace VotoTouch.WPF
                 CtrlPrimoAvvio = false;
                 return;
             }
-
-            //splash.SetSplash(60, rm.GetString("SAPP_START_INITBARCODE"));   //"inizializzo lettore barcode...");
-            // A questo punto la configurazione è attiva e caricata centralmente, posso continuare
-            //// il lettore del badge
-            //NewReader = new CNETActiveReader();
-            //NewReader.ADataRead += ObjDataReceived;
-            //evtDataReceived += new EventDataReceived(onDataReceived);
-            //// ora cerco se c'è qualche porta che va bene
-            //string ComPort = ""; 
-            //string ComDescr = "";
-            //int ComPortInt = 0;
-            //bool foundsomething = NewReader.AutodiscoverBarcode(ref ComPort, ref ComDescr, ref ComPortInt);
-            //// lo attiverà nel load
-            //if (VTConfig.UsaLettore)
-            //{
-            //    NewReader.PortName = "COM" + VTConfig.PortaLettore.ToString();
-            //}
-            //else
-            //{
-            //    // se ho trovato qualcosa allora lo salvo
-            //}
-
-            //splash.SetSplash(70, rm.GetString("SAPP_START_INITSEM"));       //"Inizializzo Semaforo..."
-            // il semaforo, ora fa tutto lei
-            //SemaforoOKImg(VTConfig.UsaSemaforo);
-            // ok, in funzione del tipo di semaforo faccio
-            // USARE SEMPRE CIPThreadSemaphore
-            if (VTConfig.TipoSemaforo == VSDecl.SEMAFORO_IP)
-                oSemaforo = new CIPThreadSemaphore();
-            else
-                oSemaforo = new CComSemaphore();
-            // se è attivato lo setto
-            oSemaforo.ConnAddress = VTConfig.IP_Com_Semaforo;  //  deve essere "COM1" o "COMn"
+            
+            // semaforo
+            oSemaforo = new CIPThreadSemaphore {ConnAddress = VTConfig.IP_Com_Semaforo};
             oSemaforo.ChangeSemaphore += onChangeSemaphore;
-            if (VTConfig.UsaSemaforo)
-                oSemaforo.AttivaSemaforo(true);
+            // se è attivato lo setto
+            if (VTConfig.UsaSemaforo)  oSemaforo.AttivaSemaforo(true);
 
-            //splash.SetSplash(80, rm.GetString("SAPP_START_INITTOUCH"));       // "Inizializzo Touch..."
             // array dei voti temporanei
             FVotiExpr = new ArrayList();
             // azionisti
             Azionisti = new TListaAzionisti(oDBDati);
-            // Classe del TouchScreen
-		    oVotoTouch = new CVotoTouchScreen(); //ref TotCfg);
-            oVotoTouch.ShowPopup += new ehShowPopup(oVotoTouch_ShowPopup);
-            oVotoTouch.PremutoVotaNormale += new ehPremutoVotaNormale(onPremutoVotaNormale);
-            oVotoTouch.PremutoVotaDifferenziato += new ehPremutoVotaDifferenziato(onPremutoVotaDifferenziato);
-            oVotoTouch.PremutoConferma += new ehPremutoConferma(onPremutoConferma);
-            oVotoTouch.PremutoAnnulla += new ehPremutoAnnulla(onPremutoAnnulla);
-            oVotoTouch.PremutoVotoValido += new ehPremutoVotoValido(onPremutoVotoValido);
-            oVotoTouch.PremutoSchedaBianca += new ehPremutoSchedaBianca(onPremutoSchedaBianca);
-            oVotoTouch.PremutoNonVoto += new ehPremutoNonVoto(onPremutoNonVoto);
-            oVotoTouch.PremutoInvalido += new ehPremutoInvalido(onPremutoInvalido);
-            oVotoTouch.PremutoTab += new ehPremutoTab(onPremutoTab);
-            oVotoTouch.TouchWatchDog += new ehTouchWatchDog(onTouchWatchDog);
-            oVotoTouch.PremutoMultiAvanti += new ehPremutoMultiAvanti(onPremutoVotoValidoMulti);
-            oVotoTouch.PremutoMulti += new ehPremutoMulti(onPremutoVotoMulti);
-            oVotoTouch.PremutoBottoneUscita += new ehPremutoBottoneUscita(onPremutoBottoneUscita);
-            oVotoTouch.PremutoContrarioTutti += new ehPremutoContrarioTutti(onPremutoContrarioTutti);
-            oVotoTouch.PremutoAstenutoTutti += new ehPremutoAstenutoTutti(onPremutoAstenutoTutti);
-
-            // classe del tema
-            oVotoTheme = new CVotoTheme();
-            oVotoTheme.CaricaTemaDaXML(VTConfig.Img_Path);
-
-            IsVotazioneDifferenziata = false;               // non è differenziata
-            Badge_Letto = 0;
-            AperturaVotoEsterno = VTConfig.VotoAperto;  // lo setto uguale così in stato badge non carica 2 volte le Liste
-            Badge_Seriale = "";
-            UscitaInVotazione = false;
-
+            // Apertura voto lo setto uguale così in stato badge non carica 2 volte le Liste
+            AperturaVotoEsterno = VTConfig.VotoAperto;  
 
             //pnSemaf.BackColor = Color.Transparent;
 
@@ -394,9 +338,6 @@ namespace VotoTouch.WPF
 
 			// ora inizializzo la macchina a stati
 			Stato = TAppStato.ssvBadge;
-            
-            //splash.SetSplash(100);   
-            //splash.Hide();
 
             // se sono in debug evidenzio le zone sensibili
             oVotoTouch.PaintTouchOnScreen = VTConfig.IsPaintTouch;
@@ -409,22 +350,8 @@ namespace VotoTouch.WPF
 
             timVotoAperto.Start();
 
-            frmMain_Shown();
-        }
-
-        private void frmMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            timVotoAperto.Stop();
-            // alcune cose sul database
-            oDBDati.DBDisconnect();
-            NewReader.Close();
-        }
-
-        //  SHOWN -----------------------------------------------------------------------------------
-        
-        private void frmMain_Shown()
-        {
-            // in shown attivo il barcode reader
+            // da qui in avanti era in shown
+            // attivo il barcode reader
             NewReader = new CNETActiveReader();
             NewReader.ADataRead += ObjDataReceived;
             evtDataReceived += new EventDataReceived(onDataReceived);
@@ -453,8 +380,7 @@ namespace VotoTouch.WPF
                     // salvo nel db
                     oDBDati.SalvaConfigurazionePistolaBarcode();
                 }
-            } 
-            
+            }
             if (VTConfig.UsaLettore)
             {
                 if (!NewReader.Open())
@@ -463,8 +389,7 @@ namespace VotoTouch.WPF
                     VTConfig.UsaLettore = false;
                     MessageBox.Show(
                         App.Instance.getLang("SAPP_START_ERRCOM1") + VTConfig.PortaLettore + 
-                        App.Instance.getLang("SAPP_START_ERRCOM2"),
-                        "Error",
+                        App.Instance.getLang("SAPP_START_ERRCOM2"),"Error",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     imgERBarcode.Visible = true;
                 }
@@ -473,11 +398,36 @@ namespace VotoTouch.WPF
             }
         }
 
+        private void frmMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            timVotoAperto.Stop();
+            // alcune cose sul database
+            oDBDati.DBDisconnect();
+            NewReader.Close();
+        }
+
         void oVotoTouch_ShowPopup(object source, string messaggio)
         {
             lblMsgPopup.Text = messaggio;
             pnPopupRed.Visible = true;
             timPopup.Start();
+        }
+
+        // IInterClassMessenger ---------------------------------------------------------------------------------
+
+        public void InterClassCommand(string ACommand, object AParam, object WParam, object YParam, object ZParam)
+        {
+            // here it comes the commands from IInterClassMessenger interface and from other classes
+            //switch (ACommand)
+            //{
+            //    case CDecl.ICM_MAIN_CHANGEVIEW:
+            //        CConfig.cfg.UI_MainTabIndex = (int)AParam;
+            //        tabMain.SelectedIndex = (int)AParam;
+            //        break;
+            //    case CDecl.ICM_MAIN_VOTESTATE:
+            //        AnimaVotoRiga( ((bool)AParam ? 0 : 40), ((bool)AParam ? 40 : 0) );
+            //        break;
+            //}
         }
 
         //  PAINT AND RESIZE ------------------------

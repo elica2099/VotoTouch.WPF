@@ -21,6 +21,9 @@ namespace VotoTouch.WPF
 
         private CompositionContainer _container;
         public static App Instance;
+        // nuovo sistema messaggi interni
+        private static readonly InterClassMessenger IClassMessenger = new InterClassMessenger();
+        internal static InterClassMessenger ICMsn => IClassMessenger;
 
         public App()
         {

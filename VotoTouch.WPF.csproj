@@ -58,6 +58,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Command\EventBehaviourFactory.cs" />
+    <Compile Include="Command\InterClassMessenger.cs" />
+    <Compile Include="Command\Messenger.cs" />
+    <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Common\CRuntimePolicyHelper.cs" />
     <Compile Include="Tipi_Voto\CWBaseTipoVoto.cs" />
     <Compile Include="Tipi_Voto\CWTipoVoto_AConferma.cs" />
@@ -90,6 +94,12 @@
     </Compile>
     <Compile Include="Views\Tools\FWSTest.xaml.cs">
       <DependentUpon>FWSTest.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\UBadgePanel.xaml.cs">
+      <DependentUpon>UBadgePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControls\UStatusPanel.xaml.cs">
+      <DependentUpon>UStatusPanel.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\Languages-Design.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -138,6 +148,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Tools\FWSTest.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\UBadgePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\UStatusPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

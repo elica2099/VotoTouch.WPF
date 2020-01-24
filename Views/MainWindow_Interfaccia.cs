@@ -284,15 +284,12 @@ namespace VotoTouch.WPF
         void btnBadgeUnVoto_Click(object sender, EventArgs e)
         {
             //1 voto
-            //MessageBox.Show("Un diritto di voto", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             BadgeLetto("1000");
-
         }
 
         void btnBadgePiuVoti_Click(object sender, EventArgs e)
         {
             //3 voti
-            //MessageBox.Show("Tre diritti di voto", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             BadgeLetto("1001");
         }
 

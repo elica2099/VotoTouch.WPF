@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="VotoTouch.WPF.Views.UserControls.UBadgePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VotoTouch.WPF.Views.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="140" d:DesignWidth="150">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.50*" />
+            <RowDefinition Height="0.25*" />
+            <RowDefinition Height="0.25*" />
+        </Grid.RowDefinitions>
+
+        <TextBox Grid.Row="0" x:Name="EdtBadge" Margin="5" />
+        <Button Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="6,0,0,0"
+                Content="999999" Click="Button999999_OnClick" />
+        <Button Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="6,0,0,0"
+                Content="88889999" Click="Button88889999_OnClick" />
+        <Button Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,6,0"
+                Content="88889000" Click="Button88889000_OnClick" />
+    </Grid>
+</UserControl>
