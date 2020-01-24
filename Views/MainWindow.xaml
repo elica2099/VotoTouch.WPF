@@ -9,8 +9,9 @@
         Closing="frmMain_Closing"
         Loaded="MainWindow_Loaded"
         PreviewKeyDown="MainWindow_OnPreviewKeyDown"
+        PreviewMouseMove="MainWindow_OnPreviewMouseMove"
         Height="600" Width="900">
-    <Grid>
+    <Grid x:Name="mainGrid">
         
     </Grid>
 </Window>

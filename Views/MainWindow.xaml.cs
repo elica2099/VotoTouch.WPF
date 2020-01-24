@@ -98,6 +98,11 @@ namespace VotoTouch.WPF
         {
             InitializeComponent();
             
+            // registrazione dei metodi interclasse (IInterClassMessenger)
+            #region InterClassMessages
+            App.ICMsn.RegisterMessage(this, VSDecl.ICM_MAIN_BADGEREAD);
+            #endregion
+
             // data_path
             CheckDataFolder();
             // variabili speciali demo/debug....
@@ -109,6 +114,15 @@ namespace VotoTouch.WPF
 
             // resize
             this.SizeChanged += OnWindowSizeChanged;
+
+            // finestra di start
+            FWSStart FStart = new FWSStart(this);
+            if (FStart.ShowDialog() == false)
+            {
+                Application.Current.Shutdown();
+                return;
+            }
+            FStart = null;
 
             // inizializzazione Classe del TouchScreen
             oVotoTouch = new CVotoTouchScreen(); //ref TotCfg);
@@ -165,32 +179,14 @@ namespace VotoTouch.WPF
             Badge_Letto = 0;
             Badge_Seriale = "";
             UscitaInVotazione = false;
+            CtrlPrimoAvvio = false;
 
-            // finestra di start
-            FWSStart FStart = new FWSStart(this);
-            if (FStart.ShowDialog() == false)
-            {
-                Application.Current.Shutdown();
-                return;
-            }
-            FStart = null;
+            // ok ora creo i controlli
+            CreaControlli();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            CtrlPrimoAvvio = PrimoAvvio;
-            if (!CtrlPrimoAvvio)
-			{
-				MessageBox.Show(App.Instance.getLang("SAPP_START_CTRL"), "", MessageBoxButton.OK, MessageBoxImage.Error);
-				Application.Current.Shutdown();
-				return;
-			}
-            
-            // registrazione dei metodi interclasse (IInterClassMessenger)
-            #region InterClassMessages
-            //App.ICMsn.RegisterMessage(this, CDecl.ICM_MAIN_CHANGEVIEW);
-            #endregion
-
             // Massimizzo la finestra
 #if DEBUG
             this.WindowState = WindowState.Normal;
@@ -198,9 +194,7 @@ namespace VotoTouch.WPF
 		    this.Height = 0;
             this.Width = 1280;
             this.Height = 1024;
-            labelMousee.Visible = true;
 #else      
-            labelMousee.Visible = false;
             WindowState = FormWindowState.Maximized;
 #endif
             // gestione immagini
@@ -417,17 +411,13 @@ namespace VotoTouch.WPF
 
         public void InterClassCommand(string ACommand, object AParam, object WParam, object YParam, object ZParam)
         {
-            // here it comes the commands from IInterClassMessenger interface and from other classes
-            //switch (ACommand)
-            //{
-            //    case CDecl.ICM_MAIN_CHANGEVIEW:
-            //        CConfig.cfg.UI_MainTabIndex = (int)AParam;
-            //        tabMain.SelectedIndex = (int)AParam;
-            //        break;
-            //    case CDecl.ICM_MAIN_VOTESTATE:
-            //        AnimaVotoRiga( ((bool)AParam ? 0 : 40), ((bool)AParam ? 40 : 0) );
-            //        break;
-            //}
+            //here it comes the commands from IInterClassMessenger interface and from other classes
+            switch (ACommand)
+            {
+                case VSDecl.ICM_MAIN_BADGEREAD:
+                    string badge = (string) AParam;
+                    break;
+            }
         }
 
         //  PAINT AND RESIZE ------------------------
@@ -659,7 +649,7 @@ namespace VotoTouch.WPF
             return true;
         }
 
-        // CONFIGURAZIONE  ----------------------------------------------------------------
+        // CONFIGURAZIONE ok ----------------------------------------------------------------
 
         #region Finestra Configurazione
 
@@ -776,16 +766,6 @@ namespace VotoTouch.WPF
             imgERSemaf.Visible = !bok;
         }
         
-        private static bool PrimoAvvio
-        {
-            get
-            {
-                bool primoAvvio = false;
-                appMutex = new Mutex(true, "VotoTouch.exe", out primoAvvio);
-                return primoAvvio;
-            }
-        }
-
         public Screen GetSecondaryScreen()
         {
             if (Screen.AllScreens.Length == 1)
@@ -969,36 +949,6 @@ namespace VotoTouch.WPF
             Panel4.Visible = true;
         }
 
-        private void edtBadge_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (VTConfig.IsDebugMode)
-            {
-                // il tasto più aumenta di uno edtBadge
-                if (e.KeyChar == '+')
-                {
-                    e.KeyChar = (char)0;
-                    //int bb = Convert.ToInt32(edtBadge.Text);
-                    Badge_Letto++;
-                    edtBadge.Text = Badge_Letto.ToString();
-                }
-            }
-        }
-        
-        private void btnExitVoto_Click(object sender, EventArgs e)
-        {
-            BadgeLetto("999999");
-        }
-
-        private void btnRipetiz_Click(object sender, EventArgs e)
-        {
-            BadgeLetto("88889999");
-        }
-
-        private void btnAbilitaDifferenziata_Click(object sender, EventArgs e)
-        {
-            BadgeLetto("88889900");
-        }
-
         public void onTouchWatchDog(object source, int VParam)
         {
             Logging.WriteToLog("     >> Touch Watchdog intervenuto");
@@ -1050,12 +1000,6 @@ namespace VotoTouch.WPF
             Panel4.Visible = false;
         }
 
-        private void edtBadge_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                BadgeLetto(edtBadge.Text);
-        }
-
         private void btnCancVoti_Click(object sender, EventArgs e)
         {
 #if DEBUG
@@ -1097,36 +1041,42 @@ namespace VotoTouch.WPF
             return new string(array);
         }
 
-
         #endregion
 
+        //private void button2_Click(object sender, EventArgs e)
+        //{
+        //    //StartTest();
+        //    ////TListaAzionisti azio = new TListaAzionisti(oDBDati);
+        //    ////azio.CaricaDirittidiVotoDaDatabase(10005, ref fVoto, NVoti);
+        //    ////List<TAzionista> aziofilt = azio.DammiDirittiDiVotoPerIDVotazione(1, true);
+        //    //TListaVotazioni vot = new TListaVotazioni(oDBDati);
+        //    //vot.CaricaListeVotazioni();
+        //}
 
-        private void button2_Click(object sender, EventArgs e)
+        private void MainWindow_OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
-            //StartTest();
-            ////TListaAzionisti azio = new TListaAzionisti(oDBDati);
-            ////azio.CaricaDirittidiVotoDaDatabase(10005, ref fVoto, NVoti);
-
-            ////List<TAzionista> aziofilt = azio.DammiDirittiDiVotoPerIDVotazione(1, true);
-
-            //TListaVotazioni vot = new TListaVotazioni(oDBDati);
-            //vot.CaricaListeVotazioni();
+            if (!VTConfig.IsDebugMode) return;
+            TextBlock lblMouse = (TextBlock) this.mainGrid.FindName("lblMouse");
+            if (lblMouse == null) return;
+            Point dd = e.GetPosition(this);
+            lblMouse.Text = "ScreenActual: " + this.ActualWidth + " / " + (int)this.ActualHeight +
+                            "Mouse: " + (int)dd.X + " / " + (int)dd.Y;
         }
 
-        private void frmMain_MouseMove(object sender, MouseEventArgs e)
-        {
-#if DEBUG
-            float vx = (VSDecl.VOTESCREEN_DIVIDE_WIDTH / this.Width) * Cursor.Position.X;
-            float vy = (VSDecl.VOTESCREEN_DIVIDE_HEIGHT / this.Height) * Cursor.Position.Y;
-            float lx = (100 / this.Width) * Cursor.Position.X;
-            float ly = (100 / this.Height) * Cursor.Position.Y;
+//        private void frmMain_MouseMove(object sender, MouseEventArgs e)
+//        {
+//#if DEBUG
+//            float vx = (VSDecl.VOTESCREEN_DIVIDE_WIDTH / this.Width) * Cursor.Position.X;
+//            float vy = (VSDecl.VOTESCREEN_DIVIDE_HEIGHT / this.Height) * Cursor.Position.Y;
+//            float lx = (100 / this.Width) * Cursor.Position.X;
+//            float ly = (100 / this.Height) * Cursor.Position.Y;
 
-            labelMousee.Text = "Local: " + e.X + ", " + e.Y + ". \n"
-               + "Vote: " + (int)vx + ", " + (int)vy + ". \n"
-                +"Label: " + (int)lx + ", " + (int)ly + ". \n"
-               + "Globalis " + Cursor.Position.X + ", " + Cursor.Position.Y + ".";
-#endif
-        }
+//            labelMousee.Text = "Local: " + e.X + ", " + e.Y + ". \n"
+//               + "Vote: " + (int)vx + ", " + (int)vy + ". \n"
+//                +"Label: " + (int)lx + ", " + (int)ly + ". \n"
+//               + "Globalis " + Cursor.Position.X + ", " + Cursor.Position.Y + ".";
+//#endif
+//        }
 
     }
 }

@@ -22,22 +22,34 @@ namespace VotoTouch.WPF.Views.UserControls
     {
         public UBadgePanel()
         {
-        InitializeComponent();
+            InitializeComponent();
+
+            edtBadge.PreviewKeyDown += EdtBadgeOnPreviewKeyDown;
+        }
+
+        private void EdtBadgeOnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+
+                App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, edtBadge.Text, null, null);
+                e.Handled = true;
+            }
         }
 
         private void Button999999_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, "999999", null, null);
         }
 
         private void Button88889999_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, "88889999", null, null);
         }
 
         private void Button88889000_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, "88889900", null, null);
         }
 
 

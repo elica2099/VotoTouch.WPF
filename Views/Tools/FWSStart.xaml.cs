@@ -24,14 +24,14 @@ namespace VotoTouch.WPF.Views.Tools
             listBox1.Items.Add("DBClose version");
 #endif
 
-            if (System.IO.File.Exists("c:\\data\\VTS_DEMO.txt"))
+            if (VTConfig.IsDemoMode)
             {
                 listBox1.Items.Add("");
                 listBox1.Items.Add("Versione DEMO");
                 return;
             }
 
-            if (System.IO.File.Exists("c:\\data\\VTS_STANDALONE.txt"))
+            if (VTConfig.IsStandalone)
             {
                 listBox1.Items.Add("");
                 listBox1.Items.Add("Versione STANDALONE");
@@ -51,7 +51,7 @@ namespace VotoTouch.WPF.Views.Tools
                 CaricaConfig(false);
 
             // versione demo
-            if (System.IO.File.Exists("c:\\data\\VTS_DEMO.txt"))
+            if (VTConfig.IsDemoMode)
             {
                 listBox1.Items.Add("");
                 listBox1.Items.Add("Versione DEMO");
@@ -62,7 +62,7 @@ namespace VotoTouch.WPF.Views.Tools
         public Boolean CaricaConfig(bool ADataLocal)
         {
             //DR11 OK
-            string ss, GeasFileName;
+            string GeasFileName;
 
             // verifica se è locale oppure no
             if (ADataLocal)
@@ -83,9 +83,8 @@ namespace VotoTouch.WPF.Views.Tools
             // leggo cosa c'è dentro
             try
             {
-                StreamReader file1;
-                file1 = File.OpenText(GeasFileName);
-                ss = file1.ReadLine();
+                StreamReader file1 = File.OpenText(GeasFileName);
+                string ss = file1.ReadLine();
                 // testo se il file è giusto
                 if (ss != "") 
                 //if (ss == "GEAS 2000 -- Stringa Connesione a SQL")
