@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,6 +16,7 @@ namespace VotoTouch.WPF
 
         #region StatoBadge E Lettura Dati Utente
 
+        /* messo messaggio
         private void ObjDataReceived(object sender, string data)
         {
             this.BeginInvoke(evtDataReceived, new object[] { this, data });
@@ -31,6 +33,12 @@ namespace VotoTouch.WPF
             timLetturaBadge.Stop();
             // ora chiamo l'evento
             Serial_NewRead(Badge_Seriale);
+        }
+        */
+
+        private void SerialDataReceived(object sender, string data)
+        {
+            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, data);
         }
 
         private void Serial_NewRead(string dato)
@@ -339,10 +347,10 @@ namespace VotoTouch.WPF
             Logging.WriteToLog("--> USCITA IN VOTO (999999) id:" + Badge_Letto.ToString() +
                                               " (" + NSKSalvate.ToString() + ")");
             // resetto il tutto
-            lbDirittiDiVoto.Visible = false;
+            TxtDirittiDiVotoVis = false;
             SettaComponenti(false);
             // labels
-            lbDirittiDiVoto.Text = "";
+            TxtDirittiDiVoto = "";
             Stato = TAppStato.ssvSalvaVoto;
             UscitaInVotazione = true;
             CambiaStato();

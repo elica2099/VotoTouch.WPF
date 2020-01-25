@@ -6,6 +6,7 @@ using System.Text;
 using System.Drawing;
 using System.Data;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -32,7 +33,10 @@ namespace VotoTouch.WPF
         public Rect a;
         public Color AColor;
         public bool Shadow;
-        public Font AFont;
+        public double FontSize;
+        public FontWeight FontWeight;
+        public FontStyle FontStyle;
+        public FontFamily FontFamily;
         public short Align;
     }
 
@@ -60,7 +64,7 @@ namespace VotoTouch.WPF
             FFormRect = new Rect();
 
             BaseFontCandidato = 22;
-            BaseColorCandidato = System.Drawing.ColorTranslator.FromHtml("#FFFFFF");
+            BaseColorCandidato = VSDecl.HexToColor("#FFFFFF");
 		}
 
         //-----------------------------------------------------------------------------
@@ -101,7 +105,7 @@ namespace VotoTouch.WPF
                 {
                     foreach (DataRow r in dtTema.Select("Oggetto = 'BaseFontCandidato'"))
                     {
-                        BaseColorCandidato = System.Drawing.ColorTranslator.FromHtml(r["Color"].ToString());
+                        BaseColorCandidato = VSDecl.HexToColor(r["Color"].ToString()); // System.Drawing.ColorTranslator.FromHtml(r["Color"].ToString());
                         BaseFontCandidato = Convert.ToInt32(r["Point"]);
                         BaseFontCandidatoBold = Convert.ToBoolean(r["Bold"]);
                     }
@@ -119,7 +123,7 @@ namespace VotoTouch.WPF
         //  GESTIONE DEI TEMI
         //-----------------------------------------------------------------------------
 
-        public bool ThemeToLabel(string ObjName, ref Label c, ref Rectangle a)
+        public bool ThemeToLabel(string ObjName, ref TextBlock c, ref Rect a)
         {
             bool ret = false;
 
@@ -131,14 +135,14 @@ namespace VotoTouch.WPF
                     {
                         GetZone(ref a, Convert.ToInt32(r["ULeft"]), Convert.ToInt32(r["UTop"]),
                                        Convert.ToInt32(r["URight"]), Convert.ToInt32(r["UBottom"]));
-                        c.ForeColor = System.Drawing.ColorTranslator.FromHtml(r["Color"].ToString());
+                        c.Foreground = new SolidColorBrush(VSDecl.HexToColor(r["Color"].ToString()));
                         //c.Visible = Convert.ToBoolean(r["Visible"]);
-                        c.TextAlign = GetTextAlignment(Convert.ToInt32(r["Align"]));
+                        c.TextAlignment = GetTextAlignment(Convert.ToInt32(r["Align"]));
                         // font
-                        FontStyle fs = FontStyle.Regular;
-                        if (Convert.ToBoolean(r["Bold"])) fs = FontStyle.Bold;
-                        c.Font = new Font(r["Font"].ToString(), Convert.ToSingle(r["Point"]), fs);
-
+                        c.FontWeight = Convert.ToBoolean(r["Bold"]) ? FontWeights.DemiBold : FontWeights.Normal;
+                        c.FontStyle = Convert.ToBoolean(r["Italic"]) ? FontStyles.Italic : FontStyles.Normal;
+                        c.FontSize = Convert.ToDouble(r["Point"]);
+                        c.FontFamily = new FontFamily(r["Font"].ToString());
                         ret = true;
                     }
                 }
@@ -151,6 +155,7 @@ namespace VotoTouch.WPF
             return ret;
         }
 
+        /*
         public bool ThemeToLabelCandidati(string ObjName, ref LabelCandidati c, ref Rectangle a)
         {
             bool ret = false;
@@ -186,7 +191,7 @@ namespace VotoTouch.WPF
             }
             return ret;
         }
-
+        */
 
         public bool ThemeToPaint(string ObjName, ref TTheme th)
         {
@@ -205,11 +210,12 @@ namespace VotoTouch.WPF
                         GetZone(ref th.a, Convert.ToInt32(r["ULeft"]), Convert.ToInt32(r["UTop"]),
                                         Convert.ToInt32(r["URight"]), Convert.ToInt32(r["UBottom"]));
                         th.Shadow = Convert.ToBoolean(r["Shadow"]);
-                        th.AColor = System.Drawing.ColorTranslator.FromHtml(r["Color"].ToString()); //r["Color"].ToString();
+                        th.AColor = VSDecl.HexToColor(r["Color"].ToString());
                         // ora il font
-                        FontStyle fs = FontStyle.Regular;
-                        if (Convert.ToBoolean(r["Bold"])) fs = FontStyle.Bold;
-                        th.AFont = new Font(r["Font"].ToString(), Convert.ToSingle(r["Point"]), fs);
+                        th.FontWeight = Convert.ToBoolean(r["Bold"]) ? FontWeights.DemiBold : FontWeights.Normal;
+                        th.FontStyle = Convert.ToBoolean(r["Italic"]) ? FontStyles.Italic : FontStyles.Normal;
+                        th.FontSize = Convert.ToDouble(r["Point"]);
+                        th.FontFamily = new FontFamily(r["Font"].ToString());
                         ret = true;
                     }
                 }
@@ -222,50 +228,49 @@ namespace VotoTouch.WPF
             // controllo se è andato male qualcosa metto i default
             if (!ret)
             {
+                th.FontWeight = FontWeights.Normal;
+                th.FontStyle = FontStyles.Normal;
+                th.FontSize = (double)28;
+                th.FontFamily = new FontFamily("Arial");
                 th.Tipo = 0;
-                th.AFont = new System.Drawing.Font("Arial", 28, FontStyle.Bold);
-                th.AColor = Color.Black;
+                th.AColor = Colors.Black;
             }
             return ret;
         }
 
-        private ContentAlignment GetTextAlignment(int AAlign)
+        private TextAlignment GetTextAlignment(int AAlign)
         {
             switch (AAlign)
             {
                 case 0:
-                    return ContentAlignment.MiddleCenter;
-                    break;
+                    return TextAlignment.Center;
                 case 1:
-                    return ContentAlignment.MiddleLeft;
-                    break;
+                    return TextAlignment.Left;
                 case 2:
-                    return ContentAlignment.MiddleRight;
-                    break;
+                    return TextAlignment.Right;
                 default:
-                    return ContentAlignment.MiddleCenter;
-                    break;
+                    return TextAlignment.Center;
             }
         }
 
-        private ContentAlignment GetTextLabelAlignment(int AAlign)
-        {
-            switch (AAlign)
-            {
-                case 0:
-                    return ContentAlignment.TopCenter;
-                    break;
-                case 1:
-                    return ContentAlignment.TopLeft;
-                    break;
-                case 2:
-                    return ContentAlignment.TopRight;
-                    break;
-                default:
-                    return ContentAlignment.TopCenter;
-                    break;
-            }
-        }
+        //private ContentAlignment GetTextLabelAlignment(int AAlign)
+        //{
+        //    switch (AAlign)
+        //    {
+        //        case 0:
+        //            return ContentAlignment.TopCenter;
+        //            break;
+        //        case 1:
+        //            return ContentAlignment.TopLeft;
+        //            break;
+        //        case 2:
+        //            return ContentAlignment.TopRight;
+        //            break;
+        //        default:
+        //            return ContentAlignment.TopCenter;
+        //            break;
+        //    }
+        //}
 
         //-----------------------------------------------------------------------------
         //  PAINT DELLE LABEL
@@ -474,93 +479,120 @@ namespace VotoTouch.WPF
         //  SETTING DELLE LABEL
         //-----------------------------------------------------------------------------
         
-        public void SetTheme_lbDirittiStart(ref Label c)
+        public void SetTheme_lbDirittiStart(ref TextBlock c)
         {
             // La label dell'apertura del voto grande con i diritti di voto
-            Rectangle a = new Rectangle();
-            GetZone(ref a, 20, 26, 38, 42);
+            Rect a = new Rect();
+            //GetZone(ref a, 20, 26, 38, 42);
             if (IsThemed) { if (!ThemeToLabel("lbDirittiStart", ref c, ref a)) GetZone(ref a, 20, 26, 38, 42); }
-            c.SetBounds(a.Left, a.Top, a.Width, a.Height);
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
         }
 
-        public void SetTheme_lbConfermaUp(ref Label c)
+        public void SetTheme_lbConfermaUp(ref TextBlock c)
         {
             // questa è la label di conferma dove sono scritte chi ha votato (es. LISTA 1)
-            Rectangle a = new Rectangle();
-            GetZone(ref a, 15, 37, 85, 41);
+            Rect a = new Rect();
+            //GetZone(ref a, 15, 37, 85, 41);
             if (IsThemed) { if (!ThemeToLabel("lbConfermaUp", ref c, ref a)) GetZone(ref a, 15, 37, 85, 41); }
-            c.SetBounds(a.Left, a.Top, a.Width, a.Height);
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
         }
 
-        public void SetTheme_lbConfermaUp_Cand(ref Label c)
+        public void SetTheme_lbConfermaUp_Cand(ref TextBlock c)
         {
             // questa è la label di conferma dove sono scritte chi ha votato (es. LISTA 1)
-            Rectangle a = new Rectangle();
-            GetZone(ref a, 15, 37, 85, 41);
+            Rect a = new Rect();
+            //GetZone(ref a, 15, 37, 85, 41);
             if (IsThemed) { if (!ThemeToLabel("lbConfermaUp_Cand", ref c, ref a)) GetZone(ref a, 15, 37, 85, 41); }
-            c.SetBounds(a.Left, a.Top, a.Width, a.Height);
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
         }
 
 
-        public void SetTheme_lbConferma(ref LabelCandidati c)
+        public void SetTheme_lbConferma(ref TextBlock c)
         {
             // questa è la label di conferma dove sono scritte chi ha votato (es. Pippo Franco, Gianni Rossi)
-            Rectangle a = new Rectangle();
-            GetZone(ref a, 15, 41, 85, 56);
-            if (IsThemed) { if (!ThemeToLabelCandidati("lbConferma", ref c, ref a)) GetZone(ref a, 15, 41, 85, 56); }
-            c.SetBounds(a.Left, a.Top, a.Width, a.Height);
+            Rect a = new Rect();
+            //GetZone(ref a, 15, 41, 85, 56);
+            //if (IsThemed) { if (!ThemeToLabelCandidati("lbConferma", ref c, ref a)) GetZone(ref a, 15, 41, 85, 56); }
+            if (IsThemed) { if (!ThemeToLabel("lbConferma", ref c, ref a)) GetZone(ref a, 15, 41, 85, 56); }
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
         }
 
-        public void SetTheme_lbConfermaNVoti(ref Label c)
+        public void SetTheme_lbConfermaNVoti(ref TextBlock c)
         {
             // questa è la label che è dopo Esprima: nella schermata di conferma (es. 1 Diritto di voto)
-            Rectangle a = new Rectangle();
-            GetZone(ref a, 14, 28, 85, 34);
+            Rect a = new Rect();
+            //GetZone(ref a, 14, 28, 85, 34);
             if (IsThemed) { if (!ThemeToLabel("lbConfermaNVoti", ref c, ref a))  GetZone(ref a, 14, 28, 85, 34); }
-            c.SetBounds(a.Left, a.Top, a.Width, a.Height);
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
         }
 
-        public void SetTheme_lbDirittiDiVoto(ref Label c)
+        public void SetTheme_lbDirittiDiVoto(ref TextBlock c)
         {
             // questa è la label in basso a sx che indica i diritti di voto
-            Rectangle a = new Rectangle();
-            GetZone(ref a, 0, 95, 25, 99);
+            Rect a = new Rect();
+            //GetZone(ref a, 0, 95, 25, 99);
             if (IsThemed) { if (!ThemeToLabel("lbDirittiDiVoto", ref c, ref a)) GetZone(ref a, 0, 95, 25, 99); }
-            c.SetBounds(a.Left, a.Top, a.Width, a.Height);
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
 
         }
         
-        public void SetTheme_lbNomeDisgiunto(ref Label c)
+        public void SetTheme_lbNomeDisgiunto(ref TextBlock c)
         {
             // mi arriva un controllo qualsiasi
-            Rectangle a = new Rectangle();
-            GetZone(ref a, 26, 93, 51, 100);
+            Rect a = new Rect();
+            //GetZone(ref a, 26, 93, 51, 100);
             if (IsThemed) { if (!ThemeToLabel("lbNomeDisgiunto", ref c, ref a)) GetZone(ref a, 26, 93, 51, 100); }
-            c.SetBounds(a.Left, a.Top, a.Width, a.Height);
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
         }
 
-        public void SetTheme_lbDisgiuntoRimangono(ref Label c)
+        public void SetTheme_lbDisgiuntoRimangono(ref TextBlock c)
         {
             // mi arriva un controllo qualsiasi
-            Rectangle a = new Rectangle();
-            GetZone(ref a, 1, 91, 25, 94);
+            Rect a = new Rect();
+            //GetZone(ref a, 1, 91, 25, 94);
             if (IsThemed) { if (!ThemeToLabel("lbDisgiuntoRimangono", ref c, ref a)) GetZone(ref a, 1, 91, 25, 94); }
-            c.SetBounds(a.Left, a.Top, a.Width, a.Height);
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
         }
 
-        public void SetTheme_lbNomeAzStart(ref Label c)
+        public void SetTheme_lbNomeAzStart(ref TextBlock c)
         {
             // mi arriva un controllo qualsiasi
-            Rectangle a = new Rectangle();
-            GetZone(ref a, 1, 30, 99, 40);
+            Rect a = new Rect();
+            //GetZone(ref a, 1, 30, 99, 40);
             if (IsThemed) { if (!ThemeToLabel("lbNomeAzStart", ref c, ref a)) GetZone(ref a, 1, 30, 99, 40); }
-            c.SetBounds(a.Left, a.Top, a.Width, a.Height);
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
         }
 
         // ------------------------------------------------------------------------------------------
 
-        private void GetZone(ref Rectangle a, int qx, int qy, int qr, int qb)
+        private void GetZone(ref Rect a, int qx, int qy, int qr, int qb)
         {
+            a.X = (FFormRect.Width / Nqx) * qx;
+            a.Y = (FFormRect.Height / Nqy) * qy;
+            double r = (FFormRect.Width / Nqx) * qr;
+            double b = (FFormRect.Height / Nqy) * qb;
+            a.Width = r - a.X;
+            a.Height = b - a.Y;
+
+            /*
             float x, y, r, b;
             // prendo le unità di misura
             x = (FFormRect.Width / Nqx) * qx;
@@ -571,6 +603,7 @@ namespace VotoTouch.WPF
             a.Y = (int)y;
             a.Width = (int)r - (int)x;
             a.Height = (int)b - (int)y;
+            */
         }
 
 

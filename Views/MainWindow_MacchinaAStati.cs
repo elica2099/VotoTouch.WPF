@@ -41,8 +41,8 @@ namespace VotoTouch.WPF
                     SettaComponenti(false);
                     UscitaInVotazione = false;
                     // labels
-                    lbDirittiDiVoto.Text = "";
-                    lbNomeAzStart.Text = "";
+                    TxtDirittiDiVoto = "";
+                    TxtNomeAzStart = "";
                     // ok ora testo eventuali eventi di apertura o chisura votazione dall'esterno
                     // questo mi viene dalla variabile AperturaVotoEsterno, che viene settata nell'evento
                     // di controllo del timer che testa la variabile votoaperto relativo alla postazione
@@ -118,9 +118,9 @@ namespace VotoTouch.WPF
                         // ora metto in quadro l'immagine, che deve essere presa da un file composto da
                         oVotoImg.LoadImages(VSDecl.IMG_voto + Votazioni.VotoCorrente.IDVoto.ToString());
                         // mostro comunque i diritti di voto in lbDirittiDiVoto e il nome di quello corrente
-                        lbNomeDisgiunto.Text = App.Instance.getLang("SAPP_VOTE_D_RASO") + "\n" +
+                        TxtNomeDisgiunto = App.Instance.getLang("SAPP_VOTE_D_RASO") + "\n" +
                                                Azionisti.DammiNomeAzionistaInVoto_VotoCorrente(IsVotazioneDifferenziata);
-                        lbNomeDisgiunto.Visible = true;
+                        TxtNomeDisgiuntoVis = true;
                         //lbNomeDisgiunto.Visible = (IsVotazioneDifferenziata || Azionisti.DammiCountDirittiDiVoto_VotoCorrente() ==1);
                         int dir_riman = IsVotazioneDifferenziata
                                             ? Azionisti.DammiTotaleDirittiRimanenti_VotoCorrente()
@@ -129,10 +129,10 @@ namespace VotoTouch.WPF
                                             ? Azionisti.DammiTotaleDirittiRimanenti_VotoCorrente()
                                             : Azionisti.DammiCountDirittiDiVoto_VotoCorrente();
                         if (!IsVotazioneDifferenziata && deleghe_riman > 1)
-                            lbNomeDisgiunto.Text += " e altre " + (deleghe_riman - 1).ToString() + " deleghe";
-                        lbDirittiDiVoto.Text = dir_riman.ToString() + App.Instance.getLang("SAPP_VOTE_D_DIRITTI");
-                        if (IsVotazioneDifferenziata) lbDirittiDiVoto.Text = "Voto Differenziato \n " + lbDirittiDiVoto.Text + " rimanenti";
-                        lbDirittiDiVoto.Visible = true;
+                            TxtNomeDisgiunto += " e altre " + (deleghe_riman - 1).ToString() + " deleghe";
+                        TxtDirittiDiVoto = dir_riman.ToString() + App.Instance.getLang("SAPP_VOTE_D_DIRITTI");
+                        if (IsVotazioneDifferenziata) TxtDirittiDiVoto = "Voto Differenziato \n " + TxtDirittiDiVoto + " rimanenti";
+                        TxtDirittiDiVotoVis = true;
                     }
                     else
                     {
@@ -153,7 +153,7 @@ namespace VotoTouch.WPF
                     oVotoImg.LoadImages(VSDecl.IMG_voto + Votazioni.VotoCorrente.IDVoto.ToString() + VSDecl.IMG_voto_c);
                     // conferma
                     MettiComponentiConferma();
-                    lbNomeDisgiunto.Visible = true; // (IsVotazioneDifferenziata || Azionisti.DammiCountDirittiDiVoto_VotoCorrente() == 1);
+                    TxtNomeDisgiuntoVis = true; // (IsVotazioneDifferenziata || Azionisti.DammiCountDirittiDiVoto_VotoCorrente() == 1);
                     break;
 
                 case TAppStato.ssvVotoContinua:
@@ -164,10 +164,10 @@ namespace VotoTouch.WPF
                 case TAppStato.ssvVotoFinito:
                     oVotoTouch.CalcolaTouchSpecial(null);
                     //oVotoTouch.CalcolaTouchSpecial(Stato, false);
-                    lbDirittiDiVoto.Visible = false;
+                    TxtDirittiDiVotoVis = false;
                     SettaComponenti(false);
                     // labels
-                    lbDirittiDiVoto.Text = "";
+                    TxtDirittiDiVoto = "";
                     // messaggio di arrivederci
                     if (VTConfig.UsaLettore)
                     {

@@ -12,6 +12,7 @@
 //  V.3.2 15/03/2012                Multivotazioni, Rivisto TouchScreen
 
 using System;
+using System.Windows.Media;
 
 namespace VotoTouch.WPF
 {
@@ -295,6 +296,10 @@ namespace VotoTouch.WPF
         public const int TIM_CKVOTO_MAX = 40000;   // 50 secondi
         public const int TIME_AUTOCLOSEVOTO = 20;
 
+        public static Color HexToColor(string color) // color = "#E7E44D"
+        {
+            return (Color)ColorConverter.ConvertFromString(color);
+        }
 
     }
 }

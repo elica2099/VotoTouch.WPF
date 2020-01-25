@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using VotoTouch.WPF.Converters;
 using VotoTouch.WPF.Views.UserControls;
 
 namespace VotoTouch.WPF
@@ -60,69 +62,208 @@ namespace VotoTouch.WPF
                 mainGrid.RegisterName(badgePanel.Name, badgePanel);
             }
 
+            // ok ora i label normali
+            // nome disgiunto
+            TextBlock lblNomeDisgiunto = new TextBlock()
+            {
+                Name = "lblNomeDisgiunto",
+                Text = "lblNomeDisgiunto",
+                Visibility = Visibility.Hidden,
+                TextWrapping = TextWrapping.Wrap,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblNomeDisgiunto, TextBlock.TextProperty, new Binding("TxtNomeDisgiunto"));
+            BindingOperations.SetBinding(lblNomeDisgiunto, TextBlock.VisibilityProperty, 
+                new Binding("TxtNomeDisgiuntoVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblNomeDisgiunto);
+            mainGrid.RegisterName(lblNomeDisgiunto.Name, lblNomeDisgiunto);
+            
+            // nome lblDisgiuntoRimangono
+            TextBlock lblDisgiuntoRimangono = new TextBlock()
+            {
+                Name = "lblDisgiuntoRimangono",
+                Text = "lblDisgiuntoRimangono",
+                Visibility = Visibility.Hidden,
+                TextWrapping = TextWrapping.Wrap,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblDisgiuntoRimangono, TextBlock.TextProperty, new Binding("TxtDisgiuntoRimangono"));
+            BindingOperations.SetBinding(lblDisgiuntoRimangono, TextBlock.VisibilityProperty, 
+                new Binding("TxtDisgiuntoRimangonoVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblDisgiuntoRimangono);
+            mainGrid.RegisterName(lblDisgiuntoRimangono.Name, lblDisgiuntoRimangono);
+            
+            // nome lblDirittiStart
+            TextBlock lblDirittiStart = new TextBlock()
+            {
+                Name = "lblDirittiStart",
+                Text = "lblDirittiStart",
+                Visibility = Visibility.Hidden,
+                TextWrapping = TextWrapping.Wrap,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Background = VTConfig.IsPaintTouch ? Brushes.Tan : Brushes.Transparent,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblDirittiStart, TextBlock.TextProperty, new Binding("TxtDirittiStart"));
+            BindingOperations.SetBinding(lblDirittiStart, TextBlock.VisibilityProperty, 
+                new Binding("TxtDirittiStartVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblDirittiStart);
+            mainGrid.RegisterName(lblDirittiStart.Name, lblDirittiStart);
+            
+            // lblDirittiDiVoto
+            TextBlock lblDirittiDiVoto = new TextBlock()
+            {
+                Name = "lblDirittiDiVoto",
+                Text = "lblDirittiDiVoto",
+                Visibility = Visibility.Hidden,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                TextWrapping = TextWrapping.Wrap,
+                Background = VTConfig.IsPaintTouch ? Brushes.Coral : Brushes.Transparent,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblDirittiDiVoto, TextBlock.TextProperty, new Binding("TxtDirittiDiVoto"));
+            BindingOperations.SetBinding(lblDirittiDiVoto, TextBlock.VisibilityProperty, 
+                new Binding("TxtDirittiDiVotoVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblDirittiDiVoto);
+            mainGrid.RegisterName(lblDirittiDiVoto.Name, lblDirittiDiVoto);
+            
+            // lbConferma
+            TextBlock lblConferma = new TextBlock()
+            {
+                Name = "lblConferma",
+                Text = "lblConferma",
+                Visibility = Visibility.Hidden,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                TextWrapping = TextWrapping.Wrap,
+                Background = VTConfig.IsPaintTouch ? Brushes.Red : Brushes.Transparent,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblConferma, TextBlock.TextProperty, new Binding("TxtConferma"));
+            BindingOperations.SetBinding(lblConferma, TextBlock.VisibilityProperty, 
+                new Binding("TxtConfermaVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblConferma);
+            mainGrid.RegisterName(lblConferma.Name, lblConferma);
+            
+            // lbConfermaUp
+            TextBlock lblConfermaUp = new TextBlock()
+            {
+                Name = "lblConfermaUp",
+                Text = "lblConfermaUp",
+                Visibility = Visibility.Hidden,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                TextWrapping = TextWrapping.Wrap,
+                Background = VTConfig.IsPaintTouch ? Brushes.Turquoise : Brushes.Transparent,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblConfermaUp, TextBlock.TextProperty, new Binding("TxtConfermaUp"));
+            BindingOperations.SetBinding(lblConfermaUp, TextBlock.VisibilityProperty, 
+                new Binding("TxtConfermaUpVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblConfermaUp);
+            mainGrid.RegisterName(lblConfermaUp.Name, lblConfermaUp);
+            
+            // lbConfermaNVoti
+            TextBlock lblConfermaNVoti = new TextBlock()
+            {
+                Name = "lblConfermaNVoti",
+                Text = "lblConfermaNVoti",
+                Visibility = Visibility.Hidden,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                TextWrapping = TextWrapping.Wrap,
+                Background = VTConfig.IsPaintTouch ? Brushes.GreenYellow : Brushes.Transparent,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblConfermaNVoti, TextBlock.TextProperty, new Binding("TxtConfermaNVoti"));
+            BindingOperations.SetBinding(lblConfermaNVoti, TextBlock.VisibilityProperty, 
+                new Binding("TxtConfermaNVotiVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblConfermaNVoti);
+            mainGrid.RegisterName(lblConfermaNVoti.Name, lblConfermaNVoti);
+            
+            // lblNomeAzStart
+            TextBlock lblNomeAzStart = new TextBlock()
+            {
+                Name = "lblNomeAzStart",
+                Text = "lblNomeAzStart",
+                Visibility = Visibility.Hidden,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                TextWrapping = TextWrapping.Wrap,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblNomeAzStart, TextBlock.TextProperty, new Binding("TxtNomeAzStart"));
+            BindingOperations.SetBinding(lblNomeAzStart, TextBlock.VisibilityProperty, 
+                new Binding("TxtNomeAzStartVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblNomeAzStart);
+            mainGrid.RegisterName(lblNomeAzStart.Name, lblNomeAzStart);
 
 
         }
-
 
         //   Caricamento Tema da VotoTheme ----------------------------------------------------------------
 
         private void CaricaTemaInControlli()
         {
             // carico il tema da vototouch, semplicemente richiamando le singole label
-            oVotoTheme.SetTheme_lbNomeDisgiunto(ref lbNomeDisgiunto);
-            oVotoTheme.SetTheme_lbDisgiuntoRimangono(ref lbDisgiuntoRimangono);
-            oVotoTheme.SetTheme_lbDirittiStart(ref lbDirittiStart);
-            oVotoTheme.SetTheme_lbDirittiDiVoto(ref lbDirittiDiVoto);
-            oVotoTheme.SetTheme_lbConferma(ref lbConferma);
-            oVotoTheme.SetTheme_lbConfermaUp(ref lbConfermaUp);
-            oVotoTheme.SetTheme_lbConfermaNVoti(ref lbConfermaNVoti);
-            oVotoTheme.SetTheme_lbNomeAzStart(ref lbNomeAzStart);
-        }
+            TextBlock lblNomeDisgiunto = (TextBlock) this.mainGrid.FindName("lblNomeDisgiunto");
+            if (lblNomeDisgiunto != null) oVotoTheme.SetTheme_lbNomeDisgiunto(ref lblNomeDisgiunto);
 
-        // Inizializzazione dei controlli ----------------------------------------------------------------
+            TextBlock lblDisgiuntoRimangono = (TextBlock) this.mainGrid.FindName("lblDisgiuntoRimangono");
+            if (lblDisgiuntoRimangono != null) oVotoTheme.SetTheme_lbDisgiuntoRimangono(ref lblDisgiuntoRimangono);
 
-        private void InizializzaControlli()
-        {
-            //Font MyFont = new Font(VSDecl.BTN_FONT_NAME, VSDecl.BTN_FONT_SIZE, FontStyle.Bold);
+            TextBlock lblDirittiStart = (TextBlock) this.mainGrid.FindName("lblDirittiStart");
+            if (lblDirittiStart != null) oVotoTheme.SetTheme_lbDirittiStart(ref lblDirittiStart);
 
-            lbDirittiStart.BackColor = VTConfig.IsPaintTouch ? Color.Tan : Color.Transparent;
-            lbDirittiDiVoto.BackColor = VTConfig.IsPaintTouch ? Color.Coral : Color.Transparent;
-            // il pannello della conferma
-            lbConferma.BackColor = VTConfig.IsPaintTouch ? Color.Red : Color.Transparent;
-            lbConfermaUp.BackColor = VTConfig.IsPaintTouch ? Color.Turquoise : Color.Transparent;
-            lbConfermaNVoti.BackColor = VTConfig.IsPaintTouch ? Color.GreenYellow : Color.Transparent;
+            TextBlock lblDirittiDiVoto = (TextBlock) this.mainGrid.FindName("lblDirittiDiVoto");
+            if (lblDirittiDiVoto != null) oVotoTheme.SetTheme_lbDirittiDiVoto(ref lblDirittiDiVoto);
 
-            if (VTConfig.IsDebugMode) pnBadge.Visible = true;
+            TextBlock lblConferma = (TextBlock) this.mainGrid.FindName("lblConferma");
+            if (lblConferma != null) oVotoTheme.SetTheme_lbConferma(ref lblConferma);
+
+            TextBlock lblConfermaUp = (TextBlock) this.mainGrid.FindName("lblConfermaUp");
+            if (lblConfermaUp != null) oVotoTheme.SetTheme_lbConferma(ref lblConfermaUp);
+
+            TextBlock lblConfermaNVoti = (TextBlock) this.mainGrid.FindName("lblConfermaNVoti");
+            if (lblConfermaNVoti != null) oVotoTheme.SetTheme_lbConferma(ref lblConfermaNVoti);
+
+            TextBlock lblNomeAzStart = (TextBlock) this.mainGrid.FindName("lblNomeAzStart");
+            if (lblNomeAzStart != null) oVotoTheme.SetTheme_lbConferma(ref lblNomeAzStart);
         }
 
         //  SETTAGGIO DEI COMPONENTI A INIZIO CAMBIO STATO ----------------------------------------------------------------
 
         private void SettaComponenti(bool AVisibile)
         {
-            lbConferma.Visible = AVisibile;
-            lbConfermaUp.Visible = AVisibile;
-            lbConfermaNVoti.Visible = AVisibile;
+            // setto la visibilità
+            TxtConfermaVis = AVisibile;
+            TxtConfermaUpVis = AVisibile;
+            TxtConfermaNVotiVis = AVisibile;
             // label del differenziato
-            lbDirittiStart.Visible = AVisibile;
+            TxtDirittiStartVis = AVisibile;
+            //TxtNomeVis = AVisibile;
+            TxtNomeDisgiuntoVis = AVisibile;
+            TxtDisgiuntoRimangonoVis = AVisibile;
+            TxtNomeAzStartVis = AVisibile;
 
-            //lbNome.Visible = AVisibile;
-            lbNomeDisgiunto.Visible = AVisibile;
-            lbDisgiuntoRimangono.Visible = AVisibile;
-            lbNomeAzStart.Visible = AVisibile;
-
-            if (VTConfig.IsDemoMode)
-            {
-                Button btnBadgeUnVoto = (Button) this.mainGrid.FindName("btnBadgeUnVoto");
-                if (btnBadgeUnVoto != null)
-                    btnBadgeUnVoto.Visibility = Stato == TAppStato.ssvBadge ? Visibility.Visible : Visibility.Hidden;
-                Button btnBadgePiuVoti = (Button) this.mainGrid.FindName("btnBadgePiuVoti");
-                if (btnBadgePiuVoti != null)
-                    btnBadgePiuVoti.Visibility = Stato == TAppStato.ssvBadge ? Visibility.Visible : Visibility.Hidden;
-                Button btnFineVotoDemo = (Button) this.mainGrid.FindName("btnFineVotoDemo");
-                if (btnFineVotoDemo != null)
-                    btnFineVotoDemo.Visibility = Stato == TAppStato.ssvVotoFinito ? Visibility.Visible : Visibility.Hidden;
-            }
+            // se non è in demo esco
+            if (!VTConfig.IsDemoMode) return;
+            // demo mode
+            Button btnBadgeUnVoto = (Button) this.mainGrid.FindName("btnBadgeUnVoto");
+            if (btnBadgeUnVoto != null)
+                btnBadgeUnVoto.Visibility = Stato == TAppStato.ssvBadge ? Visibility.Visible : Visibility.Hidden;
+            Button btnBadgePiuVoti = (Button) this.mainGrid.FindName("btnBadgePiuVoti");
+            if (btnBadgePiuVoti != null)
+                btnBadgePiuVoti.Visibility = Stato == TAppStato.ssvBadge ? Visibility.Visible : Visibility.Hidden;
+            Button btnFineVotoDemo = (Button) this.mainGrid.FindName("btnFineVotoDemo");
+            if (btnFineVotoDemo != null)
+                btnFineVotoDemo.Visibility = Stato == TAppStato.ssvVotoFinito ? Visibility.Visible : Visibility.Hidden;
         }
 
         private void TornaInizio()
@@ -145,23 +286,23 @@ namespace VotoTouch.WPF
             PrefNomeAz = Azionisti.Titolare_Badge.RaSo_Sesso;
 
             PrefNomeAz = UppercaseWords(PrefNomeAz.ToLower());
-            lbNomeAzStart.Text = PrefNomeAz;
-            lbNomeAzStart.Visible = true;
+            TxtNomeAzStart = PrefNomeAz;
+            TxtNomeAzStartVis = true;
             // diritti di voto  
             if (VTConfig.ModoAssemblea == VSDecl.MODO_AGM_POP)
             {
-                string ss = string.Format("{0:N0}", Azionisti.DammiMaxNumeroDirittiDiVotoTotali());
-                lbDirittiDiVoto.Text = ss + App.Instance.getLang("SAPP_VOTE_D_DIRITTI"); // " Diritti di voto";
-                lbDirittiStart.Text = ss;
+                string ss = $"{Azionisti.DammiMaxNumeroDirittiDiVotoTotali():N0}";
+                TxtDirittiDiVoto = ss + App.Instance.getLang("SAPP_VOTE_D_DIRITTI"); // " Diritti di voto";
+                TxtDirittiStart = ss;
             }
             else
             {
-                string ss = string.Format("{0:N0}", Azionisti.DammiMaxNumeroVotiTotali());
-                lbDirittiDiVoto.Text = ss;
-                lbDirittiStart.Text = ss;
+                string ss = $"{Azionisti.DammiMaxNumeroVotiTotali():N0}";
+                TxtDirittiDiVoto = ss;
+                TxtDirittiStart = ss;
             }
             // diritti di voto
-            lbDirittiStart.Visible = true;
+            TxtDirittiStartVis = true;
             // in funzione del n. di deleghe metto
             if (Azionisti.HaDirittiDiVotoMultipli())
             {
@@ -194,22 +335,28 @@ namespace VotoTouch.WPF
 
             // crea la pagina di conferma
             //SettaComponenti(false);
-            lbDirittiDiVoto.Visible = true;
+            TxtDirittiDiVotoVis = true;
             // Sistemo la label dei diritti di voto
             int NDirittiAzioniConferma = Azionisti.DammiDirittiAzioniDiVotoConferma(IsVotazioneDifferenziata);
-            lbConfermaNVoti.Text = string.Format("{0:N0}", NDirittiAzioniConferma) + " voti per"; // +rm.GetString("SAPP_VOTE_DIRITTIPER");
+            TxtConfermaNVoti = $"{NDirittiAzioniConferma:N0}" + " voti per"; // +rm.GetString("SAPP_VOTE_DIRITTIPER");
 
             if (VTConfig.ModoAssemblea == VSDecl.MODO_AGM_POP)
             {
                 if (IsVotazioneDifferenziata)
-                    lbConfermaNVoti.Text = App.Instance.getLang("SAPP_VOTE_1DIRITTOPER"); //"1 diritto di voto per";
+                {
+                    TxtConfermaNVoti = App.Instance.getLang("SAPP_VOTE_1DIRITTOPER"); //"1 diritto di voto per";
+                }
                 else
                 {
                     if (!Azionisti.HaDirittiDiVotoMultipli())
-                        lbConfermaNVoti.Text = App.Instance.getLang("SAPP_VOTE_1DIRITTOPER"); //"1 diritto di voto per";
+                    {
+                        TxtConfermaNVoti = App.Instance.getLang("SAPP_VOTE_1DIRITTOPER"); //"1 diritto di voto per";
+                    }
                     else
-                        lbConfermaNVoti.Text = Azionisti.DammiCountDirittiDiVoto_VotoCorrente() +
-                                               App.Instance.getLang("SAPP_VOTE_DIRITTIPER"); //" diritti di voto per";
+                    {
+                        TxtConfermaNVoti = Azionisti.DammiCountDirittiDiVoto_VotoCorrente() +
+                                                    App.Instance.getLang("SAPP_VOTE_DIRITTIPER"); //" diritti di voto per";
+                    }
                 }
             }
             else
@@ -248,9 +395,10 @@ namespace VotoTouch.WPF
                     acapo = !acapo;
                 }
                  * */
-                lbConferma.Text = VotoEspressoStrUp;
-                lbConferma.TextNote = VotoEspressoStrNote;
-                lbConferma.Visible = true;
+                TxtConferma = VotoEspressoStrUp;
+                //lblConferma.TextNote = VotoEspressoStrNote;
+                TxtConfermaVis = true;
+
                 //oVotoTheme.SetTheme_lbConfermaUp_Cand(ref lbConfermaUp);
             }
             else
@@ -258,12 +406,15 @@ namespace VotoTouch.WPF
                 // se è sk bianca o non voto non metto i diritti
                 //NODirittiLabel = (VotoEspresso == VSDecl.VOTO_SCHEDABIANCA || VotoEspresso == VSDecl.VOTO_NONVOTO);
                 if (VotoEspresso == VSDecl.VOTO_SCHEDABIANCA || VotoEspresso == VSDecl.VOTO_NONVOTO)
-                    lbConfermaNVoti.Text = "-";
+                {
+                    TxtConfermaNVoti = "-";
+                }
                 // voto di lista/candidato              
-                lbConfermaUp.Text = VotoEspressoStrUp;
-                lbConferma.Text = VotoEspressoStr;
-                lbConferma.TextNote = VotoEspressoStrNote;
-                oVotoTheme.SetTheme_lbConfermaUp(ref lbConfermaUp);
+                TxtConfermaUp = VotoEspressoStrUp;
+                TxtConferma = VotoEspressoStr;
+                //lbConferma.TextNote = VotoEspressoStrNote;
+                TextBlock lblConfermaUp = (TextBlock) this.mainGrid.FindName("lblConfermaUp");
+                if (lblConfermaUp != null) oVotoTheme.SetTheme_lbConferma(ref lblConfermaUp);
             }
 
             // attenzione, se ho una sk bianca o non voto non metto i diritii
@@ -273,9 +424,9 @@ namespace VotoTouch.WPF
             //}
 
             // ok, ora le mostro
-            lbConferma.Visible = true;
-            lbConfermaNVoti.Visible = true;
-            lbConfermaUp.Visible = true;
+            TxtConfermaVis = true;
+            TxtConfermaUpVis = true;
+            TxtConfermaNVotiVis = true;
         }
 
 		//    PARTE DEMO MODE ------------------------------------------------------------------

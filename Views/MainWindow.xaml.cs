@@ -39,7 +39,7 @@ namespace VotoTouch.WPF
         public event EventDataReceived evtDataReceived;
 
         // timer di disaccoppiamento
-        private DispatcherTimer timLetturaBadge;
+        //private DispatcherTimer timLetturaBadge;
         private DispatcherTimer timCambiaStato;
         private DispatcherTimer timConfigura;
         private DispatcherTimer timAutoRitorno;
@@ -158,9 +158,9 @@ namespace VotoTouch.WPF
             // timer di lettura badge
             timVotoAperto = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(VSDecl.TIM_CKVOTO_MIN)};
             timVotoAperto.Tick += timVotoAperto_Tick;
-            // timer di lettura badge
-            timLetturaBadge = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
-            timLetturaBadge.Tick += timLetturaBadge_Tick;
+            //// timer di lettura badge
+            //timLetturaBadge = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
+            //timLetturaBadge.Tick += timLetturaBadge_Tick;
             // timer di cambio stato
             timCambiaStato = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
             timCambiaStato.Tick += timCambiaStato_Tick;
@@ -332,7 +332,7 @@ namespace VotoTouch.WPF
             Logging.WriteToLog("");
             
             // inizializzo i componenti
-			InizializzaControlli();
+			//InizializzaControlli();
             // Se è in demo mode metto i controlli
             if (VTConfig.IsDemoMode)
                 InizializzaControlliDemo();
@@ -351,8 +351,8 @@ namespace VotoTouch.WPF
             // da qui in avanti era in shown
             // attivo il barcode reader
             NewReader = new CNETActiveReader();
-            NewReader.ADataRead += ObjDataReceived;
-            evtDataReceived += new EventDataReceived(onDataReceived);
+            NewReader.ADataRead += new DataRead(SerialDataReceived);
+            //evtDataReceived += new EventDataReceived(onDataReceived);
             // ora cerco se c'è qualche porta che va bene
             string ComPort = "";
             string ComDescr = "";
@@ -422,7 +422,8 @@ namespace VotoTouch.WPF
             switch (ACommand)
             {
                 case VSDecl.ICM_MAIN_BADGEREAD:
-                    string badge = (string) AParam;
+                    Badge_Seriale = (string) AParam;
+                    Serial_NewRead(Badge_Seriale);
                     break;
                 case VSDecl.ICM_MAIN_CLOSESTATUSPANEL:
                     UStatusPanel stp = (UStatusPanel) this.mainGrid.FindName("statusPanel");
@@ -927,8 +928,186 @@ namespace VotoTouch.WPF
             }
         }
 
-        #endregion
+        // labels
+        private string _TxtNomeDisgiunto;  
+        public string TxtNomeDisgiunto
+        {
+            get => _TxtNomeDisgiunto;
+            set
+            {
+                _TxtNomeDisgiunto = value;
+                OnPropertyChanged("TxtNomeDisgiunto");
+            }
+        }
 
+        private bool _TxtNomeDisgiuntoVis;  
+        public bool TxtNomeDisgiuntoVis
+        {
+            get => _TxtNomeDisgiuntoVis;
+            set
+            {
+                _TxtNomeDisgiuntoVis = value;
+                OnPropertyChanged("TxtNomeDisgiuntoVis");
+            }
+        }
+
+        private string _TxtDisgiuntoRimangono;  
+        public string TxtDisgiuntoRimangono
+        {
+            get => _TxtDisgiuntoRimangono;
+            set
+            {
+                _TxtDisgiuntoRimangono = value;
+                OnPropertyChanged("TxtDisgiuntoRimangono");
+            }
+        }
+
+        private bool _TxtDisgiuntoRimangonoVis;  
+        public bool TxtDisgiuntoRimangonoVis
+        {
+            get => _TxtDisgiuntoRimangonoVis;
+            set
+            {
+                _TxtDisgiuntoRimangonoVis = value;
+                OnPropertyChanged("TxtDisgiuntoRimangonoVis");
+            }
+        }
+
+        private string _TxtDirittiStart;  
+        public string TxtDirittiStart
+        {
+            get => _TxtDirittiStart;
+            set
+            {
+                _TxtDirittiStart = value;
+                OnPropertyChanged("TxtDirittiStart");
+            }
+        }
+
+        private bool _TxtDirittiStartVis;  
+        public bool TxtDirittiStartVis
+        {
+            get => _TxtDirittiStartVis;
+            set
+            {
+                _TxtDirittiStartVis = value;
+                OnPropertyChanged("TxtDirittiStartVis");
+            }
+        }
+
+        private string _TxtDirittiDiVoto;  
+        public string TxtDirittiDiVoto
+        {
+            get => _TxtDirittiDiVoto;
+            set
+            {
+                _TxtDirittiDiVoto = value;
+                OnPropertyChanged("TxtDirittiDiVoto");
+            }
+        }
+
+        private bool _TxtDirittiDiVotoVis;  
+        public bool TxtDirittiDiVotoVis
+        {
+            get => _TxtDirittiDiVotoVis;
+            set
+            {
+                _TxtDirittiDiVotoVis = value;
+                OnPropertyChanged("TxtDirittiDiVotoVis");
+            }
+        }
+
+        private string _TxtConferma;  
+        public string TxtConferma
+        {
+            get => _TxtConferma;
+            set
+            {
+                _TxtConferma = value;
+                OnPropertyChanged("TxtConferma");
+            }
+        }
+
+        private bool _TxtConfermaVis;  
+        public bool TxtConfermaVis
+        {
+            get => _TxtConfermaVis;
+            set
+            {
+                _TxtConfermaVis = value;
+                OnPropertyChanged("TxtConfermaVis");
+            }
+        }
+
+        private string _TxtConfermaUp;  
+        public string TxtConfermaUp
+        {
+            get => _TxtConfermaUp;
+            set
+            {
+                _TxtConfermaUp = value;
+                OnPropertyChanged("TxtConfermaUp");
+            }
+        }
+
+        private bool _TxtConfermaUpVis;  
+        public bool TxtConfermaUpVis
+        {
+            get => _TxtConfermaUpVis;
+            set
+            {
+                _TxtConfermaUpVis = value;
+                OnPropertyChanged("TxtConfermaUpVis");
+            }
+        }
+
+        private string _TxtConfermaNVoti;  
+        public string TxtConfermaNVoti
+        {
+            get => _TxtConfermaNVoti;
+            set
+            {
+                _TxtConfermaNVoti = value;
+                OnPropertyChanged("TxtConfermaNVoti");
+            }
+        }
+
+        private bool _TxtConfermaNVotiVis;  
+        public bool TxtConfermaNVotiVis
+        {
+            get => _TxtConfermaNVotiVis;
+            set
+            {
+                _TxtConfermaNVotiVis = value;
+                OnPropertyChanged("TxtConfermaNVotiVis");
+            }
+        }
+
+
+        private string _TxtNomeAzStart;  
+        public string TxtNomeAzStart
+        {
+            get => _TxtNomeAzStart;
+            set
+            {
+                _TxtNomeAzStart = value;
+                OnPropertyChanged("TxtNomeAzStart");
+            }
+        }
+
+        private bool _TxtNomeAzStartVis;  
+        public bool TxtNomeAzStartVis
+        {
+            get => _TxtNomeAzStartVis;
+            set
+            {
+                _TxtNomeAzStartVis = value;
+                OnPropertyChanged("TxtNomeAzStartVis");
+            }
+        }
+
+
+        #endregion
 
         //  inotify  ---------------------------------------------------------------------------------
 
