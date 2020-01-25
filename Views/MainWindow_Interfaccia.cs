@@ -39,9 +39,10 @@ namespace VotoTouch.WPF
                 {
                     Name = "lblMouse",
                     Text = "0 : 0",
-                    HorizontalAlignment = HorizontalAlignment.Left,
+                    HorizontalAlignment = HorizontalAlignment.Right,
                     VerticalAlignment = VerticalAlignment.Top,
-                    Margin = new Thickness(10,10,0,0),
+                    TextAlignment = TextAlignment.Right,
+                    Margin = new Thickness(0,10,10,0),
                     Visibility = Visibility.Visible
                 };
                 mainGrid.Children.Add(lblMouse);
@@ -52,7 +53,7 @@ namespace VotoTouch.WPF
                     Name = "badgePanel",
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
-                    Margin = new Thickness(20,20,0,0),
+                    Margin = new Thickness(40,40,0,0),
                     Visibility = Visibility.Visible
                 };
                 mainGrid.Children.Add(badgePanel);
@@ -112,12 +113,15 @@ namespace VotoTouch.WPF
 
             if (VTConfig.IsDemoMode)
             {
+                Button btnBadgeUnVoto = (Button) this.mainGrid.FindName("btnBadgeUnVoto");
                 if (btnBadgeUnVoto != null)
-                    btnBadgeUnVoto.Visible = (Stato == TAppStato.ssvBadge);
+                    btnBadgeUnVoto.Visibility = Stato == TAppStato.ssvBadge ? Visibility.Visible : Visibility.Hidden;
+                Button btnBadgePiuVoti = (Button) this.mainGrid.FindName("btnBadgePiuVoti");
                 if (btnBadgePiuVoti != null)
-                    btnBadgePiuVoti.Visible = (Stato == TAppStato.ssvBadge);
+                    btnBadgePiuVoti.Visibility = Stato == TAppStato.ssvBadge ? Visibility.Visible : Visibility.Hidden;
+                Button btnFineVotoDemo = (Button) this.mainGrid.FindName("btnFineVotoDemo");
                 if (btnFineVotoDemo != null)
-                    btnFineVotoDemo.Visible = (Stato == TAppStato.ssvVotoFinito);
+                    btnFineVotoDemo.Visibility = Stato == TAppStato.ssvVotoFinito ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -136,7 +140,6 @@ namespace VotoTouch.WPF
             string PrefNomeAz = "";
             // start del voto
             SettaComponenti(false);
-            edtBadge.Text = "";
             // le labels
             // nome azionista
             PrefNomeAz = Azionisti.Titolare_Badge.RaSo_Sesso;
@@ -279,33 +282,94 @@ namespace VotoTouch.WPF
 
         #region Demo mode
 
-        public void InizializzaControlliDemo()
+        private void InizializzaControlliDemo()
         {
-            Font myFont = new Font("Impact", 32, FontStyle.Bold);
-            // devo aggiungere due bottoni
-            btnBadgeUnVoto = new Button();
-            btnBadgeUnVoto.FlatStyle = FlatStyle.Flat;
-            btnBadgeUnVoto.Text = rm.GetString("SAPP_DEMO_1DIR");   // "Tocca per provare con 1 diritto di voto";
-            btnBadgeUnVoto.Font = myFont;
-            btnBadgeUnVoto.Click += new EventHandler(btnBadgeUnVoto_Click);
-            btnBadgeUnVoto.Visible = false;
-            this.Controls.Add(btnBadgeUnVoto);
+            Button btnBadgeUnVoto = new Button
+            {
+                Content = App.Instance.getLang("SAPP_DEMO_1DIR"),
+                Name = "btnBadgeUnVoto",
+                Width = 300,
+                Height = 100,
+                Background = new SolidColorBrush(Colors.White),
+                BorderThickness = new Thickness(4),
+                FontSize = 20,
+                FontWeight = FontWeights.DemiBold,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Visibility = Visibility.Hidden,
+                Margin = new Thickness(100, 0, 0, 100)
+            };
+            btnBadgeUnVoto.Click += new RoutedEventHandler(this.btnBadgeUnVoto_Click);
+            mainGrid.Children.Add(btnBadgeUnVoto);
+            mainGrid.RegisterName(btnBadgeUnVoto.Name, btnBadgeUnVoto);
 
-            btnBadgePiuVoti = new Button();
-            btnBadgePiuVoti.FlatStyle = FlatStyle.Flat;
-            btnBadgePiuVoti.Text = rm.GetString("SAPP_DEMO_3DIR");  // "Tocca per provare con 3 diritti di voto";
-            btnBadgePiuVoti.Font = myFont;
-            btnBadgePiuVoti.Click += new EventHandler(btnBadgePiuVoti_Click);
-            btnBadgePiuVoti.Visible = false;
-            this.Controls.Add(btnBadgePiuVoti);
+            Button btnBadgePiuVoto = new Button
+            {
+                Content = App.Instance.getLang("SAPP_DEMO_3DIR"),
+                Name = "btnBadgePiuVoto",
+                Width = 300,
+                Height = 100,
+                Background = new SolidColorBrush(Colors.White),
+                BorderThickness = new Thickness(4),
+                FontSize = 20,
+                FontWeight = FontWeights.DemiBold,
+                Visibility = Visibility.Hidden,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(0, 0, 100, 100)
+            };
+            btnBadgePiuVoto.Click += new RoutedEventHandler(this.btnBadgePiuVoti_Click);
+            mainGrid.Children.Add(btnBadgePiuVoto);
+            mainGrid.RegisterName(btnBadgePiuVoto.Name, btnBadgePiuVoto);
 
-            btnFineVotoDemo = new Button();
-            btnFineVotoDemo.FlatStyle = FlatStyle.Flat;
-            btnFineVotoDemo.Text = rm.GetString("SAPP_DEMO_3END"); // "Tocca per ritornare alla videata iniziale";
-            btnFineVotoDemo.Font = myFont;
-            btnFineVotoDemo.Click += new EventHandler(btnFineVotoDemo_Click);
-            btnFineVotoDemo.Visible = false;
-            this.Controls.Add(btnFineVotoDemo);
+            Button btnFineVotoDemo = new Button
+            {
+                Content = App.Instance.getLang("SAPP_DEMO_3DIR"),
+                Name = "btnFineVotoDemo",
+                Width = 300,
+                Height = 100,
+                Background = new SolidColorBrush(Colors.White),
+                BorderThickness = new Thickness(4),
+                FontSize = 20,
+                FontWeight = FontWeights.DemiBold,
+                Visibility = Visibility.Hidden,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Margin = new Thickness(0, 0, 0, 100)
+            };
+            btnFineVotoDemo.Click += new RoutedEventHandler(this.btnFineVotoDemo_Click);
+            mainGrid.Children.Add(btnFineVotoDemo);
+            mainGrid.RegisterName(btnFineVotoDemo.Name, btnFineVotoDemo);
+        }
+
+        private void ResizeControlliDemo()
+        {
+            // per ora non serve in wpf
+
+            // bottone un voto
+            //if (btnBadgeUnVoto != null)
+            //{
+            //    btnBadgeUnVoto.Left = this.Width / 7;
+            //    btnBadgeUnVoto.Top = (this.Height / 10) * 6;
+            //    btnBadgeUnVoto.Width = (this.Width / 7) * 2;
+            //    btnBadgeUnVoto.Height = (this.Height / 10) *2;
+            //}
+            //// bottone più voto
+            //if (btnBadgePiuVoti != null)
+            //{
+            //    btnBadgePiuVoti.Left = (this.Width / 7) * 4;
+            //    btnBadgePiuVoti.Top = (this.Height / 10) * 6;
+            //    btnBadgePiuVoti.Width = (this.Width / 7) * 2;
+            //    btnBadgePiuVoti.Height = (this.Height / 10) * 2;
+            //}
+            //// bottone finevotodemo
+            //if (btnFineVotoDemo != null)
+            //{
+            //    btnFineVotoDemo.Left = (this.Width / 7) * 2;
+            //    btnFineVotoDemo.Top = (this.Height / 10) * 6;
+            //    btnFineVotoDemo.Width = (this.Width / 7) * 3;
+            //    btnFineVotoDemo.Height = (this.Height / 10) * 2;
+            //}
         }
 
         public void onChangeSemaphore(object source, TStatoSemaforo ASemStato)
@@ -313,19 +377,19 @@ namespace VotoTouch.WPF
             // evento inutile
         }
 
-        void btnBadgeUnVoto_Click(object sender, EventArgs e)
+        void btnBadgeUnVoto_Click(object sender, RoutedEventArgs e)
         {
             //1 voto
             BadgeLetto("1000");
         }
 
-        void btnBadgePiuVoti_Click(object sender, EventArgs e)
+        void btnBadgePiuVoti_Click(object sender, RoutedEventArgs e)
         {
             //3 voti
             BadgeLetto("1001");
         }
 
-        void btnFineVotoDemo_Click(object sender, EventArgs e)
+        void btnFineVotoDemo_Click(object sender, RoutedEventArgs e)
         {
             BadgeLetto("999999");
         }

@@ -100,17 +100,14 @@ namespace VotoTouch.WPF
         protected List<TNewVotazione> _Votazioni;
         public List<TNewVotazione> Votazioni
         {
-            get { return _Votazioni; }
-            set
-            {
-                _Votazioni = value;
-            }
+            get => _Votazioni;
+            set => _Votazioni = value;
         }
 
         private int idxVotoCorrente;
         public TNewVotazione VotoCorrente
         {
-            get { return _Votazioni.Count == 0 ? null : _Votazioni[idxVotoCorrente]; }
+            get => _Votazioni.Count == 0 ? null : _Votazioni[idxVotoCorrente];
             set
             {
                 if (_Votazioni.Count > 0)
@@ -125,7 +122,6 @@ namespace VotoTouch.WPF
         public CBaseTipoVoto ClasseTipoVotoStartNorm = null;
         public CBaseTipoVoto ClasseTipoVotoStartDiff = null;
         public CBaseTipoVoto ClasseTipoVotoConferma = null;
-
 
         public TListaVotazioni(CVotoBaseDati ADBDati)
         {
@@ -363,7 +359,6 @@ namespace VotoTouch.WPF
             // Il tutto viene messo nella struttura AreaVoto (TAreaVotazione) per ogni singola votazione.
             // Questo (per ora) non viene usato per le liste
             // innanzitutto ciclo sulle votazioni
-            int CandAlt;
 
             // area di voto standard x Candidati è:
             // x: 20 y:180 ax:980 (w:960) ay:810 (h:630)  
@@ -384,7 +379,7 @@ namespace VotoTouch.WPF
                     // CDA da 4 a 6:  2 Righe CDA e 3x2 Righe alt = Candidati Pagina 6, 10 Linguette x 60 Candidati Totale
                     // ma deve essere dinamico in funzione dei candidati
                     // calcolo i candidati alternativi
-                    CandAlt = votazione.NListe - votazione.NPresentatoCDA;
+                    int CandAlt = votazione.NListe - votazione.NPresentatoCDA;
 
                     switch (votazione.NPresentatoCDA)
                     {

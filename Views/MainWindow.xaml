@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VotoTouch.WPF"
+        xmlns:converters="clr-namespace:VotoTouch.WPF.Converters"
         mc:Ignorable="d"
         Title="MainWindow" 
         Closing="frmMain_Closing"
@@ -11,7 +12,21 @@
         PreviewKeyDown="MainWindow_OnPreviewKeyDown"
         PreviewMouseMove="MainWindow_OnPreviewMouseMove"
         Height="600" Width="900">
+
+    <Window.Resources>
+        <ResourceDictionary>
+           <converters:BooleanToHiddenVisibility x:Key="boolToVis"/>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid x:Name="mainGrid">
-        
+        <!-- semaforo e com -->
+        <TextBlock Margin="8,8,0,0" Text="&#xf488;" FontSize="20" Style="{StaticResource FontAwesome}" Foreground="White" 
+                   Background="Red" Visibility="{Binding Path=ShowNoBarcode, Converter={StaticResource boolToVis}}"  />
+        <TextBlock Margin="8,28,0,0" Text="&#xf637;" FontSize="20" Style="{StaticResource FontAwesome}" Foreground="White" 
+                   Background="Red" Visibility="{Binding Path=ShowNoSemaph, Converter={StaticResource boolToVis}}"  />
+
+
+
     </Grid>
 </Window>

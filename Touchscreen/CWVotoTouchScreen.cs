@@ -107,7 +107,7 @@ namespace VotoTouch.WPF
         public event ehTouchWatchDog TouchWatchDog;
 
         public bool PaintTouchOnScreen;
-        public Rect FFormRect;         
+        //public Rect FFormRect;         
         private ArrayList Tz;
 
         //// oggetti conferma e inizio voto
@@ -143,7 +143,7 @@ namespace VotoTouch.WPF
         public CVotoTouchScreen() //ref TTotemConfig ATotCfg)
 		{
             // inizializzo
-            FFormRect = new Rect();       
+            //FFormRect = new Rect();       
     
             //Tz = new ArrayList();
             //TotCfg = ATotCfg;

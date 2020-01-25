@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using VotoTouch.WPF.Views.Tools;
 
 namespace VotoTouch.WPF
 {
@@ -235,8 +237,8 @@ namespace VotoTouch.WPF
         public void onPremutoBottoneUscita(object source, int VParam)
         {
             // Bottone Uscita
-            FVSMessageExit FMsgExit = new FVSMessageExit();
-            if (FMsgExit.ShowDialog() == DialogResult.OK)
+            FWSMessageExit FMsgExit = new FWSMessageExit();
+            if (FMsgExit.ShowDialog() == true)
             {
                 CodiceUscitaInVotazione();
             }

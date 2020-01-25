@@ -52,12 +52,12 @@ namespace VotoTouch.WPF
         DataTable dtTema = new DataTable();
         public Boolean IsThemed;
 
-        public Rectangle FFormRect;
+        public Rect FFormRect;
 
         public CVotoTheme()
 		{
             // inizializzo
-            FFormRect = new Rectangle();
+            FFormRect = new Rect();
 
             BaseFontCandidato = 22;
             BaseColorCandidato = System.Drawing.ColorTranslator.FromHtml("#FFFFFF");

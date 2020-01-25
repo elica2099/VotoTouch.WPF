@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VotoTouch.WPF.Views.UserControls"
              mc:Ignorable="d" 
+             Background="Gainsboro"
              d:DesignHeight="140" d:DesignWidth="150"
              Height="140" Width="150">
     <Grid>

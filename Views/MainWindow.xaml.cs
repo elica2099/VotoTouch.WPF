@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Resources;
@@ -19,6 +20,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using VotoTouch.WPF.Views.Tools;
 using VotoTouch.WPF.Views.UserControls;
+using WpfScreenHelper;
 
 namespace VotoTouch.WPF
 {
@@ -31,7 +33,7 @@ namespace VotoTouch.WPF
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IInterClassMessenger
+    public partial class MainWindow : Window, IInterClassMessenger, INotifyPropertyChanged
     {
         public delegate void EventDataReceived(object source, string messaggio);
         public event EventDataReceived evtDataReceived;
@@ -44,10 +46,10 @@ namespace VotoTouch.WPF
         private DispatcherTimer timPopup;
         private DispatcherTimer timVotoAperto;
 
-        // oggetti demo
-        private Button btnBadgeUnVoto;
-        private Button btnBadgePiuVoti;
-        private Button btnFineVotoDemo;
+        // oggetti demo (li creo dinamicamente)
+        //private Button btnBadgeUnVoto;
+        //private Button btnBadgePiuVoti;
+        //private Button btnFineVotoDemo;
 
         private static Mutex appMutex;
 
@@ -102,7 +104,11 @@ namespace VotoTouch.WPF
             // registrazione dei metodi interclasse (IInterClassMessenger)
             #region InterClassMessages
             App.ICMsn.RegisterMessage(this, VSDecl.ICM_MAIN_BADGEREAD);
+            App.ICMsn.RegisterMessage(this, VSDecl.ICM_MAIN_CLOSESTATUSPANEL);
             #endregion
+
+            // resize
+            this.SizeChanged += OnWindowSizeChanged;
 
             // data_path
             CheckDataFolder();
@@ -113,8 +119,6 @@ namespace VotoTouch.WPF
             VTConfig.IsAdmin = File.Exists(VTConfig.Data_Path + "VTS_ADMIN.txt");
             VTConfig.IsStandalone = File.Exists(VTConfig.Data_Path + "VTS_STANDALONE.txt");
 
-            // resize
-            this.SizeChanged += OnWindowSizeChanged;
 
             // finestra di start
             FWSStart FStart = new FWSStart(this);
@@ -143,6 +147,8 @@ namespace VotoTouch.WPF
             oVotoTouch.PremutoBottoneUscita += new ehPremutoBottoneUscita(onPremutoBottoneUscita);
             oVotoTouch.PremutoContrarioTutti += new ehPremutoContrarioTutti(onPremutoContrarioTutti);
             oVotoTouch.PremutoAstenutoTutti += new ehPremutoAstenutoTutti(onPremutoAstenutoTutti);
+            // se sono in debug evidenzio le zone sensibili
+            oVotoTouch.PaintTouchOnScreen = VTConfig.IsPaintTouch;
             // inizializzazione classe del tema
             oVotoTheme = new CVotoTheme();
             oVotoTheme.CaricaTemaDaXML(VTConfig.Img_Path);
@@ -334,9 +340,6 @@ namespace VotoTouch.WPF
 			// ora inizializzo la macchina a stati
 			Stato = TAppStato.ssvBadge;
 
-            // se sono in debug evidenzio le zone sensibili
-            oVotoTouch.PaintTouchOnScreen = VTConfig.IsPaintTouch;
-
             // se la votazione è aperta il timer di controllo voto batte di meno
             timVotoAperto.Interval = TimeSpan.FromMilliseconds(VTConfig.VotoAperto ? VSDecl.TIM_CKVOTO_MAX : VSDecl.TIM_CKVOTO_MIN);
 
@@ -386,11 +389,14 @@ namespace VotoTouch.WPF
                         App.Instance.getLang("SAPP_START_ERRCOM1") + VTConfig.PortaLettore + 
                         App.Instance.getLang("SAPP_START_ERRCOM2"),"Error",
                         MessageBoxButton.OK, MessageBoxImage.Error);
-                    imgERBarcode.Visible = true;
+                    ShowNoBarcode = true;
                 }
                 else
-                    imgERSemaf.Visible = false;
+                    ShowNoBarcode = false;
             }
+
+            // set datacontext
+            this.DataContext = this;
         }
 
         private void frmMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -403,9 +409,9 @@ namespace VotoTouch.WPF
 
         void oVotoTouch_ShowPopup(object source, string messaggio)
         {
-            lblMsgPopup.Text = messaggio;
-            pnPopupRed.Visible = true;
-            timPopup.Start();
+            //lblMsgPopup.Text = messaggio;
+            //pnPopupRed.Visible = true;
+            //timPopup.Start();
         }
 
         // IInterClassMessenger ---------------------------------------------------------------------------------
@@ -417,6 +423,14 @@ namespace VotoTouch.WPF
             {
                 case VSDecl.ICM_MAIN_BADGEREAD:
                     string badge = (string) AParam;
+                    break;
+                case VSDecl.ICM_MAIN_CLOSESTATUSPANEL:
+                    UStatusPanel stp = (UStatusPanel) this.mainGrid.FindName("statusPanel");
+                    if (stp != null)
+                    {
+                        stp.Visibility = Visibility.Hidden;
+                        stp = null;
+                    }
                     break;
             }
         }
@@ -477,6 +491,7 @@ namespace VotoTouch.WPF
             }
 
             // se è demo devo stampare una label
+            /*
             if (VTConfig.IsDemoMode)
             {
                 try
@@ -503,6 +518,7 @@ namespace VotoTouch.WPF
                     // non faccio nulla, non serve, al massimo non apparirà la scritta
                 }
             }
+            */
         }
          
         protected void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
@@ -511,62 +527,31 @@ namespace VotoTouch.WPF
             //double newWindowWidth = e.NewSize.Width;
             //double prevWindowHeight = e.PreviousSize.Height;
             //double prevWindowWidth = e.PreviousSize.Width;
+            MainWindowSizeChanged();
         }
 
-        private void frmMain_Resize(object sender, EventArgs e)
+        private void MainWindowSizeChanged()
         {
-            // immagine del salvataggio
-            pbSalvaDati.Left = (this.Width / 2) - (pbSalvaDati.Width / 2);
-            pbSalvaDati.Top = (this.Height / 2) - (pbSalvaDati.Height  / 2);
+            // immagine del salvataggio non serve qui
+            //pbSalvaDati.Left = (this.Width / 2) - (pbSalvaDati.Width / 2);
+            //pbSalvaDati.Top = (this.Height / 2) - (pbSalvaDati.Height  / 2);
 
-            Rectangle FFormRect = new Rectangle(0, 0, this.Width, this.Height);
+            Rect FFormRect = new Rect(0, 0, this.ActualWidth, this.ActualHeight);
 
-            // devo dire alla nuova touch le dimensioni della finestra
-            //if (oVotoTouch != null)
-            //{
-            //    oVotoTouch.CalcolaVotoTouch(FFormRect);
-            //}
             // lo stesso faccio per la classe del thema che si occupa di disegnare 
-            // le label di informazione
             if (oVotoTheme != null)
             {
                 oVotoTheme.FFormRect = FFormRect;
                 CaricaTemaInControlli();
             }
             // ok ora le votazioni
-            if (Votazioni != null)
-            {
-                Votazioni.ResizeZoneVotazioni(FFormRect);
-                //Votazioni.CalcolaTouchZoneVotazioni(FFormRect);
-            }
-            
+            Votazioni?.ResizeZoneVotazioni(FFormRect);
+            //Votazioni.CalcolaTouchZoneVotazioni(FFormRect);
+
             // ok, ora se è in demo mode faccio il resize dei controlli
             if (VTConfig.IsDemoMode)
             {
-                // bottone un voto
-                if (btnBadgeUnVoto != null)
-                {
-                    btnBadgeUnVoto.Left = this.Width / 7;
-                    btnBadgeUnVoto.Top = (this.Height / 10) * 6;
-                    btnBadgeUnVoto.Width = (this.Width / 7) * 2;
-                    btnBadgeUnVoto.Height = (this.Height / 10) *2;
-                }
-                // bottone più voto
-                if (btnBadgePiuVoti != null)
-                {
-                    btnBadgePiuVoti.Left = (this.Width / 7) * 4;
-                    btnBadgePiuVoti.Top = (this.Height / 10) * 6;
-                    btnBadgePiuVoti.Width = (this.Width / 7) * 2;
-                    btnBadgePiuVoti.Height = (this.Height / 10) * 2;
-                }
-                // bottone finevotodemo
-                if (btnFineVotoDemo != null)
-                {
-                    btnFineVotoDemo.Left = (this.Width / 7) * 2;
-                    btnFineVotoDemo.Top = (this.Height / 10) * 6;
-                    btnFineVotoDemo.Width = (this.Width / 7) * 3;
-                    btnFineVotoDemo.Height = (this.Height / 10) * 2;
-                }
+                ResizeControlliDemo();
             }
         }
 
@@ -764,27 +749,9 @@ namespace VotoTouch.WPF
 
         private void SemaforoOKImg(bool bok)
         {
-            imgERSemaf.Visible = !bok;
+            ShowNoSemaph = !bok;
         }
         
-        public Screen GetSecondaryScreen()
-        {
-            if (Screen.AllScreens.Length == 1)
-            {
-                return null;
-            }
-
-            foreach (Screen screen in Screen.AllScreens)
-            {
-                if (screen.Primary == false)
-                {
-                    return screen;
-                }
-            }
-
-            return null;
-        }
-
         private void MainWindow_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -829,17 +796,15 @@ namespace VotoTouch.WPF
                 // Ctrl + F2 Va sul secondo schermo
                 case Key.F2 when Keyboard.Modifiers == ModifierKeys.Control:
                     e.Handled = true;
-                    if (Screen.AllScreens.Length > 1)
+                    if (Screen.AllScreens.Count() > 1)
                     {
-                        // Important !
-                        this.StartPosition = FormStartPosition.Manual;
-                        this.WindowState = FormWindowState.Normal;
-                        // Get the second monitor screen
-                        Screen screen = GetSecondaryScreen();
-                        // set the location to the top left of the second screen
-                        this.Location = screen.WorkingArea.Location;
-                        // set it fullscreen
-                        this.Size = new Size(screen.WorkingArea.Width, screen.WorkingArea.Height);
+                        this.WindowState = WindowState.Normal;
+                        List<Screen> Screens = new List<Screen>(Screen.AllScreens);
+                        Screen screen = Screens[1];
+                        Left = screen.Bounds.Left;
+                        Top = screen.Bounds.Top;
+                        Width = screen.Bounds.Width;
+                        Height = screen.Bounds.Height;
                     }
                     break;
 
@@ -880,7 +845,8 @@ namespace VotoTouch.WPF
                 stp = null;
             }
             // ora lo creo
-            UStatusPanel statusPanel = new UStatusPanel(ShowVotazioni ? Votazioni : null, ShowAzionista ? Azionisti : null)
+            UStatusPanel statusPanel = new UStatusPanel(ShowVotazioni ? Votazioni : null, 
+                ShowAzionista ? Azionisti : null, Stato, oDBDati)
             {
                 Name = "statusPanel",
                 HorizontalAlignment = HorizontalAlignment.Right,
@@ -895,67 +861,6 @@ namespace VotoTouch.WPF
         public void onTouchWatchDog(object source, int VParam)
         {
             Logging.WriteToLog("     >> Touch Watchdog intervenuto");
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-
-             // ricarico le liste
-            if (Stato == TAppStato.ssvVotoStart)
-            {
-                if (MessageBox.Show(App.Instance.getLang("SAPP_CLOSE"), "Question",
-                     MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
-                    Application.Current.Shutdown();
-            }
-            else
-                MessageBox.Show(App.Instance.getLang("SAPP_CLOSE_ERR"), "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
-        private void btnRicaricaListe_Click(object sender, EventArgs e)
-        {
-            // ricarico le liste
-            if (Stato == TAppStato.ssvVotoStart)
-            {
-                if (MessageBox.Show("Questa operazione ricaricherà le liste/votazioni rileggendole " +
-                    "dal database?\n Vuoi veramente continuare?", "Question",
-                MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
-                {
-                    Rect FFormRect = new Rect(0, 0, this.Width, this.Height);
-                    bool pippo = Votazioni.CaricaListeVotazioni(Data_Path, FFormRect, false);
-                    if (pippo)
-                        MessageBox.Show("Liste/votazioni caricate correttamente.", "information",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
-                    else
-                        MessageBox.Show("Problemi nel caricamento Liste/votazioni.", "Error",
-                                MessageBoxButton.OK, MessageBoxImage.Error);
-
-                }
-
-            }
-            else
-                MessageBox.Show("Impossibile effettuare questa operazione durante la votazione.", "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
-        private void btnCloseInfo_Click(object sender, EventArgs e)
-        {
-            Panel4.Visible = false;
-        }
-
-        private void btnCancVoti_Click(object sender, EventArgs e)
-        {
-#if DEBUG
-            if (MessageBox.Show("Questa operazione cancellerà TUTTI i voti " +
-                "dal database?\n Vuoi veramente continuare?", "Question",
-                MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
-            {
-                oDBDati.CancellaTuttiVoti();
-            }
-#else
-            MessageBox.Show("Funzione non disponibile", "Exclamation",
-                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-#endif
         }
 
         public static string UppercaseWords(string value)
@@ -986,16 +891,6 @@ namespace VotoTouch.WPF
 
         #endregion
 
-        //private void button2_Click(object sender, EventArgs e)
-        //{
-        //    //StartTest();
-        //    ////TListaAzionisti azio = new TListaAzionisti(oDBDati);
-        //    ////azio.CaricaDirittidiVotoDaDatabase(10005, ref fVoto, NVoti);
-        //    ////List<TAzionista> aziofilt = azio.DammiDirittiDiVotoPerIDVotazione(1, true);
-        //    //TListaVotazioni vot = new TListaVotazioni(oDBDati);
-        //    //vot.CaricaListeVotazioni();
-        //}
-
         private void MainWindow_OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (!VTConfig.IsDebugMode) return;
@@ -1006,20 +901,46 @@ namespace VotoTouch.WPF
                             "Mouse: " + (int)dd.X + " / " + (int)dd.Y;
         }
 
-//        private void frmMain_MouseMove(object sender, MouseEventArgs e)
-//        {
-//#if DEBUG
-//            float vx = (VSDecl.VOTESCREEN_DIVIDE_WIDTH / this.Width) * Cursor.Position.X;
-//            float vy = (VSDecl.VOTESCREEN_DIVIDE_HEIGHT / this.Height) * Cursor.Position.Y;
-//            float lx = (100 / this.Width) * Cursor.Position.X;
-//            float ly = (100 / this.Height) * Cursor.Position.Y;
+        //  property of the UI  ---------------------------------------------------------------------------------
 
-//            labelMousee.Text = "Local: " + e.X + ", " + e.Y + ". \n"
-//               + "Vote: " + (int)vx + ", " + (int)vy + ". \n"
-//                +"Label: " + (int)lx + ", " + (int)ly + ". \n"
-//               + "Globalis " + Cursor.Position.X + ", " + Cursor.Position.Y + ".";
-//#endif
-//        }
+        #region property of the UI
+
+        private bool _ShowNoBarcode;  
+        public bool ShowNoBarcode
+        {
+            get => _ShowNoBarcode;
+            set
+            {
+                _ShowNoBarcode = value;
+                OnPropertyChanged("ShowNoBarcode");
+            }
+        }
+      
+        private bool _ShowNoSemaph;  
+        public bool ShowNoSemaph
+        {
+            get => _ShowNoSemaph;
+            set
+            {
+                _ShowNoSemaph = value;
+                OnPropertyChanged("ShowNoSemaph");
+            }
+        }
+
+        #endregion
+
+
+        //  inotify  ---------------------------------------------------------------------------------
+
+        #region INotifyPropertyChanged
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string strPropertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(strPropertyName));
+        }
+        #endregion
 
     }
 }

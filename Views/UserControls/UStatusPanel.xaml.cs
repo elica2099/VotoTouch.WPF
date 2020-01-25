@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace VotoTouch.WPF.Views.UserControls
 {
@@ -21,11 +11,18 @@ namespace VotoTouch.WPF.Views.UserControls
     /// </summary>
     public partial class UStatusPanel : UserControl
     {
-        public UStatusPanel(TListaVotazioni AVotaz, TListaAzionisti AAzion)
+        private readonly TAppStato Stato;
+        private readonly CVotoBaseDati oDBDati;
+        private readonly TListaVotazioni Votazioni;
+        
+        public UStatusPanel(TListaVotazioni AVotaz, TListaAzionisti AAzion, TAppStato AStato, CVotoBaseDati AoDBDati)
         {
             InitializeComponent();
 
-            //carica la lista
+            Stato = AStato;
+            oDBDati = AoDBDati;
+            Votazioni = AVotaz;
+            //carica la lista  ICM_MAIN_CLOSESTATUSPANEL
             CaricaListaStato(AVotaz, AAzion);
         }
 
@@ -98,12 +95,42 @@ namespace VotoTouch.WPF.Views.UserControls
 
         private void CancellaVoti_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+#if DEBUG
+            if (MessageBox.Show("Questa operazione cancellerà TUTTI i voti " +
+                                "dal database?\n Vuoi veramente continuare?", "Question",
+                    MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
+            {
+                oDBDati.CancellaTuttiVoti();
+            }
+#else
+            MessageBox.Show("Funzione non disponibile", "Exclamation",
+                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
         }
 
         private void RicaricaListe_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            // ricarico le liste
+            if (Stato == TAppStato.ssvVotoStart)
+            {
+                if (MessageBox.Show("Questa operazione ricaricherà le liste/votazioni rileggendole " +
+                                    "dal database?\n Vuoi veramente continuare?", "Question",
+                        MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
+                {
+                    Rect FFormRect = new Rect(0, 0, this.Width, this.Height);
+                    bool pippo = Votazioni.CaricaListeVotazioni(VTConfig.Data_Path, FFormRect, false);
+                    if (pippo)
+                        MessageBox.Show("Liste/votazioni caricate correttamente.", "information",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                    else
+                        MessageBox.Show("Problemi nel caricamento Liste/votazioni.", "Error",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+            }
+            else
+                MessageBox.Show("Impossibile effettuare questa operazione durante la votazione.", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void Test_OnClick(object sender, RoutedEventArgs e)
@@ -113,7 +140,34 @@ namespace VotoTouch.WPF.Views.UserControls
 
         private void ChiudiApp_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            // chiudo l'applicazione
+            if (Stato == TAppStato.ssvVotoStart)
+            {
+                if (MessageBox.Show(App.Instance.getLang("SAPP_CLOSE"), "Question",
+                        MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
+                    Application.Current.Shutdown();
+            }
+            else
+                MessageBox.Show(App.Instance.getLang("SAPP_CLOSE_ERR"), "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        private void ChiudiPannello_OnClick(object sender, RoutedEventArgs e)
+        {
+            App.ICMsn.NotifyColleaguesSync(VSDecl.ICM_MAIN_CLOSESTATUSPANEL, null);
+        }
+
+
+        //private void button2_Click(object sender, EventArgs e)
+        //{
+        //    //StartTest();
+        //    ////TListaAzionisti azio = new TListaAzionisti(oDBDati);
+        //    ////azio.CaricaDirittidiVotoDaDatabase(10005, ref fVoto, NVoti);
+        //    ////List<TAzionista> aziofilt = azio.DammiDirittiDiVotoPerIDVotazione(1, true);
+        //    //TListaVotazioni vot = new TListaVotazioni(oDBDati);
+        //    //vot.CaricaListeVotazioni();
+        //}
+
+
     }
 }

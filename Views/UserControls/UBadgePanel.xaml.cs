@@ -31,24 +31,25 @@ namespace VotoTouch.WPF.Views.UserControls
         {
             if (e.Key == Key.Enter)
             {
-                App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, edtBadge.Text, null, null);
+                App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, edtBadge.Text);
+                edtBadge.Text = "";
                 e.Handled = true;
             }
         }
 
         private void Button999999_OnClick(object sender, RoutedEventArgs e)
         {
-            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, "999999", null, null);
+            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, "999999");
         }
 
         private void Button88889999_OnClick(object sender, RoutedEventArgs e)
         {
-            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, "88889999", null, null);
+            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, "88889999");
         }
 
         private void Button88889000_OnClick(object sender, RoutedEventArgs e)
         {
-            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, "88889900", null, null);
+            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_BADGEREAD, "88889900");
         }
 
 

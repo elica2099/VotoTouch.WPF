@@ -11,13 +11,8 @@ namespace VotoTouch.WPF
 
     public partial class MainWindow : Window
     {
-        // DR16 - Classe intera
 
-        //******************************************************************************
-        // ----------------------------------------------------------------
-        //		ROUTINE DI GESTIONE DEGLI STATI
-        // ----------------------------------------------------------------
-        //******************************************************************************
+        //		ROUTINE DI GESTIONE DEGLI STATI ----------------------------------------------------------------
 
         #region Macchina A Stati
 
@@ -62,7 +57,7 @@ namespace VotoTouch.WPF
                             // TODO: Possibili bachi: Ricaricamento Liste ad apertura votazione, per ora disabilitata
                             Logging.WriteToLog("Evento Apertura votazione");
                             Rect FFormRect = new Rect(0, 0, this.Width, this.Height);
-                            Votazioni.CaricaListeVotazioni(Data_Path, FFormRect, false);
+                            Votazioni.CaricaListeVotazioni(VTConfig.Data_Path, FFormRect, false);
                         }
                         else
                             Logging.WriteToLog("Evento Chiusura votazione");
@@ -213,7 +208,7 @@ namespace VotoTouch.WPF
                         oDBDati.SalvaTuttoInGeas(Badge_Letto, ref Azionisti);
 
                     // togli lo spinning wheel
-                    pbSalvaDati.Visible = false;
+                    //pbSalvaDati.Visible = false;
                     
                     oSemaforo.SemaforoFineOccupato();
                     Stato = TAppStato.ssvVotoFinito;
@@ -224,14 +219,12 @@ namespace VotoTouch.WPF
 
         private void timVotoAperto_Tick(object sender, EventArgs e)
         {
-            // dr11 ok
-            bool vtaperto;
             // devo verificare sul database se il voto per questa postazione è aperto
             int getvtaperto = oDBDati.CheckStatoVoto(VTConfig.NomeTotem);
             // se sono in una condizione di errore (es db non risponde) lascio il valore precedente
             if (getvtaperto != -1)
             {
-                vtaperto = getvtaperto == 1;
+                bool vtaperto = getvtaperto == 1;
                 // se sono diversi e sono all'inizio allora cambio lo stato
                 if (VTConfig.VotoAperto != vtaperto)
                 {
@@ -257,8 +250,8 @@ namespace VotoTouch.WPF
 
         private void timPopup_Tick(object sender, EventArgs e)
         {
-            timPopup.Stop();
-            pnPopupRed.Visible = false;
+            //timPopup.Stop();
+            //pnPopupRed.Visible = false;
         }
 
         #endregion

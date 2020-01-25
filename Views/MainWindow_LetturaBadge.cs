@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using VotoTouch.WPF.Views.Tools;
 
 namespace VotoTouch.WPF
 {
@@ -13,11 +14,6 @@ namespace VotoTouch.WPF
     {
 
         #region StatoBadge E Lettura Dati Utente
-
-        private void btmBadge_Click(object sender, System.EventArgs e)
-        {
-            BadgeLetto(edtBadge.Text);
-        }
 
         private void ObjDataReceived(object sender, string data)
         {
@@ -89,13 +85,13 @@ namespace VotoTouch.WPF
             // pannello stato
             if (AText == VSDecl.PANNELLO_STATO)
             {
-                MostraPannelloStato();
+                MostraPannelloStato(true, false);
                 return;
             }
             // pannello stato azionista
             if (AText == VSDecl.PANNELLO_AZION)
             {
-                MostaPannelloStatoAzionista();
+                MostraPannelloStato(false, true);
                 return;
             }
 
@@ -104,13 +100,13 @@ namespace VotoTouch.WPF
             // esco direttamente
             if (!VTConfig.VotoAperto && Stato == TAppStato.ssvBadge)
             {
-                FVSTest test = new FVSTest(AText);
-                test.ShowDialog();
-                return;
+                //FVSTest test = new FVSTest(AText);
+                //test.ShowDialog();
+                //return;
             }
 
             // Devo considerare il caso in cui le finestre messaggio sono visibili ed uscire
-            if ((frmVSMessage != null) && frmVSMessage.Visible) return;
+            if ((frmVSMessage != null) && frmVSMessage.IsVisible) return;
 
             // se ho il badge il 999999 non esce fuori (doppia lettura)
             if (Stato == TAppStato.ssvBadge && AText == VTConfig.CodiceUscita) return;
@@ -223,7 +219,7 @@ namespace VotoTouch.WPF
                     // se il badge è 999999, metto un codice a parte
                     if (AText == VTConfig.CodiceUscita)
                     {
-                        messaggio = rm.GetString("SAPP_ERR_BDGUSCITA") + VTConfig.CodiceUscita + ")";
+                        messaggio = App.Instance.getLang("SAPP_ERR_BDGUSCITA") + VTConfig.CodiceUscita + ")";
                     }
 
                     // evidenzio
@@ -231,19 +227,20 @@ namespace VotoTouch.WPF
                     Logging.WriteToLog(messaggio);
 
                     // non so se è cancellata o no, x sicurezza la ricreo
-                    if (frmVSMessage == null)
+                    if (frmVSMessage != null)
                     {
-                        frmVSMessage = new FVSMessage();
-                        this.AddOwnedForm(frmVSMessage);
+                        frmVSMessage.Hide();
+                        frmVSMessage = null;
                     }
-                    frmVSMessage.Show(messaggio);
+                    frmVSMessage = new FWSMessage(messaggio) {Owner = this};
+                    frmVSMessage.Show();
 
                     this.Focus();
                     oSemaforo.SemaforoLibero();
                     return;
                 }
 
-                edtBadge.Text = "";
+                //edtBadge.Text = "";
                 return;
             }
 
@@ -255,7 +252,7 @@ namespace VotoTouch.WPF
                     Logging.WriteToLog("--> Voto " + Badge_Letto.ToString() + " terminato.");
                     TornaInizio();
                 }
-                edtBadge.Text = "";
+                //edtBadge.Text = "";
                 return;
             }
 
@@ -302,7 +299,7 @@ namespace VotoTouch.WPF
                     {
                         Logging.WriteToLog("--> Voto " + Badge_Letto.ToString() + " Annullato (88889999).");
                         TornaInizio();
-                        edtBadge.Text = "";
+                        //edtBadge.Text = "";
                     }
                 }
                 return;
@@ -326,7 +323,7 @@ namespace VotoTouch.WPF
                                 MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
             {
                 TornaInizio();
-                edtBadge.Text = "";
+                //edtBadge.Text = "";
                 LocalAbilitaVotazDifferenziataSuRichiesta = true;
             }
         }
@@ -349,7 +346,7 @@ namespace VotoTouch.WPF
             Stato = TAppStato.ssvSalvaVoto;
             UscitaInVotazione = true;
             CambiaStato();
-            edtBadge.Text = "";
+            //edtBadge.Text = "";
         }
 
         #endregion

@@ -62,7 +62,13 @@
     <Compile Include="Command\InterClassMessenger.cs" />
     <Compile Include="Command\Messenger.cs" />
     <Compile Include="Command\RelayCommand.cs" />
+    <Compile Include="Common\CConverter.cs" />
     <Compile Include="Common\CRuntimePolicyHelper.cs" />
+    <Compile Include="Helpers\WpfScreenHelper\ExternDll.cs" />
+    <Compile Include="Helpers\WpfScreenHelper\MouseHelper.cs" />
+    <Compile Include="Helpers\WpfScreenHelper\NativeMethods.cs" />
+    <Compile Include="Helpers\WpfScreenHelper\Screen.cs" />
+    <Compile Include="Helpers\WpfScreenHelper\SystemInformation.cs" />
     <Compile Include="Tipi_Voto\CWBaseTipoVoto.cs" />
     <Compile Include="Tipi_Voto\CWTipoVoto_AConferma.cs" />
     <Compile Include="Tipi_Voto\CWTipoVoto_AStart.cs" />
@@ -101,6 +107,10 @@
     <Compile Include="Views\UserControls\UStatusPanel.xaml.cs">
       <DependentUpon>UStatusPanel.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\CommonDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\Languages-Design.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -182,6 +192,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\fa-regular-400.ttf" />
+    <Resource Include="Resources\fa-solid-900.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

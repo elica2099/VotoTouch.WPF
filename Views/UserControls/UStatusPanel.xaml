@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VotoTouch.WPF.Views.UserControls"
              mc:Ignorable="d" 
+             Background="Gainsboro"
              d:DesignHeight="350" d:DesignWidth="600"
              Height="700" Width="350">
     <Grid>
@@ -16,7 +17,9 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"
                    Text="Stato applicazione" />
-        
+        <Button Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0" Width="60"
+                Height="36" Content="Chiudi Pannello" Click="ChiudiPannello_OnClick" />
+
         <ListBox Grid.Row="1" Margin="3" x:Name="listBox" />
 
         <Button Grid.Row ="2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100"
