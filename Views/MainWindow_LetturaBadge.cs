@@ -87,7 +87,7 @@ namespace VotoTouch.WPF
             // poi verifico se è stato premuto
             if (AText == VSDecl.CONFIGURA)
             {
-                timConfigura.Start();
+                App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_MAIN_SHOWCONFIG, null);
                 return;
             }
             // pannello stato

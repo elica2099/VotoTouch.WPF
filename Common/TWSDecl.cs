@@ -173,6 +173,7 @@ namespace VotoTouch.WPF
         #region InterClassMessages Messages
         internal const string ICM_MAIN_BADGEREAD = "ICM_MainBadgeRead";
         internal const string ICM_MAIN_CLOSESTATUSPANEL = "ICM_MainCloseStatusPanel";
+        internal const string ICM_MAIN_SHOWCONFIG = "ICM_MainShowConfig";
         #endregion
 
         // language constants

@@ -41,7 +41,7 @@ namespace VotoTouch.WPF
         // timer di disaccoppiamento
         //private DispatcherTimer timLetturaBadge;
         private DispatcherTimer timCambiaStato;
-        private DispatcherTimer timConfigura;
+        //private DispatcherTimer timConfigura;
         private DispatcherTimer timAutoRitorno;
         private DispatcherTimer timPopup;
         private DispatcherTimer timVotoAperto;
@@ -165,8 +165,8 @@ namespace VotoTouch.WPF
             timCambiaStato = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
             timCambiaStato.Tick += timCambiaStato_Tick;
             // timer di configurazione
-            timConfigura = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
-            timConfigura.Tick += timConfigura_Tick;
+            //timConfigura = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
+            //timConfigura.Tick += timConfigura_Tick;
             // timer di autoritorno
             timAutoRitorno = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(VTConfig.TimeAutoRitornoVoto) };
             timAutoRitorno.Tick += timAutoRitorno_Tick;
@@ -433,6 +433,9 @@ namespace VotoTouch.WPF
                         stp = null;
                     }
                     break;
+                case VSDecl.ICM_MAIN_SHOWCONFIG:
+                    if (Stato == TAppStato.ssvBadge) MostraFinestraConfig();
+                    break;
             }
         }
 
@@ -639,12 +642,6 @@ namespace VotoTouch.WPF
         // CONFIGURAZIONE ok ----------------------------------------------------------------
 
         #region Finestra Configurazione
-
-        private void timConfigura_Tick(object sender, EventArgs e)
-        {
-            timConfigura.Stop();
-            if (Stato == TAppStato.ssvBadge) MostraFinestraConfig();
-        }
 
         private void MostraFinestraConfig()
         {
