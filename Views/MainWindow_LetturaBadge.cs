@@ -65,8 +65,6 @@ namespace VotoTouch.WPF
         private void BadgeLetto(string AText)
         {
             //DR12 OK, aggiunto solo controllo badge->999999
-            int Badge_Lettura;
-            string codimp, bbadge;
             int ErrorFlag = 0;
 
             // allora prima di tutto controllo se c'è stato un comando di Reset Votazione cioè 88889999
@@ -123,10 +121,11 @@ namespace VotoTouch.WPF
             if (Stato == TAppStato.ssvBadge)
             {
                 // metto una variabile globale non si sa mai
-                Badge_Lettura = -1;
-                codimp = "00";  // codice impianto universale
+                int Badge_Lettura = -1;
+                string codimp = "00";
                 // ok, qua devo fare dei controlli sul codice impianto e sul badge
                 // se la lunghezza è giusta allora estraggo le due parti e controllo
+                string bbadge;
                 if (AText.Length >= (VTConfig.BadgeLen + VTConfig.CodImpianto.Length))
                 {
                     // estraggo il badge, parto sempre da sinistra
@@ -191,8 +190,8 @@ namespace VotoTouch.WPF
                         else  // if (DammiUtente())
                             ErrorFlag = ErrorFlag | 0x08;  // setto l'errore
 
-                            //MessageBox.Show(Azionisti.DammiMaxNumeroDirittiDiVotoTotali().ToString() + " - " +
-                            //                VTConfig.MaxDeleghe);
+                        //MessageBox.Show(Azionisti.DammiMaxNumeroDirittiDiVotoTotali().ToString() + " - " +
+                        //                VTConfig.MaxDeleghe);
 
                     }  // if (Controllato)
                 } // if (ErrorFlag == 0)

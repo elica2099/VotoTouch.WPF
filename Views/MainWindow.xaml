@@ -11,6 +11,10 @@
         Loaded="MainWindow_Loaded"
         PreviewKeyDown="MainWindow_OnPreviewKeyDown"
         PreviewMouseMove="MainWindow_OnPreviewMouseMove"
+        PreviewMouseDown="MainWindow_OnPreviewMouseDown"
+        PreviewMouseUp="MainWindow_OnPreviewMouseUp"
+        MouseDown="MainWindow_OnMouseDown"
+        MouseUp="MainWindow_OnMouseUp"
         Height="600" Width="900">
 
     <Window.Resources>

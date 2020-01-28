@@ -19,13 +19,6 @@ namespace VotoTouch.WPF
     {
         // DR16 - Classe intera
 
-        //	GESTIONE DELL'AREA SENSIBILE ----------------------------------------------------------
-
-        private void frmMain_MouseUp(object sender, MouseEventArgs e)
-        {
-            // chiamo il metodo in CTouchscreen che mi ritornerà eventi diversi a seconda del caso
-            oVotoTouch.TastoPremuto(sender, e, Stato);
-        }
 
         //   Creazione dei controlli ----------------------------------------------------------------
 
@@ -114,7 +107,25 @@ namespace VotoTouch.WPF
                 new Binding("TxtDirittiStartVis"){ Converter = new BooleanToHiddenVisibility() });
             mainGrid.Children.Add(lblDirittiStart);
             mainGrid.RegisterName(lblDirittiStart.Name, lblDirittiStart);
-            
+
+            // nome lblDirittiStartMin
+            TextBlock lblDirittiStartMin = new TextBlock()
+            {
+                Name = "lblDirittiStartMin",
+                Text = "lblDirittiStartMin",
+                Visibility = Visibility.Hidden,
+                TextWrapping = TextWrapping.Wrap,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Background = VTConfig.IsPaintTouch ? Brushes.Tan : Brushes.Transparent,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblDirittiStartMin, TextBlock.TextProperty, new Binding("TxtDirittiStartMin"));
+            BindingOperations.SetBinding(lblDirittiStartMin, TextBlock.VisibilityProperty, 
+                new Binding("TxtDirittiStartMinVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblDirittiStartMin);
+            mainGrid.RegisterName(lblDirittiStartMin.Name, lblDirittiStartMin);
+
             // lblDirittiDiVoto
             TextBlock lblDirittiDiVoto = new TextBlock()
             {
@@ -132,7 +143,7 @@ namespace VotoTouch.WPF
                 new Binding("TxtDirittiDiVotoVis"){ Converter = new BooleanToHiddenVisibility() });
             mainGrid.Children.Add(lblDirittiDiVoto);
             mainGrid.RegisterName(lblDirittiDiVoto.Name, lblDirittiDiVoto);
-            
+
             // lbConferma
             TextBlock lblConferma = new TextBlock()
             {
@@ -204,7 +215,57 @@ namespace VotoTouch.WPF
             mainGrid.Children.Add(lblNomeAzStart);
             mainGrid.RegisterName(lblNomeAzStart.Name, lblNomeAzStart);
 
+            // multiselezione/candidati
+            // lblNSelezioni
+            TextBlock lblNSelezioni = new TextBlock()
+            {
+                Name = "lblNSelezioni",
+                Text = "lblNSelezioni",
+                Visibility = Visibility.Hidden,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                TextWrapping = TextWrapping.Wrap,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblNSelezioni, TextBlock.TextProperty, new Binding("TxtNSelezioni"));
+            BindingOperations.SetBinding(lblNSelezioni, TextBlock.VisibilityProperty, 
+                new Binding("TxtNSelezioniVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblNSelezioni);
+            mainGrid.RegisterName(lblNSelezioni.Name, lblNSelezioni);
 
+            // lblCandidati_PresCDA
+            TextBlock lblCandidati_PresCDA = new TextBlock()
+            {
+                Name = "lblCandidati_PresCDA",
+                Text = "lblCandidati_PresCDA",
+                Visibility = Visibility.Hidden,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                TextWrapping = TextWrapping.Wrap,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblCandidati_PresCDA, TextBlock.TextProperty, new Binding("TxtCandidati_PresCDA"));
+            BindingOperations.SetBinding(lblCandidati_PresCDA, TextBlock.VisibilityProperty, 
+                new Binding("TxtCandidati_PresCDAVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblCandidati_PresCDA);
+            mainGrid.RegisterName(lblCandidati_PresCDA.Name, lblCandidati_PresCDA);
+
+            // lblCandidati_Altern
+            TextBlock lblCandidati_Altern = new TextBlock()
+            {
+                Name = "lblCandidati_Altern",
+                Text = "lblCandidati_Altern",
+                Visibility = Visibility.Hidden,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                TextWrapping = TextWrapping.Wrap,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(20,20,0,0)
+            };
+            BindingOperations.SetBinding(lblCandidati_Altern, TextBlock.TextProperty, new Binding("TxtCandidati_Altern"));
+            BindingOperations.SetBinding(lblCandidati_Altern, TextBlock.VisibilityProperty, 
+                new Binding("TxtCandidati_AlternVis"){ Converter = new BooleanToHiddenVisibility() });
+            mainGrid.Children.Add(lblCandidati_Altern);
+            mainGrid.RegisterName(lblCandidati_Altern.Name, lblCandidati_Altern);
         }
 
         //   Caricamento Tema da VotoTheme ----------------------------------------------------------------
@@ -221,6 +282,9 @@ namespace VotoTouch.WPF
             TextBlock lblDirittiStart = (TextBlock) this.mainGrid.FindName("lblDirittiStart");
             if (lblDirittiStart != null) oVotoTheme.SetTheme_lbDirittiStart(ref lblDirittiStart);
 
+            TextBlock lblDirittiStartMin = (TextBlock) this.mainGrid.FindName("lblDirittiStartMin");
+            if (lblDirittiStartMin != null) oVotoTheme.SetTheme_lbDirittiStartMin(ref lblDirittiStartMin);
+
             TextBlock lblDirittiDiVoto = (TextBlock) this.mainGrid.FindName("lblDirittiDiVoto");
             if (lblDirittiDiVoto != null) oVotoTheme.SetTheme_lbDirittiDiVoto(ref lblDirittiDiVoto);
 
@@ -228,13 +292,23 @@ namespace VotoTouch.WPF
             if (lblConferma != null) oVotoTheme.SetTheme_lbConferma(ref lblConferma);
 
             TextBlock lblConfermaUp = (TextBlock) this.mainGrid.FindName("lblConfermaUp");
-            if (lblConfermaUp != null) oVotoTheme.SetTheme_lbConferma(ref lblConfermaUp);
+            if (lblConfermaUp != null) oVotoTheme.SetTheme_lbConfermaUp(ref lblConfermaUp);
 
             TextBlock lblConfermaNVoti = (TextBlock) this.mainGrid.FindName("lblConfermaNVoti");
-            if (lblConfermaNVoti != null) oVotoTheme.SetTheme_lbConferma(ref lblConfermaNVoti);
+            if (lblConfermaNVoti != null) oVotoTheme.SetTheme_lbConfermaNVoti(ref lblConfermaNVoti);
 
             TextBlock lblNomeAzStart = (TextBlock) this.mainGrid.FindName("lblNomeAzStart");
-            if (lblNomeAzStart != null) oVotoTheme.SetTheme_lbConferma(ref lblNomeAzStart);
+            if (lblNomeAzStart != null) oVotoTheme.SetTheme_lbNomeAzStart(ref lblNomeAzStart);
+
+            TextBlock lblNSelezioni = (TextBlock) this.mainGrid.FindName("lblNSelezioni");
+            if (lblNSelezioni != null) oVotoTheme.SetTheme_lbNSelezioni(ref lblNSelezioni);
+
+            TextBlock lblCandidati_PresCDA = (TextBlock) this.mainGrid.FindName("lblCandidati_PresCDA");
+            if (lblCandidati_PresCDA != null) oVotoTheme.SetTheme_lbCandidati_PresCDA(ref lblCandidati_PresCDA);
+
+            TextBlock lblCandidati_Altern = (TextBlock) this.mainGrid.FindName("lblCandidati_Altern");
+            if (lblCandidati_Altern != null) oVotoTheme.SetTheme_lbCandidati_Altern(ref lblCandidati_Altern);
+
         }
 
         //  SETTAGGIO DEI COMPONENTI A INIZIO CAMBIO STATO ----------------------------------------------------------------
@@ -247,10 +321,15 @@ namespace VotoTouch.WPF
             TxtConfermaNVotiVis = AVisibile;
             // label del differenziato
             TxtDirittiStartVis = AVisibile;
+            TxtDirittiStartMinVis = AVisibile;
             //TxtNomeVis = AVisibile;
             TxtNomeDisgiuntoVis = AVisibile;
             TxtDisgiuntoRimangonoVis = AVisibile;
             TxtNomeAzStartVis = AVisibile;
+
+            TxtNSelezioniVis = AVisibile;
+            TxtCandidati_PresCDAVis = AVisibile;
+            TxtCandidati_AlternVis = AVisibile;
 
             // se non è in demo esco
             if (!VTConfig.IsDemoMode) return;
@@ -303,6 +382,17 @@ namespace VotoTouch.WPF
             }
             // diritti di voto
             TxtDirittiStartVis = true;
+            // faccio il paint del numero di diritti di voto nel bottone in basso a sx , 
+            // in questo caso uso un paint e non una label per un problema grafico di visibilità
+            int VVoti = VTConfig.ModoAssemblea == VSDecl.MODO_AGM_POP
+                ? Azionisti.DammiMaxNumeroDirittiDiVotoTotali()
+                : Azionisti.DammiMaxNumeroVotiTotali();
+            TxtDirittiStartMin = $"{VVoti:N0}";
+            if (Azionisti.HaDirittiDiVotoMultipli())
+            {
+                TxtDirittiStartMin += "(d)";
+            }
+            TxtDirittiStartMinVis = true;
             // in funzione del n. di deleghe metto
             if (Azionisti.HaDirittiDiVotoMultipli())
             {
@@ -325,7 +415,6 @@ namespace VotoTouch.WPF
                 oVotoImg.LoadImages(VSDecl.IMG_Votostart1);
             }
         }
-
 
         // CONFERMA/SALVATAGGIO DEL VOTO ----------------------------------------------------------------
 

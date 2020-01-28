@@ -455,7 +455,7 @@ namespace VotoTouch.WPF
                 {
                     // paint delle label Aggiuntive
                     //oVotoTheme.PaintlabelProposteCdaAlt(sender, e, ref Votazioni.VotoCorrente, true);
-                    oVotoTheme.PaintlabelProposteCdaAlt(sender, e, Votazioni.VotoCorrente, true);
+                   // oVotoTheme.PaintlabelProposteCdaAlt(sender, e, Votazioni.VotoCorrente, true);
                     // paint dei Bottoni
                     oVotoTouch.PaintButtonCandidatoPagina(sender, e, false, oVotoTheme.BaseFontCandidato, 
                         oVotoTheme.BaseFontCandidatoBold, oVotoTheme.BaseColorCandidato);
@@ -464,8 +464,8 @@ namespace VotoTouch.WPF
                 if (Stato == TAppStato.ssvVoto && Votazioni.VotoCorrente.TipoVoto == VSDecl.VOTO_MULTICANDIDATO)
                 {
                     // paint delle label Aggiuntive
-                    oVotoTheme.PaintlabelProposteCdaAlt(sender, e, Votazioni.VotoCorrente, false);
-                    oVotoTheme.PaintlabelNSelezioni(sender, e, Votazioni.VotoCorrente, false);
+                    //oVotoTheme.PaintlabelProposteCdaAlt(sender, e, Votazioni.VotoCorrente, false);
+                    //oVotoTheme.PaintlabelNSelezioni(sender, e, Votazioni.VotoCorrente, false);
                     // paint dei bottoni
                     oVotoTouch.PaintButtonCandidatoPagina(sender, e, true, oVotoTheme.BaseFontCandidato,
                         oVotoTheme.BaseFontCandidatoBold, oVotoTheme.BaseColorCandidato);
@@ -477,21 +477,21 @@ namespace VotoTouch.WPF
                 //    oVotoTouch.PaintButtonCandidatoSingola(sender, e);
                 
                 // se sono nello stato di votostart e il n. di voti è > 1
-                if (Stato == TAppStato.ssvVotoStart) // && Azionisti.HaDirittiDiVotoMultipli())
-                {
-                    // faccio il paint del numero di diritti di voto nel bottone in basso a sx , 
-                    // in questo caso uso un paint e non una label per un problema grafico di visibilità
-                    int VVoti = VTConfig.ModoAssemblea == VSDecl.MODO_AGM_POP
-                                   ? Azionisti.DammiMaxNumeroDirittiDiVotoTotali()
-                                   : Azionisti.DammiMaxNumeroVotiTotali();
-                    string ss = string.Format("{0:N0}", VVoti.ToString());
-                    if (Azionisti.HaDirittiDiVotoMultipli())
-                    {
-                        ss += "(d)";
-                        oVotoTheme.PaintDirittiDiVoto(sender, e, ss);
-                    }
-                    //oVotoTheme.PaintDirittiDiVoto(sender, e, VVoti);
-                }
+                //if (Stato == TAppStato.ssvVotoStart) // && Azionisti.HaDirittiDiVotoMultipli())
+                //{
+                //    // faccio il paint del numero di diritti di voto nel bottone in basso a sx , 
+                //    // in questo caso uso un paint e non una label per un problema grafico di visibilità
+                //    int VVoti = VTConfig.ModoAssemblea == VSDecl.MODO_AGM_POP
+                //                   ? Azionisti.DammiMaxNumeroDirittiDiVotoTotali()
+                //                   : Azionisti.DammiMaxNumeroVotiTotali();
+                //    string ss = string.Format("{0:N0}", VVoti.ToString());
+                //    if (Azionisti.HaDirittiDiVotoMultipli())
+                //    {
+                //        ss += "(d)";
+                //        oVotoTheme.PaintDirittiDiVoto(sender, e, ss);
+                //    }
+                //    //oVotoTheme.PaintDirittiDiVoto(sender, e, VVoti);
+                //}
             }
 
             // se è demo devo stampare una label
@@ -641,7 +641,7 @@ namespace VotoTouch.WPF
 
         // CONFIGURAZIONE ok ----------------------------------------------------------------
 
-        #region Finestra Configurazione
+        #region Finestra Configurazione/semaforo
 
         private void MostraFinestraConfig()
         {
@@ -887,7 +887,6 @@ namespace VotoTouch.WPF
             return new string(array);
         }
 
-        #endregion
 
         private void MainWindow_OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
@@ -898,6 +897,8 @@ namespace VotoTouch.WPF
             lblMouse.Text = "ScreenActual: " + this.ActualWidth + " / " + (int)this.ActualHeight +
                             "Mouse: " + (int)dd.X + " / " + (int)dd.Y;
         }
+
+        #endregion
 
         //  property of the UI  ---------------------------------------------------------------------------------
 
@@ -992,6 +993,28 @@ namespace VotoTouch.WPF
             }
         }
 
+        private string _TxtDirittiStartMin;  
+        public string TxtDirittiStartMin
+        {
+            get => _TxtDirittiStartMin;
+            set
+            {
+                _TxtDirittiStartMin = value;
+                OnPropertyChanged("TxtDirittiStartMin");
+            }
+        }
+
+        private bool _TxtDirittiStartMinVis;  
+        public bool TxtDirittiStartMinVis
+        {
+            get => _TxtDirittiStartMinVis;
+            set
+            {
+                _TxtDirittiStartMinVis = value;
+                OnPropertyChanged("TxtDirittiStartMinVis");
+            }
+        }
+
         private string _TxtDirittiDiVoto;  
         public string TxtDirittiDiVoto
         {
@@ -1080,7 +1103,6 @@ namespace VotoTouch.WPF
             }
         }
 
-
         private string _TxtNomeAzStart;  
         public string TxtNomeAzStart
         {
@@ -1103,6 +1125,71 @@ namespace VotoTouch.WPF
             }
         }
 
+        private string _TxtNSelezioni;  
+        public string TxtNSelezioni
+        {
+            get => _TxtNSelezioni;
+            set
+            {
+                _TxtNSelezioni = value;
+                OnPropertyChanged("TxtNSelezioni");
+            }
+        }
+
+        private bool _TxtNSelezioniVis;  
+        public bool TxtNSelezioniVis
+        {
+            get => _TxtNSelezioniVis;
+            set
+            {
+                _TxtNSelezioniVis = value;
+                OnPropertyChanged("TxtNSelezioniVis");
+            }
+        }
+
+        private string _TxtCandidati_PresCDA;  
+        public string TxtCandidati_PresCDA
+        {
+            get => _TxtCandidati_PresCDA;
+            set
+            {
+                _TxtCandidati_PresCDA = value;
+                OnPropertyChanged("TxtCandidati_PresCDA");
+            }
+        }
+
+        private bool _TxtCandidati_PresCDAVis;  
+        public bool TxtCandidati_PresCDAVis
+        {
+            get => _TxtCandidati_PresCDAVis;
+            set
+            {
+                _TxtCandidati_PresCDAVis = value;
+                OnPropertyChanged("TxtCandidati_PresCDAVis");
+            }
+        }
+
+        private string _TxtCandidati_Altern;  
+        public string TxtCandidati_Altern
+        {
+            get => _TxtCandidati_Altern;
+            set
+            {
+                _TxtCandidati_Altern = value;
+                OnPropertyChanged("TxtCandidati_Altern");
+            }
+        }
+
+        private bool _TxtCandidati_AlternVis;  
+        public bool TxtCandidati_AlternVis
+        {
+            get => _TxtCandidati_AlternVis;
+            set
+            {
+                _TxtCandidati_AlternVis = value;
+                OnPropertyChanged("TxtCandidati_AlternVis");
+            }
+        }
 
         #endregion
 

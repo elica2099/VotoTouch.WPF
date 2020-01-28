@@ -276,70 +276,7 @@ namespace VotoTouch.WPF
         //  PAINT DELLE LABEL
         //-----------------------------------------------------------------------------
 
-        // tengo queste due funzioni come esempio
-        //public void PaintDirittiDiVotoPiuOld(object sender, PaintEventArgs e, int Diritti)
-        //{
-        //    // DR11 Ok
-        //    // ok questo metodo viene chiamato da paint della finestra principale 
-        //    // per stampare i diritti di voto
-        //    Rectangle a = new Rectangle(); //TTZone a = new TTZone();
-        //    StringFormat stringFormat = new StringFormat();
-        //    stringFormat.Alignment = StringAlignment.Center;
-        //    stringFormat.LineAlignment = StringAlignment.Center;
-
-        //    if (IsThemed && dtTema.Rows.Count > 0)  // se ha il tema la cerco nella datatable
-        //    {
-        //        // metto un try non si sa mai
-        //        try
-        //        {
-        //            foreach (DataRow r in dtTema.Select("Oggetto = 'lbDirittiStartMin'"))
-        //            {
-        //                GetZone(ref a, Convert.ToInt32(r["ULeft"]), Convert.ToInt32(r["UTop"]),
-        //                               Convert.ToInt32(r["URight"]), Convert.ToInt32(r["UBottom"]));
-        //                Brush myBrush = new System.Drawing.SolidBrush(System.Drawing.ColorTranslator.FromHtml(r["Color"].ToString()));
-        //                // font
-        //                FontStyle fs = FontStyle.Regular;
-        //                if (Convert.ToBoolean(r["Bold"])) fs = FontStyle.Bold;
-        //                Font myFont1 = new Font(r["Font"].ToString(), Convert.ToSingle(r["Point"]), fs);
-        //                e.Graphics.DrawString(Diritti.ToString(), myFont1, myBrush, a, stringFormat);
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            GetZone(ref a, 16, 60, 34, 77);
-        //            Font myFont = new System.Drawing.Font("Tahoma", 66, FontStyle.Bold);
-        //            e.Graphics.DrawString(Diritti.ToString(), myFont, Brushes.Firebrick, a, stringFormat);
-        //        }
-
-        //    }
-        //    else
-        //    {
-        //        GetZone(ref a, 16, 60, 34, 77);
-        //        Font myFont = new System.Drawing.Font("Tahoma", 66, FontStyle.Bold);
-        //        e.Graphics.DrawString(Diritti.ToString(), myFont, Brushes.Firebrick, a, stringFormat);
-        //    }
-        //}
-
-        //public void PaintDirittiDiVotoOld(object sender, PaintEventArgs e, int Diritti)
-        //{
-        //    Rectangle a = new Rectangle(); //TTZone a = new TTZone();
-        //    StringFormat stringFormat = new StringFormat();
-        //    stringFormat.Alignment = StringAlignment.Center;
-        //    stringFormat.LineAlignment = StringAlignment.Center;
-        //    // sono costretto a crearmi una finta label
-        //    Label c = new Label();
-        //    GetZone(ref a, 16, 60, 34, 77);
-        //    c.ForeColor = Color.Firebrick;
-        //    c.Font = new System.Drawing.Font("Tahoma", 66, FontStyle.Bold);
-        //    // cerco il tema
-        //    if (IsThemed) { if (!ThemeToLabel("lbDirittiStartMin", ref c, ref a)) GetZone(ref a, 16, 60, 34, 77); }
-        //    Brush myBrush = new System.Drawing.SolidBrush(c.ForeColor);
-
-        //    e.Graphics.DrawString(Diritti.ToString(), c.Font, myBrush, a, stringFormat);
-        //    // cancello la label
-        //    c.Dispose();
-        //}
-
+        /*
         // in questo caso uso il paint invce della label per un problema grafico
         public void PaintDirittiDiVoto(object sender, PaintEventArgs e, int Diritti)
         {
@@ -402,11 +339,13 @@ namespace VotoTouch.WPF
             e.Graphics.DrawString(ss, th.AFont, myBrush, fx, fy); //th.a, stringFormat);
             th.AFont.Dispose();
         }
+        */
 
         //-----------------------------------------------------------------------------
         //  PAINT DELLE LABEL MULTICANDIDATO
         //-----------------------------------------------------------------------------
 
+        /*
         public void PaintlabelNSelezioni(object sender, PaintEventArgs e, TNewVotazione vt, bool Candidato)
         {
             int nsel = vt.NMultiSelezioni;
@@ -421,6 +360,7 @@ namespace VotoTouch.WPF
             Font myFont3 = new System.Drawing.Font("Arial", 20, FontStyle.Regular);
             e.Graphics.DrawString("scelte espresse", myFont3, myBrush1, 534, 75);//rr, stringFormat);
         }
+        
 
         public void PaintlabelProposteCdaAlt(object sender, PaintEventArgs e, TNewVotazione vt, bool Candidato)
         {
@@ -474,6 +414,7 @@ namespace VotoTouch.WPF
             if (th.AFont != null)
                 th.AFont.Dispose();
         }
+        */
 
         //-----------------------------------------------------------------------------
         //  SETTING DELLE LABEL
@@ -485,6 +426,16 @@ namespace VotoTouch.WPF
             Rect a = new Rect();
             //GetZone(ref a, 20, 26, 38, 42);
             if (IsThemed) { if (!ThemeToLabel("lbDirittiStart", ref c, ref a)) GetZone(ref a, 20, 26, 38, 42); }
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
+        }
+
+        public void SetTheme_lbDirittiStartMin(ref TextBlock c)
+        {
+            // La label dell'apertura del voto grande con i diritti di voto
+            Rect a = new Rect();
+            if (IsThemed) { if (!ThemeToLabel("lbDirittiStartMin", ref c, ref a)) GetZone(ref a, 20, 26, 38, 42); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Width = a.Height;
@@ -576,6 +527,36 @@ namespace VotoTouch.WPF
             Rect a = new Rect();
             //GetZone(ref a, 1, 30, 99, 40);
             if (IsThemed) { if (!ThemeToLabel("lbNomeAzStart", ref c, ref a)) GetZone(ref a, 1, 30, 99, 40); }
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
+        }
+
+        public void SetTheme_lbNSelezioni(ref TextBlock c)
+        {
+            // mi arriva un controllo qualsiasi
+            Rect a = new Rect();
+            if (IsThemed) { if (!ThemeToLabel("lbNSelezioni", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
+        }
+
+        public void SetTheme_lbCandidati_PresCDA(ref TextBlock c)
+        {
+            // mi arriva un controllo qualsiasi
+            Rect a = new Rect();
+            if (IsThemed) { if (!ThemeToLabel("lbCandidati_PresCDA", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Width = a.Height;
+        }
+
+        public void SetTheme_lbCandidati_Altern(ref TextBlock c)
+        {
+            // mi arriva un controllo qualsiasi
+            Rect a = new Rect();
+            if (IsThemed) { if (!ThemeToLabel("lbCandidati_Altern", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Width = a.Height;

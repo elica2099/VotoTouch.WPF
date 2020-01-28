@@ -5,6 +5,7 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using VotoTouch.WPF.Views.Tools;
 
 namespace VotoTouch.WPF
@@ -14,6 +15,29 @@ namespace VotoTouch.WPF
     public partial class MainWindow : Window
     {
         // DR16 - Classe intera
+
+        //	GESTIONE DELL'AREA SENSIBILE ----------------------------------------------------------
+
+        private void MainWindow_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // non so se serve
+        }
+
+        private void MainWindow_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            // non so se serve
+        }
+
+        private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // verifica e crea l'adorner dell'area premuta
+        }
+
+        private void MainWindow_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            // chiamo il metodo in CTouchscreen che mi ritornerà eventi diversi a seconda del caso
+            oVotoTouch.TastoPremuto(sender, e, Stato);
+        }
 
         //	EVENTI DI PRESSIONE SCHERMO DA CTOUCHSCREEN ----------------------------------------------------------------
 
@@ -29,7 +53,7 @@ namespace VotoTouch.WPF
             // ricalcolo, non serve più con la nuova gestione pagine
             //oVotoTouch.CalcolaTouch(this, Stato, ref FParVoto[CurrVoteIDX], DatiUsr.utente_voti > 1);
             // devo ridisegnare tutto, qui lo voglio
-            this.Invalidate();
+            this.InvalidateVisual();
         }
 
         public void onPremutoVotaNormale(object source, int VParam)
@@ -144,7 +168,7 @@ namespace VotoTouch.WPF
         public void onPremutoVotoMulti(object source, int VParam)
         {
             // mi serve per il repaint per settare o meno i tasti verdi
-            this.Invalidate();
+            this.InvalidateVisual();
         }
 
         public void onPremutoSchedaBianca(object source, int VParam)
@@ -245,10 +269,7 @@ namespace VotoTouch.WPF
             FMsgExit = null;
         }
 
-        // ----------------------------------------------------------------
-        //	 CONFERMA - ANNULLA VOTI
-        //      versione con SalvaVotoNonConfermato
-        // ----------------------------------------------------------------
+        //	 CONFERMA - ANNULLA  -----------------------------------------------------------------
 
         public void onPremutoConferma(object source, int VParam)
         {

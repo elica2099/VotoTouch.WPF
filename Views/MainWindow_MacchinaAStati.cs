@@ -133,6 +133,52 @@ namespace VotoTouch.WPF
                         TxtDirittiDiVoto = dir_riman.ToString() + App.Instance.getLang("SAPP_VOTE_D_DIRITTI");
                         if (IsVotazioneDifferenziata) TxtDirittiDiVoto = "Voto Differenziato \n " + TxtDirittiDiVoto + " rimanenti";
                         TxtDirittiDiVotoVis = true;
+        
+                        // se la votazione corrente è di candidato su più pagine disegno i rettangoli
+                        if (Stato == TAppStato.ssvVoto && 
+                            (Votazioni.VotoCorrente.TipoVoto == VSDecl.VOTO_CANDIDATO ||
+                             Votazioni.VotoCorrente.TipoVoto == VSDecl.VOTO_CANDIDATO_SING))
+                        {
+                            // ora lbCandidati_PresCDA
+                            if (Votazioni.VotoCorrente.NPresentatoCDA > 0)
+                            {
+                                TxtCandidati_PresCDA = "Proposto (Cooptato) C.d.A.";
+                                TxtCandidati_PresCDAVis = true;
+                            }
+                            // Proposte alternative
+                            if ((Votazioni.VotoCorrente.NListe - Votazioni.VotoCorrente.NPresentatoCDA) > 0)
+                            {
+                                TxtCandidati_Altern = "Candidati Alternativi";
+                                TxtCandidati_PresCDAVis = true;
+                            }
+                        }
+
+                        // se è multicandidato metto le labelapposite
+                        if (Votazioni.VotoCorrente.TipoVoto == VSDecl.VOTO_MULTICANDIDATO)
+                        {
+                            // label nselezioni
+                            int nsel = Votazioni.VotoCorrente.NMultiSelezioni;
+                            //if (nsel >= vt.MinScelte && nsel <= vt.MaxScelte)
+                            //    myBrush1 = new System.Drawing.SolidBrush(Color.Green);  //E3E3E3
+                            //else
+                            //    myBrush1 = new System.Drawing.SolidBrush(Color.Red);  //E3E3E3
+                            TxtNSelezioni = nsel + " scelte espresse";
+                            TxtNSelezioniVis = true;
+
+                            // ora lbCandidati_PresCDA
+                            if (Votazioni.VotoCorrente.NPresentatoCDA > 0)
+                            {
+                                TxtCandidati_PresCDA = "Proposto (Cooptato) C.d.A.";
+                                TxtCandidati_PresCDAVis = true;
+                            }
+                            // Proposte alternative
+                            if ((Votazioni.VotoCorrente.NListe - Votazioni.VotoCorrente.NPresentatoCDA) > 0)
+                            {
+                                TxtCandidati_Altern = "Proposte Alternative";
+                                TxtCandidati_PresCDAVis = true;
+                            }
+                        }
+
                     }
                     else
                     {
