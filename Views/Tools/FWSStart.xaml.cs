@@ -10,12 +10,10 @@ namespace VotoTouch.WPF.Views.Tools
     public partial class FWSStart : Window
     {
         
-        public FWSStart(Window MainWindow)
+        public FWSStart()
         {
             InitializeComponent();
             
-            this.Owner = MainWindow;
-
             listBox1.Items.Clear();
             listBox1.Items.Add("Informazioni sulla versione: ");
             listBox1.Items.Add("");

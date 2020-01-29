@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Media;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -43,7 +44,10 @@ namespace VotoTouch.WPF
         // per la multivotazione
         public bool MultiNoPrint;
         public int Multi;
-        public Rectangle CKRect;
+        public Rect CKRect;
+
+        public Rect zone => new Rect(new Point(x, y), new Point(r,b));
+
 
         public TTZone()
         {
@@ -107,14 +111,9 @@ namespace VotoTouch.WPF
         public event ehTouchWatchDog TouchWatchDog;
 
         public bool PaintTouchOnScreen;
-        //public Rect FFormRect;         
         private ArrayList Tz;
 
-        //// oggetti conferma e inizio voto
-        //CBaseTipoVoto ClasseTipoVotoStartNorm = null;
-        //CBaseTipoVoto ClasseTipoVotoStartDiff = null;
-        //CBaseTipoVoto ClasseTipoVotoConferma = null;
-
+        /*
         public Bitmap btnBmpCand;
         public Bitmap btnBmpCandCda;
         //public Bitmap btnBmpCandArancio; 
@@ -125,6 +124,7 @@ namespace VotoTouch.WPF
         public Bitmap btnBmpTabSelez;
         public Bitmap btnBmpCDASelez;
         public Bitmap btnBmpCheck;
+        */
 
         // Gestione delle Multivotazioni
         public int MaxMultiCandSelezionabili = 0;
@@ -150,6 +150,7 @@ namespace VotoTouch.WPF
 
             PaintTouchOnScreen = false;
 
+            /*
             // ora mi creo il bottone in bmp
             Assembly myAssembly = Assembly.GetExecutingAssembly();
             Stream myStream = myAssembly.GetManifestResourceStream("VotoTouch.Resources.bottonetrasp_ok.png");
@@ -185,16 +186,7 @@ namespace VotoTouch.WPF
 
             myStream = myAssembly.GetManifestResourceStream("VotoTouch.Resources.check.png");
             btnBmpCheck = myStream != null ? new Bitmap(myStream) : new Bitmap(1, 1);
-
-            //ClasseTipoVotoStartNorm = new CTipoVoto_AStart(FFormRect);
-            //ClasseTipoVotoStartDiff = new CTipoVoto_AStart(FFormRect);
-            //ClasseTipoVotoConferma = new CTipoVoto_AConferma(FFormRect);
-
-            // gestione delle pagine
-            //CurrPag = 1;
-
-            // la variabile che indica quanti candidati si possono toccare
-            //MaxMultiCandSelezionabili = 0;
+            */
 
             // ritardo del touch
             TouchEnabled = true;
@@ -303,7 +295,8 @@ namespace VotoTouch.WPF
         #region Touch Eventi
 
         // metodo chiamato al tocco dello schermo
-        public int TastoPremuto(object sender, MouseEventArgs e, TAppStato Stato)
+        //public int TastoPremuto(object sender, MouseEventArgs e, TAppStato Stato)
+        public int TastoPremuto(Point point)
         {
             // DR12 OK
             // prima di tutto testo se TouchEnabled è false, se lo è, vuol dire che non è ancora
@@ -334,8 +327,7 @@ namespace VotoTouch.WPF
             for (int i = 0; i < Tz.Count; i++)
             {
                 a = (TTZone)Tz[i];
-
-                if ((e.X >= a.x) && (e.X <= a.r) && (e.Y >= a.y) && (e.Y <= a.b))
+                if (a.zone.Contains(point))
                 {
                     // serve per le multivotazioni
                     if (a.pag == CurrPag || a.pag == 0)
@@ -344,6 +336,16 @@ namespace VotoTouch.WPF
                         break;
                     }
                 }
+
+                //if ((e.X >= a.x) && (e.X <= a.r) && (e.Y >= a.y) && (e.Y <= a.b))
+                //{
+                //    // serve per le multivotazioni
+                //    if (a.pag == CurrPag || a.pag == 0)
+                //    {
+                //        Trovato = i;
+                //        break;
+                //    }
+                //}
 
             }
             // ok, lancio l'evento
@@ -547,7 +549,7 @@ namespace VotoTouch.WPF
                     a.Multi = 1;
                 else
                 {
-                    if (ShowPopup != null) { ShowPopup(this, "Hai espresso il numero massimo di scelte, per modificare devi deselezionarne una"); }
+                    ShowPopup?.Invoke(this, "Hai espresso il numero massimo di scelte, per modificare devi deselezionarne una");
                     SystemSounds.Beep.Play();
                 }
             }
@@ -600,12 +602,52 @@ namespace VotoTouch.WPF
         
         #endregion
 
-        // --------------------------------------------------------------
-        //  PAINTING DELLE ZONE TOUCH
-        // --------------------------------------------------------------
+        //  PAINTING DELLE ZONE TOUCH ------------------------------------------------------------------
 
         #region  PAINTING DELLE ZONE TOUCH
 
+        public void PaintOnDrawingContext(Grid control)
+        {
+            // questa routine fa il paint delle varie cose sul DravingContext della finestra
+            if (Tz == null) return;
+            // Create a DrawingGroup
+            DrawingGroup dGroup = new DrawingGroup();
+
+            // Obtain a DrawingContext from the DrawingGroup.
+            using (DrawingContext dc = dGroup.Open())
+            {
+
+                // per prima cosa evidenzio le zone sensibili del tocco, se devo
+                if (PaintTouchOnScreen)
+                {
+                    // creo la penna
+                    Pen shapeOutlinePen = new Pen(Brushes.DarkGray, 1);
+                    shapeOutlinePen.DashStyle = DashStyles.DashDot;
+                    shapeOutlinePen.Freeze();
+
+                    //Graphics g = e.Graphics;
+                    //Pen p = new Pen(Color.DarkGray) {DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot};
+
+                    foreach (TTZone a in Tz)
+                    {
+                        //a = (TTZone)t;
+                        if (a.pag == 0 || a.pag == CurrPag)
+                            dc.DrawRectangle(Brushes.Transparent, shapeOutlinePen, a.zone);
+                        //g.DrawRectangle(p, a.x, a.y, (a.r - a.x), (a.b - a.y));
+                    }
+                }
+
+
+            }
+            DrawingBrush db = new DrawingBrush(dGroup);
+            control.Background = db;
+
+
+
+
+        }
+
+        /*
         public void PaintTouch(object sender, PaintEventArgs e)
         {
             // ok questo metodo viene chiamato da paint della finestra principale 
@@ -769,8 +811,11 @@ namespace VotoTouch.WPF
                 }  //  if (a.expr >= 0)
             }  // for (int i = 0; i < Tz.Count; i++)
         }
+        */
 
-        // obsoleto
+
+        // obsoleto : PaintButtonCandidatoSingola
+        /*
         public void PaintButtonCandidatoSingola(object sender, PaintEventArgs e)
         {
             // OBSOLETO
@@ -832,7 +877,7 @@ namespace VotoTouch.WPF
 
             }  // for (int i = 0; i < Tz.Count; i++)
         }
-
+        */
         #endregion  
         
 

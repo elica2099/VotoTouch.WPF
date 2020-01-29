@@ -5,29 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VotoTouch.WPF.Views.Tools"
         mc:Ignorable="d"
+        ShowInTaskbar="False"
         Title="Configurazione Totem" 
-        Height="900" Width="1140">
+        Loaded="FWSConfig_OnLoaded"
+        WindowStartupLocation="CenterScreen"
+        Height="680" Width="800">
 
     <Window.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="InfoSerialiItem" DataType="local:TInfoSeriale">
-                <Grid Height="30" HorizontalAlignment="Stretch" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="120" />
-                        <ColumnDefinition Width="230" />
-                        <ColumnDefinition Width="400" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding COM}" VerticalAlignment="Center" HorizontalAlignment="Left" 
-                               Grid.Column="0" Margin="8,0,0,0" FontSize="16"/>
-                    <TextBlock Text="{Binding AssegnataA}" VerticalAlignment="Center" HorizontalAlignment="Left" 
-                               Grid.Column="1" Margin="8,0,0,0" FontSize="16"/>
-                    <TextBlock Text="{Binding Tipo}" VerticalAlignment="Center" HorizontalAlignment="Left" 
-                               Grid.Column="2" Margin="8,0,0,0" FontSize="16"/>
-                </Grid>
-            </DataTemplate>
             <Style TargetType="{x:Type ListViewItem}" x:Key="ViewProxyStyle" >
-                <!--<EventSetter Event="MouseDoubleClick" Handler="DoubleClickHandler" />-->
-                <Setter Property="ContentTemplate" Value="{StaticResource InfoSerialiItem}" />
                 <Style.Triggers>
                     <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                         <Setter Property="Background" Value="#19f39611"></Setter>
@@ -35,47 +21,73 @@
                     <Trigger Property="ItemsControl.AlternationIndex" Value="1">
                         <Setter Property="Background" Value="White"></Setter>
                     </Trigger>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsSelected" Value="true" />
+                            <Condition Property="Selector.IsSelectionActive" Value="true" />
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background" Value="Gray" />
+                        <Setter Property="Foreground" Value="White" />
+                    </MultiTrigger>
                 </Style.Triggers>
             </Style>
-        </ResourceDictionary>
+         </ResourceDictionary>
     </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.30*" />
-            <RowDefinition Height="90" />
-            <RowDefinition Height="100" />
             <RowDefinition Height="0.40*" />
+            <RowDefinition Height="70" />
             <RowDefinition Height="100" />
+            <RowDefinition Height="180" />
+            <RowDefinition Height="75" />
         </Grid.RowDefinitions>
 
         <ListView Name="lvSeriali" Grid.Row="0" Margin="10" HorizontalAlignment="Stretch" 
                   VerticalAlignment="Stretch" AlternationCount="2"
                   ItemsSource="{Binding Seriali, Mode=TwoWay}" 
                   IsSynchronizedWithCurrentItem="True"
-                  HorizontalContentAlignment="Stretch" >
+                  HorizontalContentAlignment="Stretch" 
+                  ItemContainerStyle="{StaticResource ViewProxyStyle}" 
+                  FontSize ="20"
+                  >
             <ListView.View >
                 <GridView >
-                    <GridViewColumn Header="Com" Width="120" />
-                    <GridViewColumn Header="Assegnata a " Width="230" />
-                    <GridViewColumn Header="Tipo" Width="400" />
+                    <GridViewColumn Header="COM" Width="120" DisplayMemberBinding="{Binding Path=COM}" >
+                        <!--<GridViewColumn.Header>
+                            <TextBlock Text="COM" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                                       Grid.Column="0" Margin="8,0,0,0" FontSize="18"/>
+                        </GridViewColumn.Header>-->
+                    </GridViewColumn>
+                    <GridViewColumn Header="Assegnata a" Width="230" DisplayMemberBinding="{Binding Path=AssegnataA}" >
+                        <!--<GridViewColumn.Header>
+                            <TextBlock Text="Assegnata" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                                       Grid.Column="0" Margin="8,0,0,0" FontSize="18"/>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=AssegnataA}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>-->
+                    </GridViewColumn>
+                    <GridViewColumn Header="Tipo" Width="400" DisplayMemberBinding="{Binding Path=Tipo}" />
                 </GridView >
             </ListView.View>
         </ListView>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <Button Name="btnAssegna" Height="57" Width="192" TabIndex="11" Click="btnAssegna_Click" 
-                    Margin="10,0,50,0" Content="Assegna a Barcode"  />
+            <Button Name="btnAssegna" Height="57" Width="192" TabIndex="11" Click="btnAssegna_Click" FontSize="16"
+                    Margin="10,0,50,0" Content="Assegna a Barcode" Style="{StaticResource btn-success}" />
             <!--<Button Name="btnAssegnaSem" Height="57" Width="192" TabIndex="19" Click="btnAssegnaSem_Click" 
                     Margin="10,0,20,0" Content="Assegna a Semaforo Seriale" />-->
-            <Button Name="btnNoLettore" Height="57" Width="192" TabIndex="12" Click="btnNoLettore_Click" 
-                    Margin="10,0,20,0" Content="Libera Porta" />
-            <Button Name="btnAggiorna" Height="56" Width="64" TabIndex="6" Click="btnAggiorna_Click" 
-                    Margin="10,0,20,0" Content="Aggiorna Com" />
+            <Button Name="btnNoLettore" Height="57" Width="192" TabIndex="12" Click="btnNoLettore_Click" FontSize="16"
+                    Margin="10,0,20,0" Content="Libera Porta" Style="{StaticResource btn-warning}" />
         </StackPanel>
+        <Button Grid.Row="1" Name="btnAggiorna" Height="56" Width="100" TabIndex="6" Click="btnAggiorna_Click" 
+                Margin="0,0,20,0" Content="Aggiorna Com" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
-        <GroupBox Grid.Row="2" Margin="15,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" 
-                  Header="Prova Lettore Barcode" Height="90" Width="630" x:Name="grbLettore" >
+        <GroupBox Grid.Row="2" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                  Header="Prova Lettore Barcode" Height="90" Width="460" x:Name="grbLettore" >
                  <TextBox Name="txtProva" Height="40" Width="267" TabIndex="8" 
                           HorizontalAlignment="Center" VerticalAlignment="center" />
         </GroupBox>
@@ -83,23 +95,35 @@
         <GroupBox Grid.Row="3" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                   Header="Semaforo" x:Name="grbSemaforo" >
             <Grid>
-                <Button Name="btnNoSemaforo" Height="79" Width="125" TabIndex="21" Visibility="Hidden" Margin="164,74,553,547" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Nessun Semaforo</Button>
-                <Button Name="btnSemAssegnaIP" Height="79" Width="125" TabIndex="20" Visibility="Hidden" Margin="16,74,701,547" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Assegna IP a Semaforo</Button>
-                <Label Name="label3" Height="33" Width="40" FontSize="11" FontFamily="Microsoft Sans Serif" TabIndex="10" Margin="22,22,780,645" HorizontalAlignment="Right" VerticalAlignment="Bottom" >IP:</Label>
-                <TextBox Name="txtSemIP" Height="40" Width="235" TabIndex="9" Margin="54,16,553,644" HorizontalAlignment="Right" VerticalAlignment="Bottom" TextWrapping="Wrap" ></TextBox>
-                <Button Name="btnSErrore" Height="61" Width="187" TabIndex="3" Click="btnSErrore_Click" Margin="588,86,67,553" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Semaforo Errore</Button>
-                <Button Name="btnSFineOcc" Height="61" Width="187" TabIndex="2" Click="btnSFineOcc_Click" Margin="588,8,67,631" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Semaforo Fine Occupato</Button>
-                <Button Name="btnSOccupato" Height="61" Width="187" TabIndex="1" Click="btnSOccupato_Click" Margin="366,86,289,553" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Semaforo Occupato</Button>
-                <Button Name="btnLibero" Height="61" Width="187" TabIndex="0" Click="btnLibero_Click" Margin="366,8,289,631" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Semaforo Libero</Button>
+                <TextBlock Text="IP:" Height="33" Width="40" FontSize="20" FontFamily="Microsoft Sans Serif" 
+                       Margin="10,15,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"  />
+                <TextBox Name="txtSemIP" Height="40" Width="200" Margin="46,10,0,0" 
+                         HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="16" />
+
+                <!--<Button Name="btnNoSemaforo" Height="79" Width="125" TabIndex="21" Visibility="Hidden" 
+                        Margin="164,74,553,547" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Nessun Semaforo</Button>
+                <Button Name="btnSemAssegnaIP" Height="79" Width="125" TabIndex="20" Visibility="Hidden" 
+                        Margin="16,74,701,547" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Assegna IP a Semaforo</Button>-->
+
+                <Button Name="btnLibero" Height="55" Width="187" Content="Semaforo Libero" Click="btnLibero_Click" 
+                        Margin="0,6,210,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="16" />
+                <Button Name="btnSOccupato" Height="55" Width="187" Content="Semaforo Occupato" Click="btnSOccupato_Click" 
+                        Margin="0,6,6,0" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="16" />
+
+                <Button Name="btnSFineOcc" Height="55" Width="187" Content="Semaforo Fine Occupato" Click="btnSFineOcc_Click" 
+                        Margin="0,0,210,6" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="16" />
+                <Button Name="btnSErrore" Height="55" Width="187" Content="Semaforo Errore" Click="btnSErrore_Click" 
+                        Margin="0,0,6,6" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="16" />
             </Grid>
         </GroupBox>
 
         <Button Grid.Row="4" Name="btnSalvaDB" Height="58" Width="273" TabIndex="10" Click="btnSalvaDB_Click" 
-                Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" 
-                Content="Salva Config su DB" />
-        <Button Grid.Row="4" Name="btnChiudi" Height="57" Width="223" TabIndex="2" Click="btnChiudi_Click" 
                 Margin="0,0,20,0" HorizontalAlignment="Right" VerticalAlignment="Center" 
-                Content="Chiudi" />
+                Content="Salva su DB e Chiudi" Style="{StaticResource btn-primary}" />
+
+        <Button Grid.Row="4" Name="btnChiudi" Height="57" Width="223" TabIndex="2" Click="btnChiudi_Click" 
+                Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                Content="Annulla"  Style="{StaticResource btn-default}" />
 
 
 

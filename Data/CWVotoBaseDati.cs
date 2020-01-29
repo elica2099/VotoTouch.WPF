@@ -224,7 +224,7 @@ namespace VotoTouch.WPF
             Stream stream;
             StreamReader reader;
             // -> detailsByIDShareholder
-            stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("VotoTouch.Data.Query." + ANameSqlFile);
+            stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("VotoTouch.WPF.Data.Query." + ANameSqlFile);
             if (stream == null)
                 ret = "";
             else

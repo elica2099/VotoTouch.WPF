@@ -16,7 +16,7 @@ namespace VotoTouch.WPF
         public Rect FFormRect;
         protected ArrayList Tz;
 
-        public ArrayList TouchZone { get { return Tz ?? null; } }
+        public ArrayList TouchZone => Tz ?? null;
 
         public const float Nqx = VSDecl.VOTESCREEN_DIVIDE_WIDTH;
         public const float Nqy = VSDecl.VOTESCREEN_DIVIDE_HEIGHT;
@@ -74,11 +74,11 @@ namespace VotoTouch.WPF
         }
 
 
-        public virtual void CallbackPaintTouch(object sender, PaintEventArgs e)
-        {
-            // ok questo metodo viene chiamato da paint della finestra principale 
-            // nel caso in cui debba fare dei disegni speciali
-        }
+        //public virtual void CallbackPaintTouch(object sender, PaintEventArgs e)
+        //{
+        //    // ok questo metodo viene chiamato da paint della finestra principale 
+        //    // nel caso in cui debba fare dei disegni speciali
+        //}
 
         // --------------------------------------------------------------
         //  SCHEDE SPECIALI
@@ -183,12 +183,11 @@ namespace VotoTouch.WPF
 
         protected void GetZone(ref TTZone a, int qx, int qy, int qr, int qb)
         {
-            float x, y, r, b;
             // prendo le unità di misura
-            x = (FFormRect.Width / Nqx) * qx;
-            y = (FFormRect.Height / Nqy) * qy;
-            r = (FFormRect.Width / Nqx) * qr;
-            b = (FFormRect.Height / Nqy) * qb;
+            double x = (FFormRect.Width / Nqx) * qx;
+            double y = (FFormRect.Height / Nqy) * qy;
+            double r = (FFormRect.Width / Nqx) * qr;
+            double b = (FFormRect.Height / Nqy) * qb;
             a.x = (int)x;
             a.y = (int)y;
             a.r = (int)r;
@@ -197,12 +196,11 @@ namespace VotoTouch.WPF
 
         protected void GetZoneFloat(ref TTZone a, float qx, float qy, float qr, float qb)
         {
-            float x, y, r, b;
             // prendo le unità di misura
-            x = (FFormRect.Width / Nqx) * qx;
-            y = (FFormRect.Height / Nqy) * qy;
-            r = (FFormRect.Width / Nqx) * qr;
-            b = (FFormRect.Height / Nqy) * qb;
+            double x = (FFormRect.Width / Nqx) * qx;
+            double y = (FFormRect.Height / Nqy) * qy;
+            double r = (FFormRect.Width / Nqx) * qr;
+            double b = (FFormRect.Height / Nqy) * qb;
             a.x = (int)x;
             a.y = (int)y;
             a.r = (int)r;

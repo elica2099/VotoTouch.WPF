@@ -6,25 +6,27 @@
         xmlns:local="clr-namespace:VotoTouch.WPF.Views.Tools"
         mc:Ignorable="d"
         Title="FWSStart" 
-        Height="539" Width="703">
+        Height="500" Width="660">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="0.15*"/>
-            <RowDefinition Height="0.40*"/>
-            <RowDefinition Height="0.30*"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="0.50*"/>
+            <RowDefinition Height="140"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="1" Foreground="DimGray" Text="TouchVote 2020  (WPF)" FontWeight="DemiBold" FontSize="20"
                HorizontalAlignment="Center" VerticalAlignment="Center" />
         <ListBox Grid.Row="2" Name="listBox1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                  Margin="10" />
-        <Button Grid.Row="3" Name="btnAvvia" Height="100" Width="200" TabIndex="0" Margin="0,0,20,0" 
+        <Button Grid.Row="3" Name="btnAvvia" Height="100" Width="260" TabIndex="0" Margin="0,0,20,0" 
                 HorizontalAlignment="Right" VerticalAlignment="Center" Content="Avvia TouchVote"
-                FontSize="20" FontWeight="DemiBold" Click="ButtonAvvia_OnClick" />
+                FontSize="20" FontWeight="DemiBold" Click="ButtonAvvia_OnClick" 
+                Style="{StaticResource btn-primary}" />
         <Button Grid.Row="3" Name="btnChiudi" Height="100" Width="200" TabIndex="1" Margin="20,0,0,0" 
                 HorizontalAlignment="Left" VerticalAlignment="Center" Content="Chiudi"
-                FontSize="20" FontWeight="DemiBold" Click="ButtonChiudi_OnClick" />
+                FontSize="20" FontWeight="DemiBold" Click="ButtonChiudi_OnClick" 
+                Style="{StaticResource btn-default}" />
     </Grid>
 </Window>

@@ -36,7 +36,8 @@ namespace VotoTouch.WPF
         private void MainWindow_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             // chiamo il metodo in CTouchscreen che mi ritornerà eventi diversi a seconda del caso
-            oVotoTouch.TastoPremuto(sender, e, Stato);
+            Point currentPoint = e.GetPosition(this);
+            oVotoTouch.TastoPremuto(currentPoint);
         }
 
         //	EVENTI DI PRESSIONE SCHERMO DA CTOUCHSCREEN ----------------------------------------------------------------

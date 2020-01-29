@@ -68,13 +68,18 @@ namespace VotoTouch.WPF.Views.Tools
         public FWSConfig()
         {
             InitializeComponent();
-            NoPorte = false;
 
+            NoPorte = false;
+        }
+
+        private void FWSConfig_OnLoaded(object sender, RoutedEventArgs e)
+        {
             Seriali = new ObservableCollection<TInfoSeriale>();
             cvSeriali = CollectionViewSource.GetDefaultView(Seriali);
             cvSeriali.CurrentChanged += new EventHandler(cvSerialiCurrentChanged);
 
             CaricaSeriali();
+            this.DataContext = this;
         }
 
         public void Configura()
@@ -157,15 +162,12 @@ namespace VotoTouch.WPF.Views.Tools
                 Seriali.Add(ser);
             }
 
-            //// se non ci sono porte seriali attive inserisco una scritta
-            //if (lvSeriali.Items.Count == 0)
-            //{
-            //    ListViewItem lvis = new ListViewItem();
-            //    lvis.Text = "Nessuna ";
-            //    lvis.SubItems.Add("COM nel sistema");
-            //    lvSeriali.Items.Add(lvis);
-            //    NoPorte = true;
-            //}
+            // se non ci sono porte seriali attive inserisco una scritta
+            if (Seriali.Count == 0)
+            {
+                Seriali.Add( new TInfoSeriale(){ COM = "Nessuna", Tipo = "", AssegnataA = "COM nel sistema"});
+                NoPorte = true;
+            }
 
             // setto i componenti in funzione delle porte
             //btnSalvaDB.Enabled = !NoPorte;
@@ -205,10 +207,10 @@ namespace VotoTouch.WPF.Views.Tools
             // ora devo trovare la stringa COM
             string ss = selectedItem.COM;
             string removeString = "COM";
-            int index = ss.LastIndexOf(removeString);
+            int index = ss.LastIndexOf(removeString, StringComparison.Ordinal);
             if (index >= 0)
             {
-                string st = ss.Remove(ss.IndexOf(removeString), removeString.Length);
+                string st = ss.Remove(ss.IndexOf(removeString, StringComparison.Ordinal), removeString.Length);
                 //string st = ss.Substring(index +3, ss.Length - index +3); // ss[index + 3].ToString();
                 ComPort = Convert.ToInt16(st);
                 UsaLettore = true;
@@ -280,8 +282,9 @@ namespace VotoTouch.WPF.Views.Tools
 
         private void btnSalvaDB_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Vuoi salvare la configurazione sul database?", "Question",
-                    MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
+            // testo se è cambiato qualcosa, sennò non salvo nemmeno e esco
+            if (VTConfig.UsaLettore != UsaLettore || VTConfig.PortaLettore != ComPort ||
+                VTConfig.UsaSemaforo != UsaSemaforo || VTConfig.IP_Com_Semaforo != SemComPort)
             {
                 VTConfig.UsaLettore = UsaLettore;
                 VTConfig.PortaLettore = ComPort;
@@ -291,11 +294,11 @@ namespace VotoTouch.WPF.Views.Tools
                     VTConfig.IP_Com_Semaforo = SemComPort;
                     VTConfig.UsaSemaforo = UsaSemaforo;
                 }
-
                 SalvaConfigurazioneLettore?.Invoke(this, UsaLettore, ComPort, SemComPort, UsaSemaforo);
                 // aggiorno i campi
                 Configura();
             }
+            this.Close();
         }
 
         public void Semaforo(bool Attivato)

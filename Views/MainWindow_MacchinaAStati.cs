@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace VotoTouch.WPF
 {
@@ -19,18 +20,17 @@ namespace VotoTouch.WPF
         private void CambiaStato()
         {
             // disaccoppia la funzione attraverso un timer che chiama un evento
+            DispatcherTimer timCambiaStato = new DispatcherTimer { IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30) };
+            timCambiaStato.Tick += delegate (object asender, EventArgs ae)
+            {
+                timCambiaStato.Stop();
+                CambiaStatoDaTimer();
+            };
             timCambiaStato.Start();
-        }
-
-        private void timCambiaStato_Tick(object sender, EventArgs e)
-        {
-            timCambiaStato.Stop();
-            CambiaStatoDaTimer();
         }
 
         private void CambiaStatoDaTimer()
         {
-            //TAzionista c;
             // gestione degli stati della votazione
             switch (Stato)
             {
@@ -261,6 +261,8 @@ namespace VotoTouch.WPF
                     CambiaStato();
                     break;
             }
+            // painting
+            //oVotoTouch.PaintOnDrawingContext(mainGrid);
         }
 
         private void timVotoAperto_Tick(object sender, EventArgs e)

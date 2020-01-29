@@ -40,7 +40,7 @@ namespace VotoTouch.WPF
 
         // timer di disaccoppiamento
         //private DispatcherTimer timLetturaBadge;
-        private DispatcherTimer timCambiaStato;
+        //private DispatcherTimer timCambiaStato;
         //private DispatcherTimer timConfigura;
         private DispatcherTimer timAutoRitorno;
         private DispatcherTimer timPopup;
@@ -119,9 +119,8 @@ namespace VotoTouch.WPF
             VTConfig.IsAdmin = File.Exists(VTConfig.Data_Path + "VTS_ADMIN.txt");
             VTConfig.IsStandalone = File.Exists(VTConfig.Data_Path + "VTS_STANDALONE.txt");
 
-
             // finestra di start
-            FWSStart FStart = new FWSStart(this);
+            FWSStart FStart = new FWSStart {WindowStartupLocation = WindowStartupLocation.CenterScreen};
             if (FStart.ShowDialog() == false)
             {
                 Application.Current.Shutdown();
@@ -162,8 +161,8 @@ namespace VotoTouch.WPF
             //timLetturaBadge = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
             //timLetturaBadge.Tick += timLetturaBadge_Tick;
             // timer di cambio stato
-            timCambiaStato = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
-            timCambiaStato.Tick += timCambiaStato_Tick;
+            //timCambiaStato = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
+            //timCambiaStato.Tick += timCambiaStato_Tick;
             // timer di configurazione
             //timConfigura = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
             //timConfigura.Tick += timConfigura_Tick;
@@ -195,15 +194,15 @@ namespace VotoTouch.WPF
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             // Massimizzo la finestra
-#if DEBUG
-            this.WindowState = WindowState.Normal;
-		    this.Left = 0;
-		    this.Height = 0;
-            this.Width = 1280;
-            this.Height = 1024;
-#else      
-            WindowState = FormWindowState.Maximized;
-#endif
+//#if DEBUG
+//            this.WindowState = WindowState.Normal;
+//		    this.Left = 0;
+//		    this.Height = 0;
+//            this.Width = 1280;
+//            this.Height = 1024;
+//#else      
+            WindowState = WindowState.Maximized;
+//#endif
             // gestione immagini
             oVotoImg = new CVotoImages {MainForm = this};
             CtrlPrimoAvvio = oVotoImg.CheckImageFolder();
@@ -401,10 +400,10 @@ namespace VotoTouch.WPF
 
         private void frmMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            timVotoAperto.Stop();
+            timVotoAperto?.Stop();
             // alcune cose sul database
-            oDBDati.DBDisconnect();
-            NewReader.Close();
+            oDBDati?.DBDisconnect();
+            NewReader?.Close();
         }
 
         void oVotoTouch_ShowPopup(object source, string messaggio)
@@ -440,7 +439,8 @@ namespace VotoTouch.WPF
         }
 
         //  PAINT AND RESIZE ------------------------
-
+        
+        /*
         private void frmMain_Paint(object sender, PaintEventArgs e)
         {
             // ok, questa funzione serve all'oggetto CTouchscreen per evidenziare le zone sensibili
@@ -471,7 +471,6 @@ namespace VotoTouch.WPF
                         oVotoTheme.BaseFontCandidatoBold, oVotoTheme.BaseColorCandidato);
                 }
 
-                // ******* OBSOLETO ********/
                 // votazione VOTO_CANDIDATO_SING, candidato a singola pagina, disegno i rettangoli
                 //if (Stato == TAppStato.ssvVoto && (FParVoto[CurrVoteIDX].TipoVoto == VSDecl.VOTO_CANDIDATO_SING))
                 //    oVotoTouch.PaintButtonCandidatoSingola(sender, e);
@@ -495,7 +494,7 @@ namespace VotoTouch.WPF
             }
 
             // se è demo devo stampare una label
-            /*
+            
             if (VTConfig.IsDemoMode)
             {
                 try
@@ -522,9 +521,10 @@ namespace VotoTouch.WPF
                     // non faccio nulla, non serve, al massimo non apparirà la scritta
                 }
             }
-            */
+            
         }
-         
+        */ 
+
         protected void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
         {
             //double newWindowHeight = e.NewSize.Height;
