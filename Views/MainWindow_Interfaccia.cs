@@ -272,13 +272,6 @@ namespace VotoTouch.WPF
 
         private void CaricaTemaInControlli()
         {
-            // carico il tema da vototouch, semplicemente richiamando le singole label
-            TextBlock lblNomeDisgiunto = (TextBlock) this.mainGrid.FindName("lblNomeDisgiunto");
-            if (lblNomeDisgiunto != null) oVotoTheme.SetTheme_lbNomeDisgiunto(ref lblNomeDisgiunto);
-
-            TextBlock lblDisgiuntoRimangono = (TextBlock) this.mainGrid.FindName("lblDisgiuntoRimangono");
-            if (lblDisgiuntoRimangono != null) oVotoTheme.SetTheme_lbDisgiuntoRimangono(ref lblDisgiuntoRimangono);
-
             TextBlock lblDirittiStart = (TextBlock) this.mainGrid.FindName("lblDirittiStart");
             if (lblDirittiStart != null) oVotoTheme.SetTheme_lbDirittiStart(ref lblDirittiStart);
 
@@ -287,6 +280,13 @@ namespace VotoTouch.WPF
 
             TextBlock lblDirittiDiVoto = (TextBlock) this.mainGrid.FindName("lblDirittiDiVoto");
             if (lblDirittiDiVoto != null) oVotoTheme.SetTheme_lbDirittiDiVoto(ref lblDirittiDiVoto);
+
+            // carico il tema da vototouch, semplicemente richiamando le singole label
+            TextBlock lblNomeDisgiunto = (TextBlock) this.mainGrid.FindName("lblNomeDisgiunto");
+            if (lblNomeDisgiunto != null) oVotoTheme.SetTheme_lbNomeDisgiunto(ref lblNomeDisgiunto);
+
+            TextBlock lblDisgiuntoRimangono = (TextBlock) this.mainGrid.FindName("lblDisgiuntoRimangono");
+            if (lblDisgiuntoRimangono != null) oVotoTheme.SetTheme_lbDisgiuntoRimangono(ref lblDisgiuntoRimangono);
 
             TextBlock lblConferma = (TextBlock) this.mainGrid.FindName("lblConferma");
             if (lblConferma != null) oVotoTheme.SetTheme_lbConferma(ref lblConferma);

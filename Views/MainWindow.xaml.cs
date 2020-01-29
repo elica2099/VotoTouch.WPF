@@ -203,6 +203,7 @@ namespace VotoTouch.WPF
 //#else      
             WindowState = WindowState.Maximized;
 //#endif
+
             // gestione immagini
             oVotoImg = new CVotoImages {MainForm = this};
             CtrlPrimoAvvio = oVotoImg.CheckImageFolder();
@@ -316,7 +317,6 @@ namespace VotoTouch.WPF
 
             //pnSemaf.BackColor = Color.Transparent;
 
-            //splash.SetSplash(90, rm.GetString("SAPP_START_INITVAR"));   //"Inizializzo variabili...");
             // scrive la configurazione nel log
             Logging.WriteToLog(VSDecl.VTS_VERSION);
             Logging.WriteToLog("** Configurazione:");
@@ -540,22 +540,26 @@ namespace VotoTouch.WPF
             //pbSalvaDati.Left = (this.Width / 2) - (pbSalvaDati.Width / 2);
             //pbSalvaDati.Top = (this.Height / 2) - (pbSalvaDati.Height  / 2);
 
-            Rect FFormRect = new Rect(0, 0, this.ActualWidth, this.ActualHeight);
-
-            // lo stesso faccio per la classe del thema che si occupa di disegnare 
-            if (oVotoTheme != null)
+            if (this.IsLoaded)
             {
-                oVotoTheme.FFormRect = FFormRect;
-                CaricaTemaInControlli();
-            }
-            // ok ora le votazioni
-            Votazioni?.ResizeZoneVotazioni(FFormRect);
-            //Votazioni.CalcolaTouchZoneVotazioni(FFormRect);
+                Rect FFormRect = new Rect(0, 0, this.ActualWidth, this.ActualHeight);
 
-            // ok, ora se è in demo mode faccio il resize dei controlli
-            if (VTConfig.IsDemoMode)
-            {
-                ResizeControlliDemo();
+                // lo stesso faccio per la classe del thema che si occupa di disegnare 
+                if (oVotoTheme != null)
+                {
+                    oVotoTheme.FFormRect = FFormRect;
+                    CaricaTemaInControlli();
+                }
+
+                // ok ora le votazioni
+                Votazioni?.ResizeZoneVotazioni(FFormRect);
+                //Votazioni.CalcolaTouchZoneVotazioni(FFormRect);
+
+                // ok, ora se è in demo mode faccio il resize dei controlli
+                if (VTConfig.IsDemoMode)
+                {
+                    ResizeControlliDemo();
+                }
             }
         }
 

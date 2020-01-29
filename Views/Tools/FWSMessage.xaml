@@ -5,20 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VotoTouch.WPF.Views.Tools"
         mc:Ignorable="d"
-        Title="FWSMessage" Height="200" Width="940">
+        ResizeMode="NoResize"
+        Title="" 
+        Background="LightGoldenrodYellow"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Height="210" Width="940">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="140" />
             <ColumnDefinition Width="0.80*" />
-            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="250" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="1" x:Name="lblMessage" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                   TextWrapping="Wrap" TextAlignment="Center" />
+        <TextBlock Text="&#xf071;" FontSize="80" FontWeight="Bold" Style="{StaticResource FontAwesome}" VerticalAlignment="Center" 
+                   HorizontalAlignment="Center" Foreground="OrangeRed" Margin="0,0,0,10" />
 
-        <Button Grid.Column="2" Name="btnChiudi" Height="200" Width="270" 
-                HorizontalAlignment="Center" VerticalAlignment="Center" Content="Chiudi"
-                FontSize="20" FontWeight="DemiBold" Click="ButtonChiudi_OnClick" />
+        <TextBlock Grid.Column="1" x:Name="lblMessage" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   TextWrapping="Wrap" TextAlignment="Center" FontSize="21" Margin="0,0,0,10" />
+
+        <Button Grid.Column="2" Name="btnChiudi" Margin="3" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="Chiudi"
+                FontSize="24" FontWeight="DemiBold" Click="ButtonChiudi_OnClick" Style="{StaticResource btn-primary}" />
 
 
 </Grid>

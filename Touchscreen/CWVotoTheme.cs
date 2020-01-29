@@ -420,6 +420,17 @@ namespace VotoTouch.WPF
         //  SETTING DELLE LABEL
         //-----------------------------------------------------------------------------
         
+        public void SetTheme_lbNomeAzStart(ref TextBlock c)
+        {
+            // mi arriva un controllo qualsiasi
+            Rect a = new Rect();
+            //GetZone(ref a, 1, 30, 99, 40);
+            if (IsThemed) { if (!ThemeToLabel("lbNomeAzStart", ref c, ref a)) GetZone(ref a, 1, 30, 99, 40); }
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Height = a.Height;
+        }
+
         public void SetTheme_lbDirittiStart(ref TextBlock c)
         {
             // La label dell'apertura del voto grande con i diritti di voto
@@ -428,7 +439,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbDirittiStart", ref c, ref a)) GetZone(ref a, 20, 26, 38, 42); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
         public void SetTheme_lbDirittiStartMin(ref TextBlock c)
@@ -438,7 +449,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbDirittiStartMin", ref c, ref a)) GetZone(ref a, 20, 26, 38, 42); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
         public void SetTheme_lbConfermaUp(ref TextBlock c)
@@ -449,7 +460,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbConfermaUp", ref c, ref a)) GetZone(ref a, 15, 37, 85, 41); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
         public void SetTheme_lbConfermaUp_Cand(ref TextBlock c)
@@ -460,7 +471,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbConfermaUp_Cand", ref c, ref a)) GetZone(ref a, 15, 37, 85, 41); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
 
@@ -473,7 +484,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbConferma", ref c, ref a)) GetZone(ref a, 15, 41, 85, 56); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
         public void SetTheme_lbConfermaNVoti(ref TextBlock c)
@@ -484,7 +495,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbConfermaNVoti", ref c, ref a))  GetZone(ref a, 14, 28, 85, 34); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
         public void SetTheme_lbDirittiDiVoto(ref TextBlock c)
@@ -495,7 +506,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbDirittiDiVoto", ref c, ref a)) GetZone(ref a, 0, 95, 25, 99); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
 
         }
         
@@ -507,7 +518,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbNomeDisgiunto", ref c, ref a)) GetZone(ref a, 26, 93, 51, 100); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
         public void SetTheme_lbDisgiuntoRimangono(ref TextBlock c)
@@ -518,18 +529,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbDisgiuntoRimangono", ref c, ref a)) GetZone(ref a, 1, 91, 25, 94); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
-        }
-
-        public void SetTheme_lbNomeAzStart(ref TextBlock c)
-        {
-            // mi arriva un controllo qualsiasi
-            Rect a = new Rect();
-            //GetZone(ref a, 1, 30, 99, 40);
-            if (IsThemed) { if (!ThemeToLabel("lbNomeAzStart", ref c, ref a)) GetZone(ref a, 1, 30, 99, 40); }
-            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
-            c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
         public void SetTheme_lbNSelezioni(ref TextBlock c)
@@ -539,7 +539,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbNSelezioni", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
         public void SetTheme_lbCandidati_PresCDA(ref TextBlock c)
@@ -549,7 +549,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbCandidati_PresCDA", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
         public void SetTheme_lbCandidati_Altern(ref TextBlock c)
@@ -559,7 +559,7 @@ namespace VotoTouch.WPF
             if (IsThemed) { if (!ThemeToLabel("lbCandidati_Altern", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
-            c.Width = a.Height;
+            c.Height = a.Height;
         }
 
         // ------------------------------------------------------------------------------------------
