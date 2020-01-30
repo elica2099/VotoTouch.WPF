@@ -637,7 +637,6 @@ namespace VotoTouch.WPF
                     {
                         //Debug.Print($"maingrid w/h {control.ActualWidth}, {control.ActualHeight}");
                         //Debug.Print($"{a.x}, {a.y} - {a.r}, {a.b} - {a.ev}");
-
                         if (a.pag == 0 || a.pag == CurrPag)
                         {
                             Rect zz = new Rect(new Point(a.x, a.y), new Point(a.r, a.b));

@@ -59,7 +59,7 @@
                             </Border>
                             <ContentPresenter Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" 
                                               Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" 
-                                              Focusable="False" HorizontalAlignment="Center" 
+                                              Focusable="False" HorizontalAlignment="Center"
                                               Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" 
                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
                                               VerticalAlignment="Center"/>

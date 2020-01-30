@@ -8,7 +8,7 @@
         ResizeMode="NoResize"
         Title="" 
         Background="LightGoldenrodYellow"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False"
         Height="210" Width="940">
     <Grid>

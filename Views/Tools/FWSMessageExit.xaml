@@ -5,26 +5,58 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VotoTouch.WPF.Views.Tools"
         mc:Ignorable="d"
-        Title="FWSMessageExit" Height="430" Width="900">
+        ResizeMode="NoResize"
+        Title="" 
+        Background="White"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False"
+        Height="430" Width="900">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="140" />
+            <ColumnDefinition Width="0.80*" />
+            <ColumnDefinition Width="140" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.60*" />
-            <RowDefinition Height="0.40*" />
+            <RowDefinition Height="140" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" HorizontalAlignment="Center">
-            <TextBlock Text="Si è scelto di abbandonare la votazione." FontSize="16" FontWeight="DemiBold" />
-            <TextBlock Text="Continuare ?" FontSize="20" FontWeight="DemiBold" />
-            <TextBlock Text="In questo caso i voti non espressi" FontSize="16" FontWeight="DemiBold" />
-            <TextBlock Text="saranno salvati come scheda bianca." FontSize="16" FontWeight="DemiBold" />
+        <TextBlock Text="&#xf071;" FontSize="80" FontWeight="Bold" Style="{StaticResource FontAwesome}" 
+                   Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="OrangeRed" Margin="0,0,0,10" />
+
+        <TextBlock Text="&#xf071;" FontSize="80" FontWeight="Bold" Style="{StaticResource FontAwesome}" 
+                   Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   Foreground="OrangeRed" Margin="0,0,0,10" />
+
+        <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" >
+            <TextBlock Text="Si è scelto di abbandonare la votazione." FontSize="30" Foreground="DimGray"
+                       FontWeight="DemiBold" HorizontalAlignment="Center" />
+            <TextBlock Text="Continuare ?" FontSize="30" FontWeight="DemiBold" Foreground="DimGray"
+                       Margin="0,0,0,10" HorizontalAlignment="Center" />
+            <TextBlock Text="In questo caso i voti non espressi" FontSize="24" Foreground="DimGray"
+                       FontWeight="DemiBold" HorizontalAlignment="Center" />
+            <TextBlock Text="saranno salvati come scheda bianca." FontSize="24" Foreground="DimGray"
+                       FontWeight="DemiBold" HorizontalAlignment="Center" />
         </StackPanel>
 
-        <Button Grid.Row="1" Name="btnAnnulla" Height="100" Width="200" TabIndex="0" Margin="20,0,0,0" 
-                HorizontalAlignment="Left" VerticalAlignment="Center" Content="Annulla (Torna alla votazione)"
-                FontSize="20" FontWeight="DemiBold" Click="ButtonAnnulla_OnClick" />
-        <Button Grid.Row="1" Name="btnContinua" Height="100" Width="200" TabIndex="1" Margin="0,0,20,0" 
-                HorizontalAlignment="Right" VerticalAlignment="Center" Content="Continua (Abbandona il voto)"
-                FontSize="20" FontWeight="DemiBold" Click="ButtonContinua_OnClick" />
+        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="btnAnnulla" TabIndex="0" Margin="10,1,0,10" Width="300"
+                HorizontalAlignment="Left" VerticalAlignment="Stretch" Click="ButtonAnnulla_OnClick" 
+                Style="{StaticResource btn-primary}" >
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                <TextBlock Text="Annulla" FontSize="26" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="0,0,0,6" />
+                <TextBlock Text="(Torna alla votazione)" FontSize="22" FontWeight="DemiBold" HorizontalAlignment="Center" />
+            </StackPanel>
+        </Button>
+        <Button Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Name="btnContinua" TabIndex="1" Margin="0,1,10,10" Width="300"
+                HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="ButtonContinua_OnClick" 
+                Style="{StaticResource btn-warning}" >
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                <TextBlock Text="Continua" FontSize="26" FontWeight="DemiBold" HorizontalAlignment="Center" Margin="0,0,0,6" />
+                <TextBlock Text="(Abbandona il voto)" FontSize="22" FontWeight="DemiBold" HorizontalAlignment="Center" />
+            </StackPanel>
+        </Button>
 
     </Grid>
 </Window>
