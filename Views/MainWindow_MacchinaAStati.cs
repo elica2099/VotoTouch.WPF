@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -262,7 +263,12 @@ namespace VotoTouch.WPF
                     break;
             }
             // painting
-            //oVotoTouch.PaintOnDrawingContext(mainGrid);
+            //Point relativePoint = mainGrid.TransformToAncestor(this)
+            //    .Transform(new Point(0, 0));
+            //Debug.Print($"window w/h: {this.ActualWidth}, {this.ActualHeight}");
+            //Debug.Print($"maingrid x/y: {relativePoint.X}, {relativePoint.Y}");
+
+            oVotoTouch.PaintOnDrawingContext(mainGrid, this);
         }
 
         private void timVotoAperto_Tick(object sender, EventArgs e)

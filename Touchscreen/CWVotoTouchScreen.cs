@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Media;
@@ -327,7 +328,8 @@ namespace VotoTouch.WPF
             for (int i = 0; i < Tz.Count; i++)
             {
                 a = (TTZone)Tz[i];
-                if (a.zone.Contains(point))
+                if ((point.X >= a.x) && (point.X <= a.r) && (point.Y >= a.y) && (point.Y <= a.b))
+                //if (a.zone.Contains(point))
                 {
                     // serve per le multivotazioni
                     if (a.pag == CurrPag || a.pag == 0)
@@ -606,7 +608,7 @@ namespace VotoTouch.WPF
 
         #region  PAINTING DELLE ZONE TOUCH
 
-        public void PaintOnDrawingContext(Grid control)
+        public void PaintOnDrawingContext(Grid control, Window mainWindow)
         {
             // questa routine fa il paint delle varie cose sul DravingContext della finestra
             if (Tz == null) return;
@@ -616,23 +618,32 @@ namespace VotoTouch.WPF
             // Obtain a DrawingContext from the DrawingGroup.
             using (DrawingContext dc = dGroup.Open())
             {
+                // stampo i mirini
+                Pen colliderPen = new Pen(Brushes.LightGray, 1) {DashStyle = DashStyles.DashDot};
+                colliderPen.Freeze();
+                dc.DrawRectangle(PaintTouchOnScreen ? Brushes.Blue : Brushes.Transparent, colliderPen, 
+                    new Rect(0, 0, 10, 10));
+                dc.DrawRectangle(PaintTouchOnScreen ? Brushes.Blue : Brushes.Transparent, colliderPen, 
+                    new Rect(mainWindow.ActualWidth -10, mainWindow.ActualHeight -10, 10, 10));
 
                 // per prima cosa evidenzio le zone sensibili del tocco, se devo
                 if (PaintTouchOnScreen)
                 {
                     // creo la penna
-                    Pen shapeOutlinePen = new Pen(Brushes.DarkGray, 1);
-                    shapeOutlinePen.DashStyle = DashStyles.DashDot;
+                    Pen shapeOutlinePen = new Pen(Brushes.DarkGray, 1) {DashStyle = DashStyles.DashDot};
                     shapeOutlinePen.Freeze();
-
-                    //Graphics g = e.Graphics;
-                    //Pen p = new Pen(Color.DarkGray) {DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot};
 
                     foreach (TTZone a in Tz)
                     {
-                        //a = (TTZone)t;
+                        //Debug.Print($"maingrid w/h {control.ActualWidth}, {control.ActualHeight}");
+                        //Debug.Print($"{a.x}, {a.y} - {a.r}, {a.b} - {a.ev}");
+
                         if (a.pag == 0 || a.pag == CurrPag)
-                            dc.DrawRectangle(Brushes.Transparent, shapeOutlinePen, a.zone);
+                        {
+                            Rect zz = new Rect(new Point(a.x, a.y), new Point(a.r, a.b));
+                            //Debug.Print($"zz: {zz.X}, {zz.Y} - {zz.Right}, {zz.Bottom}");
+                            dc.DrawRectangle(Brushes.Transparent, shapeOutlinePen, zz);
+                        }
                         //g.DrawRectangle(p, a.x, a.y, (a.r - a.x), (a.b - a.y));
                     }
                 }

@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xml.Serialization;
 using VotoTouch.WPF.Converters;
 using VotoTouch.WPF.Views.UserControls;
 
@@ -70,6 +71,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblNomeDisgiunto, TextBlock.TextProperty, new Binding("TxtNomeDisgiunto"));
             BindingOperations.SetBinding(lblNomeDisgiunto, TextBlock.VisibilityProperty, 
                 new Binding("TxtNomeDisgiuntoVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtNomeDisgiuntoVis = false;
             mainGrid.Children.Add(lblNomeDisgiunto);
             mainGrid.RegisterName(lblNomeDisgiunto.Name, lblNomeDisgiunto);
             
@@ -87,6 +89,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblDisgiuntoRimangono, TextBlock.TextProperty, new Binding("TxtDisgiuntoRimangono"));
             BindingOperations.SetBinding(lblDisgiuntoRimangono, TextBlock.VisibilityProperty, 
                 new Binding("TxtDisgiuntoRimangonoVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtDisgiuntoRimangonoVis = false;
             mainGrid.Children.Add(lblDisgiuntoRimangono);
             mainGrid.RegisterName(lblDisgiuntoRimangono.Name, lblDisgiuntoRimangono);
             
@@ -105,6 +108,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblDirittiStart, TextBlock.TextProperty, new Binding("TxtDirittiStart"));
             BindingOperations.SetBinding(lblDirittiStart, TextBlock.VisibilityProperty, 
                 new Binding("TxtDirittiStartVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtDirittiStartVis = false;
             mainGrid.Children.Add(lblDirittiStart);
             mainGrid.RegisterName(lblDirittiStart.Name, lblDirittiStart);
 
@@ -123,6 +127,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblDirittiStartMin, TextBlock.TextProperty, new Binding("TxtDirittiStartMin"));
             BindingOperations.SetBinding(lblDirittiStartMin, TextBlock.VisibilityProperty, 
                 new Binding("TxtDirittiStartMinVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtDirittiStartMinVis = false;
             mainGrid.Children.Add(lblDirittiStartMin);
             mainGrid.RegisterName(lblDirittiStartMin.Name, lblDirittiStartMin);
 
@@ -141,6 +146,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblDirittiDiVoto, TextBlock.TextProperty, new Binding("TxtDirittiDiVoto"));
             BindingOperations.SetBinding(lblDirittiDiVoto, TextBlock.VisibilityProperty, 
                 new Binding("TxtDirittiDiVotoVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtDirittiDiVotoVis = false;
             mainGrid.Children.Add(lblDirittiDiVoto);
             mainGrid.RegisterName(lblDirittiDiVoto.Name, lblDirittiDiVoto);
 
@@ -159,6 +165,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblConferma, TextBlock.TextProperty, new Binding("TxtConferma"));
             BindingOperations.SetBinding(lblConferma, TextBlock.VisibilityProperty, 
                 new Binding("TxtConfermaVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtConfermaVis = false;
             mainGrid.Children.Add(lblConferma);
             mainGrid.RegisterName(lblConferma.Name, lblConferma);
             
@@ -177,6 +184,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblConfermaUp, TextBlock.TextProperty, new Binding("TxtConfermaUp"));
             BindingOperations.SetBinding(lblConfermaUp, TextBlock.VisibilityProperty, 
                 new Binding("TxtConfermaUpVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtConfermaUpVis = false;
             mainGrid.Children.Add(lblConfermaUp);
             mainGrid.RegisterName(lblConfermaUp.Name, lblConfermaUp);
             
@@ -195,6 +203,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblConfermaNVoti, TextBlock.TextProperty, new Binding("TxtConfermaNVoti"));
             BindingOperations.SetBinding(lblConfermaNVoti, TextBlock.VisibilityProperty, 
                 new Binding("TxtConfermaNVotiVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtConfermaNVotiVis = false;
             mainGrid.Children.Add(lblConfermaNVoti);
             mainGrid.RegisterName(lblConfermaNVoti.Name, lblConfermaNVoti);
             
@@ -212,6 +221,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblNomeAzStart, TextBlock.TextProperty, new Binding("TxtNomeAzStart"));
             BindingOperations.SetBinding(lblNomeAzStart, TextBlock.VisibilityProperty, 
                 new Binding("TxtNomeAzStartVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtNomeAzStartVis = false;
             mainGrid.Children.Add(lblNomeAzStart);
             mainGrid.RegisterName(lblNomeAzStart.Name, lblNomeAzStart);
 
@@ -230,6 +240,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblNSelezioni, TextBlock.TextProperty, new Binding("TxtNSelezioni"));
             BindingOperations.SetBinding(lblNSelezioni, TextBlock.VisibilityProperty, 
                 new Binding("TxtNSelezioniVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtNSelezioniVis = false;
             mainGrid.Children.Add(lblNSelezioni);
             mainGrid.RegisterName(lblNSelezioni.Name, lblNSelezioni);
 
@@ -247,6 +258,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblCandidati_PresCDA, TextBlock.TextProperty, new Binding("TxtCandidati_PresCDA"));
             BindingOperations.SetBinding(lblCandidati_PresCDA, TextBlock.VisibilityProperty, 
                 new Binding("TxtCandidati_PresCDAVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtCandidati_PresCDAVis = false;
             mainGrid.Children.Add(lblCandidati_PresCDA);
             mainGrid.RegisterName(lblCandidati_PresCDA.Name, lblCandidati_PresCDA);
 
@@ -264,6 +276,7 @@ namespace VotoTouch.WPF
             BindingOperations.SetBinding(lblCandidati_Altern, TextBlock.TextProperty, new Binding("TxtCandidati_Altern"));
             BindingOperations.SetBinding(lblCandidati_Altern, TextBlock.VisibilityProperty, 
                 new Binding("TxtCandidati_AlternVis"){ Converter = new BooleanToHiddenVisibility() });
+            _TxtCandidati_AlternVis = false;
             mainGrid.Children.Add(lblCandidati_Altern);
             mainGrid.RegisterName(lblCandidati_Altern.Name, lblCandidati_Altern);
         }

@@ -203,6 +203,9 @@ namespace VotoTouch.WPF
 //#else      
             WindowState = WindowState.Maximized;
 //#endif
+            ShowNoBarcode = false;
+            ShowNoSemaph = false;
+            SettaComponenti(false);
 
             // gestione immagini
             oVotoImg = new CVotoImages {MainForm = this};
@@ -281,7 +284,7 @@ namespace VotoTouch.WPF
                 // carica le votazioni, le carica comunque all'inizio
                 Rect FFormRect = new Rect(0, 0, Width, Height);
                 Votazioni = new TListaVotazioni(oDBDati);
-                Votazioni.CaricaListeVotazioni(VTConfig.Data_Path, FFormRect, true);
+                Votazioni.CaricaListeVotazioni(VTConfig.Data_Path, FFormRect, false);
                 // ok, finisce
                 if (DBOk == 0)
                 {

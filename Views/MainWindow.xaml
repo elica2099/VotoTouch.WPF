@@ -7,6 +7,10 @@
         xmlns:converters="clr-namespace:VotoTouch.WPF.Converters"
         mc:Ignorable="d"
         Title="MainWindow" 
+        WindowStyle="None"
+        Background="White"
+        AllowsTransparency="True"
+        ResizeMode="NoResize"
         Closing="frmMain_Closing"
         Loaded="MainWindow_Loaded"
         PreviewKeyDown="MainWindow_OnPreviewKeyDown"
@@ -24,11 +28,11 @@
     </Window.Resources>
 
     <Grid x:Name="mainGrid">
-        <!-- semaforo e com -->
+        <!-- semaforo e com
         <TextBlock Margin="8,8,0,0" Text="&#xf488;" FontSize="20" Style="{StaticResource FontAwesome}" Foreground="White" 
                    Background="Red" Visibility="{Binding Path=ShowNoBarcode, Converter={StaticResource boolToVis}}"  />
         <TextBlock Margin="8,28,0,0" Text="&#xf637;" FontSize="20" Style="{StaticResource FontAwesome}" Foreground="White" 
-                   Background="Red" Visibility="{Binding Path=ShowNoSemaph, Converter={StaticResource boolToVis}}"  />
+                   Background="Red" Visibility="{Binding Path=ShowNoSemaph, Converter={StaticResource boolToVis}}"  /> -->
 
 
 
