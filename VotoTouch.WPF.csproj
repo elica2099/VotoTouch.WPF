@@ -64,6 +64,10 @@
     <Compile Include="Command\RelayCommand.cs" />
     <Compile Include="Common\CConverter.cs" />
     <Compile Include="Common\CRuntimePolicyHelper.cs" />
+    <Compile Include="Common\CUtility.cs" />
+    <Compile Include="Common\ToolDebugError.xaml.cs">
+      <DependentUpon>ToolDebugError.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\WpfScreenHelper\ExternDll.cs" />
     <Compile Include="Helpers\WpfScreenHelper\MouseHelper.cs" />
     <Compile Include="Helpers\WpfScreenHelper\NativeMethods.cs" />
@@ -104,9 +108,19 @@
     <Compile Include="Views\UserControls\UBadgePanel.xaml.cs">
       <DependentUpon>UBadgePanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserControls\ULabelCandidati.xaml.cs">
+      <DependentUpon>ULabelCandidati.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\UStatusPanel.xaml.cs">
       <DependentUpon>UStatusPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserControls\UTextBlock.xaml.cs">
+      <DependentUpon>UTextBlock.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Common\ToolDebugError.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\CommonDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -165,7 +179,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\UserControls\ULabelCandidati.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\UserControls\UStatusPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControls\UTextBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -208,8 +230,9 @@
     <EmbeddedResource Include="Data\Query\DammiVotazioniTotem.sql" />
     <EmbeddedResource Include="Data\Query\MettiBadgePresenteGeas.sql" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Images\" />
+    <Resource Include="Images\CPLogo_purple.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

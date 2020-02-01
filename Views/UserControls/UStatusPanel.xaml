@@ -17,20 +17,20 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"
                    Text="Stato applicazione" />
-        <Button Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0" Width="60"
+        <Button Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,2,10,0" Width="150"
                 Height="36" Content="Chiudi Pannello" Click="ChiudiPannello_OnClick" />
 
         <ListBox Grid.Row="1" Margin="3" x:Name="listBox" />
 
-        <Button Grid.Row ="2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100"
-                Height="65" Content="Cancella Voti" Click="CancellaVoti_OnClick" Margin="10,0,0,0" />
-        <Button Grid.Row ="2" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100"
-                Height="65" Content="Test" Click="Test_OnClick" Margin="0,0,10,0" />
+        <Button Grid.Row ="2" VerticalAlignment="Center" HorizontalAlignment="Left" Width="150"
+                Height="60" Content="Cancella Voti" Click="CancellaVoti_OnClick" Margin="10,0,0,0" />
+        <Button Grid.Row ="2" VerticalAlignment="Center" HorizontalAlignment="Right" Width="150"
+                Height="60" Content="Test" Click="Test_OnClick" Margin="0,0,10,0" />
 
-        <Button Grid.Row ="3" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100"
-                Height="65" Content="Ricarica Liste/Odg" Click="RicaricaListe_OnClick" Margin="10,0,0,0" />
-        <Button Grid.Row ="3" VerticalAlignment="Center" HorizontalAlignment="Right" Width="100"
-                Height="65" Content="Chiudi Applicazione" Click="ChiudiApp_OnClick" Margin="0,0,10,0" />
+        <Button Grid.Row ="3" VerticalAlignment="Center" HorizontalAlignment="Left" Width="150"
+                Height="60" Content="Ricarica Liste/Odg" Click="RicaricaListe_OnClick" Margin="10,0,0,0" />
+        <Button Grid.Row ="3" VerticalAlignment="Center" HorizontalAlignment="Right" Width="150"
+                Height="60" Content="Chiudi Applicazione" Click="ChiudiApp_OnClick" Margin="0,0,10,0" />
 
 </Grid>
 </UserControl>

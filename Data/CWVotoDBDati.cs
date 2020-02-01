@@ -70,9 +70,7 @@ namespace VotoTouch.WPF
             // Destructor
         }
 
-        // --------------------------------------------------------------------------
-        //  METODI DATABASE
-        // --------------------------------------------------------------------------
+        //  METODI DATABASE --------------------------------------------------------------------------
 
         #region Metodi Database
 
@@ -144,10 +142,78 @@ namespace VotoTouch.WPF
         }
 
         #endregion
-        
-        // --------------------------------------------------------------------------
-        //  LETTURA CONFIGURAZIONE NEL DATABASE
-        // --------------------------------------------------------------------------
+
+        //  LETTURA TIPO DI DATABASE  --------------------------------------------------------------------------
+
+        #region Lettura tipo database
+
+        public override int getDatabaseMode()
+        {
+            // this function return the type of the database spa/pop
+            int ret = -1;
+            if (!OpenConnection("getDatabaseMode")) return -1;
+            SqlCommand qryStd = new SqlCommand { Connection = STDBConn, CommandText = "select VotaTesta from CONFIG_CfgParametri" };
+            try
+            {
+                SqlDataReader a = qryStd.ExecuteReader();
+                if (a.HasRows && a.Read())
+                {
+                    ret = Convert.ToBoolean(a["VotaTesta"]) ? VSDecl.DBMODE_POP : VSDecl.DBMODE_SPA;
+                }
+            }
+            catch (Exception objExc)
+            {
+                Utils.errorCall("getDatabaseMode", objExc.Message);
+            }
+            finally
+            {
+                qryStd?.Dispose();
+                CloseConnection("");
+            }
+            return ret;
+        }
+
+        public override int getDatabaseVersion()
+        {
+            // this function return the type of the database spa/pop
+            return TableExists("GEAS_Titolari_Voti") ? VSDecl.DBVERS_12 : VSDecl.DBVERS_10;
+        }
+
+        private static bool ColumnExists(SqlDataReader reader, string columnName)
+        {
+            using (var schemaTable = reader.GetSchemaTable())
+            {
+                if (schemaTable != null)
+                    schemaTable.DefaultView.RowFilter = $"ColumnName= '{columnName}'";
+
+                return schemaTable != null && (schemaTable.DefaultView.Count > 0);
+            }
+        }
+
+        private bool TableExists(string SQLTableName)
+        {
+            Int32 newProdID = 0;
+            string sql = "SELECT count(*) as IsExists FROM dbo.sysobjects where id = object_id('[dbo].[" + SQLTableName + "]')";
+            using (SqlConnection conn = new SqlConnection(DammiStringaConnessione()))
+            {
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                try
+                {
+                    conn.Open();
+                    newProdID = (Int32)cmd.ExecuteScalar();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            //get the result value: 1-exist; 0-not exist;
+            return newProdID == 1;
+        }
+
+        #endregion
+
+        //  LETTURA CONFIGURAZIONE NEL DATABASE  --------------------------------------------------------------------------
 
         #region Lettura/Scrittura Configurazione
 
@@ -202,9 +268,7 @@ namespace VotoTouch.WPF
             catch (Exception objExc)
             {
                 Tok = 1;
-                Logging.WriteToLog("<dberror> Errore nella funzione CaricaConfigDB: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione CaricaConfigDB" + "\n" +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("CaricaConfigDB", objExc.Message);
             }
             finally
             {
@@ -314,9 +378,7 @@ namespace VotoTouch.WPF
             {
                 result = 1;
                 traStd.Rollback();
-                Logging.WriteToLog("<dberror> Errore nella funzione DammiConfigTotem: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione DammiConfigTotem" + "\n" +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("DammiConfigTotem", objExc.Message);
             }
             finally
             {
@@ -382,9 +444,7 @@ namespace VotoTouch.WPF
             catch (Exception objExc)
             {
                 result = 1;
-                Logging.WriteToLog("<dberror> Errore nella funzione DammiConfigDatabase: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione DammiConfigDatabase" + "\n" +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("DammiConfigDatabase", objExc.Message);
             }
             finally
             {
@@ -422,9 +482,7 @@ namespace VotoTouch.WPF
             {
                 traStd.Rollback();
                 result = 0;
-                Logging.WriteToLog("<dberror> Errore nella funzione SalvaConfigurazioneLettore: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione SalvaConfigurazioneLettore" + "\n" +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("SalvaConfigurazioneLettore", objExc.Message);
             }
             finally
             {
@@ -461,9 +519,7 @@ namespace VotoTouch.WPF
             {
                 traStd.Rollback();
                 result = 0;
-                Logging.WriteToLog("<dberror> Errore nella funzione SalvaConfigurazionePistolaBarcode: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione SalvaConfigurazionePistolaBarcode" + "\n" +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("SalvaConfigurazionePistolaBarcode", objExc.Message);
             }
             finally
             {
@@ -477,9 +533,7 @@ namespace VotoTouch.WPF
 
         #endregion       
         
-        // --------------------------------------------------------------------------
-        //  CARICAMENTO DATI VOTAZIONI
-        // --------------------------------------------------------------------------
+        //  CARICAMENTO DATI VOTAZIONI  --------------------------------------------------------------------------
 
         #region Caricamento dati votazioni
 
@@ -532,10 +586,7 @@ namespace VotoTouch.WPF
             }
             catch (Exception objExc)
             {
-                Logging.WriteToLog("Errore fn CaricaListeVotazioniDaDatabase: err: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione CaricaListeVotazioniDaDatabase" + "\n\n" +
-                    "Chiamare operatore esterno.\n\n " +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("CaricaListeVotazioniDaDatabase", objExc.Message);
             }
             finally
             {
@@ -633,10 +684,7 @@ namespace VotoTouch.WPF
             }
             catch (Exception objExc)
             {
-                Logging.WriteToLog("Errore fn CaricaListeDaDatabase: err: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione CaricaListeDaDatabase" + "\n\n" +
-                    "Chiamare operatore esterno.\n\n " +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("CaricaListeDaDatabase", objExc.Message);
             }
             finally
             {
@@ -648,9 +696,7 @@ namespace VotoTouch.WPF
 
         #endregion
 
-        // --------------------------------------------------------------------------
-		//  METODI SUI BADGE
-		// --------------------------------------------------------------------------
+		//  METODI SUI BADGE  --------------------------------------------------------------------------
 
         #region Metodi sui Badge (Presenza, ha già votato...)
 
@@ -836,12 +882,8 @@ namespace VotoTouch.WPF
             }
             catch (Exception objExc)
             {
-                if (traStd != null) traStd.Rollback();
-                Logging.WriteToLog("<dberror> Errore fn ControllaBadge : " + AIDBadge.ToString() + " err: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione ControllaBadge" + "\n\n" +
-                    "Il controllo del Badge non è andato a buon fine.\n\n " +
-                    "Chiamare operatore esterno.\n\n " +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                traStd?.Rollback();
+                Utils.errorCall("ControllaBadge", objExc.Message);
                 result = false;
             }
             finally
@@ -908,9 +950,7 @@ namespace VotoTouch.WPF
 
         #endregion
 
-		// --------------------------------------------------------------------------
-		//  LETTURA DATI AZIONISTA
-		// --------------------------------------------------------------------------
+		//  LETTURA DATI AZIONISTA  --------------------------------------------------------------------------
 
         #region Caricamento dati Azionista 
 
@@ -1047,10 +1087,7 @@ namespace VotoTouch.WPF
             }
             catch (Exception objExc)
             {
-                Logging.WriteToLog("Errore fn CaricaDirittidiVotoDaDatabaseDBDATI: " + AIDBadge.ToString() + " err: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione CaricaDirittidiVotoDaDatabaseDBDATI" + "\n\n" +
-                    "Chiamare operatore esterno.\n\n " +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("CaricaDirittidiVotoDaDatabaseDBDATI", objExc.Message);
             }
             finally
             {
@@ -1062,9 +1099,7 @@ namespace VotoTouch.WPF
 
 	    #endregion
 
-        // --------------------------------------------------------------------------
-        //  CONTROLLO DELLA VOTAZIONE
-        // --------------------------------------------------------------------------
+        //  CONTROLLO DELLA VOTAZIONE --------------------------------------------------------------------------
 
         #region Salvataggio Voti
 
@@ -1168,11 +1203,7 @@ namespace VotoTouch.WPF
             {
                 traStd?.Rollback();
                 result = 0;
-                Logging.WriteToLog("<dberror> fn SalvaTutto: " + AIDBadge.ToString() + " err: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione SalvaTutto " + "\n\n" +
-                    "Impossibile salvare i voti.\n\n " +
-                    "Chiamare operatore esterno.\n\n " +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("SalvaTutto", objExc.Message);
             }
             finally
             {
@@ -1356,11 +1387,7 @@ namespace VotoTouch.WPF
             {
                 traStd?.Rollback();
                 result = 0;
-                Logging.WriteToLog("<dberror> fn SalvaTuttoInGeas: " + AIDBadge.ToString() + " err: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione SalvaTuttoInGeas " + "\n\n" +
-                    "Impossibile salvare i voti Geas.\n\n " +
-                    "Chiamare operatore esterno.\n\n " +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("SalvaTuttoInGeas", objExc.Message);
             }
             finally
             {
@@ -1374,9 +1401,7 @@ namespace VotoTouch.WPF
 
         #endregion
 
-        // --------------------------------------------------------------------------
-        //  ALTRE FUNZIONI DELLA VOTAZIONE
-        // --------------------------------------------------------------------------
+        //  ALTRE FUNZIONI DELLA VOTAZIONE  --------------------------------------------------------------------------
 
         #region Altre funzioni votazione
 
@@ -1403,7 +1428,7 @@ namespace VotoTouch.WPF
                 // possono essere nulli
                 if (VTConfig.IsOrdinaria)
                     result = ab.IsDBNull(ab.GetOrdinal("AzOrd")) ? 0 : Convert.ToInt32(ab["AzOrd"]);
-                    //c.NAzioni = Convert.ToDouble(a["AzOrd"]);
+                //c.NAzioni = Convert.ToDouble(a["AzOrd"]);
                 else
                 {
                     if (!VTConfig.IsOrdinaria && VTConfig.IsStraordinaria)
@@ -1479,7 +1504,7 @@ namespace VotoTouch.WPF
             catch (Exception objExc)
             {
                 result = -1;
-                Logging.WriteToLog("<dberror> fn CheckStatoVoto: " + ANomeTotem + " err: " + objExc.Message);
+                Utils.errorCall("CheckStatoVoto", objExc.Message);
             }
             finally
             {
@@ -1551,8 +1576,7 @@ namespace VotoTouch.WPF
             {
                 traStd.Rollback();
                 result = false;
-                MessageBox.Show("Errore nella funzione CancellaBadgeVotazioni, badge: " + AIDBadge.ToString() + "\n" +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("CancellaBadgeVotazioni, badge:" +AIDBadge, objExc.Message);
             }
             finally
             {
@@ -1602,8 +1626,7 @@ namespace VotoTouch.WPF
             {
                 traStd.Rollback();
                 result = false;
-                MessageBox.Show("Errore nella funzione CancellaTuttiVoti" + "\n" +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("CancellaTuttiVoti", objExc.Message);
             }
             qryStd.Dispose();
             traStd.Dispose();
@@ -1615,9 +1638,7 @@ namespace VotoTouch.WPF
 
         #endregion
 
-        // --------------------------------------------------------------
-		//  METODI DI CONFIGURAZIONE
-		// --------------------------------------------------------------
+		//  METODI DI CONFIGURAZIONE --------------------------------------------------------------------------
 		
 		// carica la configurazione 
         public override Boolean CaricaConfig()
@@ -1664,7 +1685,7 @@ namespace VotoTouch.WPF
             }
             catch (Exception e)
             {
-                Logging.WriteToLog("<dberror> fn CaricaConfig: " + VTConfig.NomeTotem + " err: " + e.Message);
+                Utils.errorCall("CaricaConfig", e.Message);
                 return false;
             }		
 
@@ -1697,9 +1718,7 @@ namespace VotoTouch.WPF
             }
             catch (Exception objExc)
             {
-                Logging.WriteToLog("<dberror> Errore nella funzione DammiTuttiIBadgeValidi: " + objExc.Message);
-                MessageBox.Show("Errore nella funzione DammiTuttiIBadgeValidi" + "\n" +
-                    "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.errorCall("DammiTuttiIBadgeValidi", objExc.Message);
             }
             finally
             {

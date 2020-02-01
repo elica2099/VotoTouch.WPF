@@ -31,7 +31,7 @@ namespace VotoTouch.WPF
             if (VTConfig.IsDebugMode)
             {
                 //creo la label del mouse
-                TextBlock lblMouse = new TextBlock()
+                UTextBlock lblMouse = new UTextBlock()
                 {
                     Name = "lblMouse",
                     Text = "0 : 0",
@@ -58,168 +58,179 @@ namespace VotoTouch.WPF
 
             // ok ora i label normali
             // nome disgiunto
-            TextBlock lblNomeDisgiunto = new TextBlock()
+            UTextBlock lblNomeDisgiunto = new UTextBlock()
             {
                 Name = "lblNomeDisgiunto",
                 Text = "lblNomeDisgiunto",
+                ToolTip = "lblNomeDisgiunto",
                 Visibility = Visibility.Hidden,
-                TextWrapping = TextWrapping.Wrap,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
+                Background = VTConfig.IsPaintTouch ? Brushes.DarkSeaGreen : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblNomeDisgiunto, TextBlock.TextProperty, new Binding("TxtNomeDisgiunto"));
-            BindingOperations.SetBinding(lblNomeDisgiunto, TextBlock.VisibilityProperty, 
+            lblNomeDisgiunto.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblNomeDisgiunto, UTextBlock.TextProperty, new Binding("TxtNomeDisgiunto"));
+            BindingOperations.SetBinding(lblNomeDisgiunto, UTextBlock.VisibilityProperty, 
                 new Binding("TxtNomeDisgiuntoVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtNomeDisgiuntoVis = false;
             mainGrid.Children.Add(lblNomeDisgiunto);
             mainGrid.RegisterName(lblNomeDisgiunto.Name, lblNomeDisgiunto);
             
             // nome lblDisgiuntoRimangono
-            TextBlock lblDisgiuntoRimangono = new TextBlock()
+            UTextBlock lblDisgiuntoRimangono = new UTextBlock()
             {
                 Name = "lblDisgiuntoRimangono",
                 Text = "lblDisgiuntoRimangono",
+                ToolTip = "lblDisgiuntoRimangono",
                 Visibility = Visibility.Hidden,
-                TextWrapping = TextWrapping.Wrap,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
+                Background = VTConfig.IsPaintTouch ? Brushes.OldLace : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblDisgiuntoRimangono, TextBlock.TextProperty, new Binding("TxtDisgiuntoRimangono"));
-            BindingOperations.SetBinding(lblDisgiuntoRimangono, TextBlock.VisibilityProperty, 
+            lblDisgiuntoRimangono.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblDisgiuntoRimangono, UTextBlock.TextProperty, new Binding("TxtDisgiuntoRimangono"));
+            BindingOperations.SetBinding(lblDisgiuntoRimangono, UTextBlock.VisibilityProperty, 
                 new Binding("TxtDisgiuntoRimangonoVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtDisgiuntoRimangonoVis = false;
             mainGrid.Children.Add(lblDisgiuntoRimangono);
             mainGrid.RegisterName(lblDisgiuntoRimangono.Name, lblDisgiuntoRimangono);
             
             // nome lblDirittiStart
-            TextBlock lblDirittiStart = new TextBlock()
+            UTextBlock lblDirittiStart = new UTextBlock()
             {
                 Name = "lblDirittiStart",
                 Text = "lblDirittiStart",
+                ToolTip = "lblDirittiStart",
                 Visibility = Visibility.Hidden,
-                TextWrapping = TextWrapping.Wrap,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 Background = VTConfig.IsPaintTouch ? Brushes.Tan : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblDirittiStart, TextBlock.TextProperty, new Binding("TxtDirittiStart"));
-            BindingOperations.SetBinding(lblDirittiStart, TextBlock.VisibilityProperty, 
+            lblDirittiStart.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblDirittiStart, UTextBlock.TextProperty, new Binding("TxtDirittiStart"));
+            BindingOperations.SetBinding(lblDirittiStart, UTextBlock.VisibilityProperty, 
                 new Binding("TxtDirittiStartVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtDirittiStartVis = false;
             mainGrid.Children.Add(lblDirittiStart);
             mainGrid.RegisterName(lblDirittiStart.Name, lblDirittiStart);
 
             // nome lblDirittiStartMin
-            TextBlock lblDirittiStartMin = new TextBlock()
+            UTextBlock lblDirittiStartMin = new UTextBlock()
             {
                 Name = "lblDirittiStartMin",
                 Text = "lblDirittiStartMin",
+                ToolTip = "lblDirittiStartMin",
                 Visibility = Visibility.Hidden,
-                TextWrapping = TextWrapping.Wrap,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 Background = VTConfig.IsPaintTouch ? Brushes.Tan : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblDirittiStartMin, TextBlock.TextProperty, new Binding("TxtDirittiStartMin"));
-            BindingOperations.SetBinding(lblDirittiStartMin, TextBlock.VisibilityProperty, 
+            lblDirittiStartMin.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblDirittiStartMin, UTextBlock.TextProperty, new Binding("TxtDirittiStartMin"));
+            BindingOperations.SetBinding(lblDirittiStartMin, UTextBlock.VisibilityProperty, 
                 new Binding("TxtDirittiStartMinVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtDirittiStartMinVis = false;
             mainGrid.Children.Add(lblDirittiStartMin);
             mainGrid.RegisterName(lblDirittiStartMin.Name, lblDirittiStartMin);
 
             // lblDirittiDiVoto
-            TextBlock lblDirittiDiVoto = new TextBlock()
+            UTextBlock lblDirittiDiVoto = new UTextBlock()
             {
                 Name = "lblDirittiDiVoto",
                 Text = "lblDirittiDiVoto",
+                ToolTip = "lblDirittiDiVoto",
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                TextWrapping = TextWrapping.Wrap,
                 Background = VTConfig.IsPaintTouch ? Brushes.Coral : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblDirittiDiVoto, TextBlock.TextProperty, new Binding("TxtDirittiDiVoto"));
-            BindingOperations.SetBinding(lblDirittiDiVoto, TextBlock.VisibilityProperty, 
+            lblDirittiDiVoto.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblDirittiDiVoto, UTextBlock.TextProperty, new Binding("TxtDirittiDiVoto"));
+            BindingOperations.SetBinding(lblDirittiDiVoto, UTextBlock.VisibilityProperty, 
                 new Binding("TxtDirittiDiVotoVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtDirittiDiVotoVis = false;
             mainGrid.Children.Add(lblDirittiDiVoto);
             mainGrid.RegisterName(lblDirittiDiVoto.Name, lblDirittiDiVoto);
 
             // lbConferma
-            TextBlock lblConferma = new TextBlock()
+            ULabelCandidati lblConferma = new ULabelCandidati()
             {
                 Name = "lblConferma",
-                Text = "lblConferma",
+                ToolTip = "lblConferma",
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                TextWrapping = TextWrapping.Wrap,
                 Background = VTConfig.IsPaintTouch ? Brushes.Red : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblConferma, TextBlock.TextProperty, new Binding("TxtConferma"));
-            BindingOperations.SetBinding(lblConferma, TextBlock.VisibilityProperty, 
+            lblConferma.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblConferma, ULabelCandidati.SetTextProperty, new Binding("TxtConferma"));
+            BindingOperations.SetBinding(lblConferma, ULabelCandidati.VisibilityProperty, 
                 new Binding("TxtConfermaVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtConfermaVis = false;
             mainGrid.Children.Add(lblConferma);
             mainGrid.RegisterName(lblConferma.Name, lblConferma);
             
             // lbConfermaUp
-            TextBlock lblConfermaUp = new TextBlock()
+            UTextBlock lblConfermaUp = new UTextBlock()
             {
                 Name = "lblConfermaUp",
                 Text = "lblConfermaUp",
+                ToolTip = "lblConfermaUp",
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                TextWrapping = TextWrapping.Wrap,
                 Background = VTConfig.IsPaintTouch ? Brushes.Turquoise : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblConfermaUp, TextBlock.TextProperty, new Binding("TxtConfermaUp"));
-            BindingOperations.SetBinding(lblConfermaUp, TextBlock.VisibilityProperty, 
+            lblConfermaUp.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblConfermaUp, UTextBlock.TextProperty, new Binding("TxtConfermaUp"));
+            BindingOperations.SetBinding(lblConfermaUp, UTextBlock.VisibilityProperty, 
                 new Binding("TxtConfermaUpVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtConfermaUpVis = false;
             mainGrid.Children.Add(lblConfermaUp);
             mainGrid.RegisterName(lblConfermaUp.Name, lblConfermaUp);
             
             // lbConfermaNVoti
-            TextBlock lblConfermaNVoti = new TextBlock()
+            UTextBlock lblConfermaNVoti = new UTextBlock()
             {
                 Name = "lblConfermaNVoti",
                 Text = "lblConfermaNVoti",
+                ToolTip = "lblConfermaNVoti",
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                TextWrapping = TextWrapping.Wrap,
                 Background = VTConfig.IsPaintTouch ? Brushes.GreenYellow : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblConfermaNVoti, TextBlock.TextProperty, new Binding("TxtConfermaNVoti"));
-            BindingOperations.SetBinding(lblConfermaNVoti, TextBlock.VisibilityProperty, 
+            lblConfermaNVoti.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblConfermaNVoti, UTextBlock.TextProperty, new Binding("TxtConfermaNVoti"));
+            BindingOperations.SetBinding(lblConfermaNVoti, UTextBlock.VisibilityProperty, 
                 new Binding("TxtConfermaNVotiVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtConfermaNVotiVis = false;
             mainGrid.Children.Add(lblConfermaNVoti);
             mainGrid.RegisterName(lblConfermaNVoti.Name, lblConfermaNVoti);
             
             // lblNomeAzStart
-            TextBlock lblNomeAzStart = new TextBlock()
+            UTextBlock lblNomeAzStart = new UTextBlock()
             {
                 Name = "lblNomeAzStart",
                 Text = "lblNomeAzStart",
+                ToolTip = "lblNomeAzStart",
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                TextWrapping = TextWrapping.Wrap,
                 VerticalAlignment = VerticalAlignment.Top,
+                Background = VTConfig.IsPaintTouch ? Brushes.Plum : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblNomeAzStart, TextBlock.TextProperty, new Binding("TxtNomeAzStart"));
-            BindingOperations.SetBinding(lblNomeAzStart, TextBlock.VisibilityProperty, 
+            lblNomeAzStart.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblNomeAzStart, UTextBlock.TextProperty, new Binding("TxtNomeAzStart"));
+            BindingOperations.SetBinding(lblNomeAzStart, UTextBlock.VisibilityProperty, 
                 new Binding("TxtNomeAzStartVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtNomeAzStartVis = false;
             mainGrid.Children.Add(lblNomeAzStart);
@@ -227,99 +238,111 @@ namespace VotoTouch.WPF
 
             // multiselezione/candidati
             // lblNSelezioni
-            TextBlock lblNSelezioni = new TextBlock()
+            UTextBlock lblNSelezioni = new UTextBlock()
             {
                 Name = "lblNSelezioni",
                 Text = "lblNSelezioni",
+                ToolTip = "lblNSelezioni",
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                TextWrapping = TextWrapping.Wrap,
                 VerticalAlignment = VerticalAlignment.Top,
+                Background = VTConfig.IsPaintTouch ? Brushes.Wheat : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblNSelezioni, TextBlock.TextProperty, new Binding("TxtNSelezioni"));
-            BindingOperations.SetBinding(lblNSelezioni, TextBlock.VisibilityProperty, 
+            lblNSelezioni.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblNSelezioni, UTextBlock.TextProperty, new Binding("TxtNSelezioni"));
+            BindingOperations.SetBinding(lblNSelezioni, UTextBlock.VisibilityProperty, 
                 new Binding("TxtNSelezioniVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtNSelezioniVis = false;
             mainGrid.Children.Add(lblNSelezioni);
             mainGrid.RegisterName(lblNSelezioni.Name, lblNSelezioni);
 
             // lblCandidati_PresCDA
-            TextBlock lblCandidati_PresCDA = new TextBlock()
+            UTextBlock lblCandidati_PresCDA = new UTextBlock()
             {
                 Name = "lblCandidati_PresCDA",
                 Text = "lblCandidati_PresCDA",
+                ToolTip = "lblCandidati_PresCDA",
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                TextWrapping = TextWrapping.Wrap,
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblCandidati_PresCDA, TextBlock.TextProperty, new Binding("TxtCandidati_PresCDA"));
-            BindingOperations.SetBinding(lblCandidati_PresCDA, TextBlock.VisibilityProperty, 
+            lblCandidati_PresCDA.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblCandidati_PresCDA, UTextBlock.TextProperty, new Binding("TxtCandidati_PresCDA"));
+            BindingOperations.SetBinding(lblCandidati_PresCDA, UTextBlock.VisibilityProperty, 
                 new Binding("TxtCandidati_PresCDAVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtCandidati_PresCDAVis = false;
             mainGrid.Children.Add(lblCandidati_PresCDA);
             mainGrid.RegisterName(lblCandidati_PresCDA.Name, lblCandidati_PresCDA);
 
             // lblCandidati_Altern
-            TextBlock lblCandidati_Altern = new TextBlock()
+            UTextBlock lblCandidati_Altern = new UTextBlock()
             {
                 Name = "lblCandidati_Altern",
                 Text = "lblCandidati_Altern",
+                ToolTip = "lblCandidati_Altern",
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                TextWrapping = TextWrapping.Wrap,
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(20,20,0,0)
             };
-            BindingOperations.SetBinding(lblCandidati_Altern, TextBlock.TextProperty, new Binding("TxtCandidati_Altern"));
-            BindingOperations.SetBinding(lblCandidati_Altern, TextBlock.VisibilityProperty, 
+            lblCandidati_Altern.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
+            BindingOperations.SetBinding(lblCandidati_Altern, UTextBlock.TextProperty, new Binding("TxtCandidati_Altern"));
+            BindingOperations.SetBinding(lblCandidati_Altern, UTextBlock.VisibilityProperty, 
                 new Binding("TxtCandidati_AlternVis"){ Converter = new BooleanToHiddenVisibility() });
             _TxtCandidati_AlternVis = false;
             mainGrid.Children.Add(lblCandidati_Altern);
             mainGrid.RegisterName(lblCandidati_Altern.Name, lblCandidati_Altern);
         }
 
+        private void AllLabelStartOnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // qua dovrebbe esserci la finestra di personalizzazione della label
+
+            //MessageBox.Show("sdfsdfs");
+            //throw new NotImplementedException();
+        }
+
         //   Caricamento Tema da VotoTheme ----------------------------------------------------------------
 
         private void CaricaTemaInControlli()
         {
-            TextBlock lblDirittiStart = (TextBlock) this.mainGrid.FindName("lblDirittiStart");
+            UTextBlock lblDirittiStart = (UTextBlock) this.mainGrid.FindName("lblDirittiStart");
             if (lblDirittiStart != null) oVotoTheme.SetTheme_lbDirittiStart(ref lblDirittiStart);
 
-            TextBlock lblDirittiStartMin = (TextBlock) this.mainGrid.FindName("lblDirittiStartMin");
+            UTextBlock lblDirittiStartMin = (UTextBlock) this.mainGrid.FindName("lblDirittiStartMin");
             if (lblDirittiStartMin != null) oVotoTheme.SetTheme_lbDirittiStartMin(ref lblDirittiStartMin);
 
-            TextBlock lblDirittiDiVoto = (TextBlock) this.mainGrid.FindName("lblDirittiDiVoto");
+            UTextBlock lblDirittiDiVoto = (UTextBlock) this.mainGrid.FindName("lblDirittiDiVoto");
             if (lblDirittiDiVoto != null) oVotoTheme.SetTheme_lbDirittiDiVoto(ref lblDirittiDiVoto);
 
             // carico il tema da vototouch, semplicemente richiamando le singole label
-            TextBlock lblNomeDisgiunto = (TextBlock) this.mainGrid.FindName("lblNomeDisgiunto");
+            UTextBlock lblNomeDisgiunto = (UTextBlock) this.mainGrid.FindName("lblNomeDisgiunto");
             if (lblNomeDisgiunto != null) oVotoTheme.SetTheme_lbNomeDisgiunto(ref lblNomeDisgiunto);
 
-            TextBlock lblDisgiuntoRimangono = (TextBlock) this.mainGrid.FindName("lblDisgiuntoRimangono");
+            UTextBlock lblDisgiuntoRimangono = (UTextBlock) this.mainGrid.FindName("lblDisgiuntoRimangono");
             if (lblDisgiuntoRimangono != null) oVotoTheme.SetTheme_lbDisgiuntoRimangono(ref lblDisgiuntoRimangono);
 
-            TextBlock lblConferma = (TextBlock) this.mainGrid.FindName("lblConferma");
+            ULabelCandidati lblConferma = (ULabelCandidati) this.mainGrid.FindName("lblConferma");
             if (lblConferma != null) oVotoTheme.SetTheme_lbConferma(ref lblConferma);
 
-            TextBlock lblConfermaUp = (TextBlock) this.mainGrid.FindName("lblConfermaUp");
+            UTextBlock lblConfermaUp = (UTextBlock) this.mainGrid.FindName("lblConfermaUp");
             if (lblConfermaUp != null) oVotoTheme.SetTheme_lbConfermaUp(ref lblConfermaUp);
 
-            TextBlock lblConfermaNVoti = (TextBlock) this.mainGrid.FindName("lblConfermaNVoti");
+            UTextBlock lblConfermaNVoti = (UTextBlock) this.mainGrid.FindName("lblConfermaNVoti");
             if (lblConfermaNVoti != null) oVotoTheme.SetTheme_lbConfermaNVoti(ref lblConfermaNVoti);
 
-            TextBlock lblNomeAzStart = (TextBlock) this.mainGrid.FindName("lblNomeAzStart");
+            UTextBlock lblNomeAzStart = (UTextBlock) this.mainGrid.FindName("lblNomeAzStart");
             if (lblNomeAzStart != null) oVotoTheme.SetTheme_lbNomeAzStart(ref lblNomeAzStart);
 
-            TextBlock lblNSelezioni = (TextBlock) this.mainGrid.FindName("lblNSelezioni");
+            UTextBlock lblNSelezioni = (UTextBlock) this.mainGrid.FindName("lblNSelezioni");
             if (lblNSelezioni != null) oVotoTheme.SetTheme_lbNSelezioni(ref lblNSelezioni);
 
-            TextBlock lblCandidati_PresCDA = (TextBlock) this.mainGrid.FindName("lblCandidati_PresCDA");
+            UTextBlock lblCandidati_PresCDA = (UTextBlock) this.mainGrid.FindName("lblCandidati_PresCDA");
             if (lblCandidati_PresCDA != null) oVotoTheme.SetTheme_lbCandidati_PresCDA(ref lblCandidati_PresCDA);
 
-            TextBlock lblCandidati_Altern = (TextBlock) this.mainGrid.FindName("lblCandidati_Altern");
+            UTextBlock lblCandidati_Altern = (UTextBlock) this.mainGrid.FindName("lblCandidati_Altern");
             if (lblCandidati_Altern != null) oVotoTheme.SetTheme_lbCandidati_Altern(ref lblCandidati_Altern);
 
         }
@@ -515,8 +538,8 @@ namespace VotoTouch.WPF
                 TxtConfermaUp = VotoEspressoStrUp;
                 TxtConferma = VotoEspressoStr;
                 //lbConferma.TextNote = VotoEspressoStrNote;
-                TextBlock lblConfermaUp = (TextBlock) this.mainGrid.FindName("lblConfermaUp");
-                if (lblConfermaUp != null) oVotoTheme.SetTheme_lbConferma(ref lblConfermaUp);
+                //TextBlock lblConfermaUp = (TextBlock) this.mainGrid.FindName("lblConfermaUp");
+                //if (lblConfermaUp != null) oVotoTheme.SetTheme_lbConfermaUp(ref lblConfermaUp);
             }
 
             // attenzione, se ho una sk bianca o non voto non metto i diritii

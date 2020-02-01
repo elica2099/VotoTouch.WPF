@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using VotoTouch.WPF.Views.UserControls;
 
 // -----------------------------------------------------------------------
 //			VOTO SEGRETO - 
@@ -136,7 +137,6 @@ namespace VotoTouch.WPF
                         GetZone(ref a, Convert.ToInt32(r["ULeft"]), Convert.ToInt32(r["UTop"]),
                                        Convert.ToInt32(r["URight"]), Convert.ToInt32(r["UBottom"]));
                         c.Foreground = new SolidColorBrush(VSDecl.HexToColor(r["Color"].ToString()));
-                        //c.Visible = Convert.ToBoolean(r["Visible"]);
                         c.TextAlignment = GetTextAlignment(Convert.ToInt32(r["Align"]));
                         // font
                         c.FontWeight = Convert.ToBoolean(r["Bold"]) ? FontWeights.DemiBold : FontWeights.Normal;
@@ -155,8 +155,7 @@ namespace VotoTouch.WPF
             return ret;
         }
 
-        /*
-        public bool ThemeToLabelCandidati(string ObjName, ref LabelCandidati c, ref Rectangle a)
+        public bool ThemeToULabel(string ObjName, ref UTextBlock c, ref Rect a)
         {
             bool ret = false;
 
@@ -166,20 +165,15 @@ namespace VotoTouch.WPF
                 {
                     foreach (DataRow r in dtTema.Select("Oggetto = '" + ObjName + "'"))
                     {
-                        Debug.WriteLine(r["Oggetto"].ToString());
-                        Debug.WriteLine(r["Bold"].ToString());
-                        Debug.WriteLine(r["Point"].ToString());
-
                         GetZone(ref a, Convert.ToInt32(r["ULeft"]), Convert.ToInt32(r["UTop"]),
-                                       Convert.ToInt32(r["URight"]), Convert.ToInt32(r["UBottom"]));
-                        c.ForeColor = System.Drawing.ColorTranslator.FromHtml(r["Color"].ToString());
-                        //c.Visible = Convert.ToBoolean(r["Visible"]);
-                        c.TextAlign = GetTextLabelAlignment(Convert.ToInt32(r["Align"]));
+                            Convert.ToInt32(r["URight"]), Convert.ToInt32(r["UBottom"]));
+                        c.Foreground = new SolidColorBrush(VSDecl.HexToColor(r["Color"].ToString()));
+                        c.TextAlignment = GetTextAlignment(Convert.ToInt32(r["Align"]));
                         // font
-                        FontStyle fs = FontStyle.Regular;
-                        if (Convert.ToBoolean(r["Bold"])) fs = FontStyle.Bold;
-                        c.Font = new Font(r["Font"].ToString(), Convert.ToSingle(r["Point"]), fs);
-
+                        c.FontWeight = Convert.ToBoolean(r["Bold"]) ? FontWeights.DemiBold : FontWeights.Normal;
+                        c.FontStyle = Convert.ToBoolean(r["Italic"]) ? FontStyles.Italic : FontStyles.Normal;
+                        c.FontSize = Convert.ToDouble(r["Point"]);
+                        c.FontFamily = new FontFamily(r["Font"].ToString());
                         ret = true;
                     }
                 }
@@ -191,7 +185,37 @@ namespace VotoTouch.WPF
             }
             return ret;
         }
-        */
+
+        public bool ThemeToLabelCandidati(string ObjName, ref ULabelCandidati c, ref Rect a)
+        {
+            bool ret = false;
+
+            try
+            {
+                if (IsThemed && dtTema.Rows.Count > 0)  // se ha il tema la cerco nella datatable
+                {
+                    foreach (DataRow r in dtTema.Select("Oggetto = '" + ObjName + "'"))
+                    {
+                        GetZone(ref a, Convert.ToInt32(r["ULeft"]), Convert.ToInt32(r["UTop"]),
+                            Convert.ToInt32(r["URight"]), Convert.ToInt32(r["UBottom"]));
+                        c.Foreground = new SolidColorBrush(VSDecl.HexToColor(r["Color"].ToString()));
+                        //c.TextAlignment = GetTextAlignment(Convert.ToInt32(r["Align"]));
+                        // font
+                        c.FontWeight = Convert.ToBoolean(r["Bold"]) ? FontWeights.DemiBold : FontWeights.Normal;
+                        c.FontStyle = Convert.ToBoolean(r["Italic"]) ? FontStyles.Italic : FontStyles.Normal;
+                        c.FontSize = Convert.ToDouble(r["Point"]);
+                        c.FontFamily = new FontFamily(r["Font"].ToString());
+                        ret = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // non fare nulla, rimane come prima
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
+            return ret;
+        }
 
         public bool ThemeToPaint(string ObjName, ref TTheme th)
         {
@@ -420,143 +444,144 @@ namespace VotoTouch.WPF
         //  SETTING DELLE LABEL
         //-----------------------------------------------------------------------------
         
-        public void SetTheme_lbNomeAzStart(ref TextBlock c)
+        public void SetTheme_lbNomeAzStart(ref UTextBlock c)
         {
             // mi arriva un controllo qualsiasi
             Rect a = new Rect();
             //GetZone(ref a, 1, 30, 99, 40);
-            if (IsThemed) { if (!ThemeToLabel("lbNomeAzStart", ref c, ref a)) GetZone(ref a, 1, 30, 99, 40); }
+            if (IsThemed) { if (!ThemeToULabel("lbNomeAzStart", ref c, ref a)) GetZone(ref a, 1, 30, 99, 40); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;
         }
 
-        public void SetTheme_lbDirittiStart(ref TextBlock c)
+        public void SetTheme_lbDirittiStart(ref UTextBlock c)
         {
             // La label dell'apertura del voto grande con i diritti di voto
             Rect a = new Rect();
             //GetZone(ref a, 20, 26, 38, 42);
-            if (IsThemed) { if (!ThemeToLabel("lbDirittiStart", ref c, ref a)) GetZone(ref a, 20, 26, 38, 42); }
+            if (IsThemed) { if (!ThemeToULabel("lbDirittiStart", ref c, ref a)) GetZone(ref a, 20, 26, 38, 42); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;
         }
 
-        public void SetTheme_lbDirittiStartMin(ref TextBlock c)
+        public void SetTheme_lbDirittiStartMin(ref UTextBlock c)
         {
             // La label dell'apertura del voto grande con i diritti di voto
             Rect a = new Rect();
-            if (IsThemed) { if (!ThemeToLabel("lbDirittiStartMin", ref c, ref a)) GetZone(ref a, 20, 26, 38, 42); }
+            if (IsThemed) { if (!ThemeToULabel("lbDirittiStartMin", ref c, ref a)) GetZone(ref a, 20, 26, 38, 42); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;
         }
 
-        public void SetTheme_lbConfermaUp(ref TextBlock c)
-        {
-            // questa è la label di conferma dove sono scritte chi ha votato (es. LISTA 1)
-            Rect a = new Rect();
-            //GetZone(ref a, 15, 37, 85, 41);
-            if (IsThemed) { if (!ThemeToLabel("lbConfermaUp", ref c, ref a)) GetZone(ref a, 15, 37, 85, 41); }
-            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
-            c.Width = a.Width;
-            c.Height = a.Height;
-        }
-
-        public void SetTheme_lbConfermaUp_Cand(ref TextBlock c)
-        {
-            // questa è la label di conferma dove sono scritte chi ha votato (es. LISTA 1)
-            Rect a = new Rect();
-            //GetZone(ref a, 15, 37, 85, 41);
-            if (IsThemed) { if (!ThemeToLabel("lbConfermaUp_Cand", ref c, ref a)) GetZone(ref a, 15, 37, 85, 41); }
-            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
-            c.Width = a.Width;
-            c.Height = a.Height;
-        }
-
-
-        public void SetTheme_lbConferma(ref TextBlock c)
+        public void SetTheme_lbConferma(ref ULabelCandidati c)
         {
             // questa è la label di conferma dove sono scritte chi ha votato (es. Pippo Franco, Gianni Rossi)
             Rect a = new Rect();
             //GetZone(ref a, 15, 41, 85, 56);
-            //if (IsThemed) { if (!ThemeToLabelCandidati("lbConferma", ref c, ref a)) GetZone(ref a, 15, 41, 85, 56); }
-            if (IsThemed) { if (!ThemeToLabel("lbConferma", ref c, ref a)) GetZone(ref a, 15, 41, 85, 56); }
+            if (IsThemed) { if (!ThemeToLabelCandidati("lbConferma", ref c, ref a)) GetZone(ref a, 15, 41, 85, 56); }
+            //if (IsThemed) { if (!ThemeToLabel("lbConferma", ref c, ref a)) GetZone(ref a, 15, 41, 85, 56); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;
         }
 
-        public void SetTheme_lbConfermaNVoti(ref TextBlock c)
+        public void SetTheme_lbConfermaUp(ref UTextBlock c)
+        {
+            // questa è la label di conferma dove sono scritte chi ha votato (es. LISTA 1)
+            Rect a = new Rect();
+            //GetZone(ref a, 15, 37, 85, 41);
+            if (IsThemed) { if (!ThemeToULabel("lbConfermaUp", ref c, ref a)) GetZone(ref a, 15, 37, 85, 41); }
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Height = a.Height;
+        }
+
+        public void SetTheme_lbConfermaUp_Cand(ref UTextBlock c)
+        {
+            // questa è la label di conferma dove sono scritte chi ha votato (es. LISTA 1)
+            Rect a = new Rect();
+            //GetZone(ref a, 15, 37, 85, 41);
+            if (IsThemed) { if (!ThemeToULabel("lbConfermaUp_Cand", ref c, ref a)) GetZone(ref a, 15, 37, 85, 41); }
+            c.Margin = new Thickness(a.Left, a.Top, 0, 0);
+            c.Width = a.Width;
+            c.Height = a.Height;
+        }
+
+
+
+        public void SetTheme_lbConfermaNVoti(ref UTextBlock c)
         {
             // questa è la label che è dopo Esprima: nella schermata di conferma (es. 1 Diritto di voto)
             Rect a = new Rect();
             //GetZone(ref a, 14, 28, 85, 34);
-            if (IsThemed) { if (!ThemeToLabel("lbConfermaNVoti", ref c, ref a))  GetZone(ref a, 14, 28, 85, 34); }
+            if (IsThemed) { if (!ThemeToULabel("lbConfermaNVoti", ref c, ref a))  GetZone(ref a, 14, 28, 85, 34); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;
         }
 
-        public void SetTheme_lbDirittiDiVoto(ref TextBlock c)
+        public void SetTheme_lbDirittiDiVoto(ref UTextBlock c)
         {
             // questa è la label in basso a sx che indica i diritti di voto
             Rect a = new Rect();
             //GetZone(ref a, 0, 95, 25, 99);
-            if (IsThemed) { if (!ThemeToLabel("lbDirittiDiVoto", ref c, ref a)) GetZone(ref a, 0, 95, 25, 99); }
+            if (IsThemed) { if (!ThemeToULabel("lbDirittiDiVoto", ref c, ref a)) GetZone(ref a, 0, 95, 25, 99); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;
 
         }
         
-        public void SetTheme_lbNomeDisgiunto(ref TextBlock c)
+        public void SetTheme_lbNomeDisgiunto(ref UTextBlock c)
         {
             // mi arriva un controllo qualsiasi
             Rect a = new Rect();
             //GetZone(ref a, 26, 93, 51, 100);
-            if (IsThemed) { if (!ThemeToLabel("lbNomeDisgiunto", ref c, ref a)) GetZone(ref a, 26, 93, 51, 100); }
+            if (IsThemed) { if (!ThemeToULabel("lbNomeDisgiunto", ref c, ref a)) GetZone(ref a, 26, 93, 51, 100); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;
         }
 
-        public void SetTheme_lbDisgiuntoRimangono(ref TextBlock c)
+        public void SetTheme_lbDisgiuntoRimangono(ref UTextBlock c)
         {
             // mi arriva un controllo qualsiasi
             Rect a = new Rect();
             //GetZone(ref a, 1, 91, 25, 94);
-            if (IsThemed) { if (!ThemeToLabel("lbDisgiuntoRimangono", ref c, ref a)) GetZone(ref a, 1, 91, 25, 94); }
+            if (IsThemed) { if (!ThemeToULabel("lbDisgiuntoRimangono", ref c, ref a)) GetZone(ref a, 1, 91, 25, 94); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;
         }
 
-        public void SetTheme_lbNSelezioni(ref TextBlock c)
+        public void SetTheme_lbNSelezioni(ref UTextBlock c)
         {
             // mi arriva un controllo qualsiasi
             Rect a = new Rect();
-            if (IsThemed) { if (!ThemeToLabel("lbNSelezioni", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
+            if (IsThemed) { if (!ThemeToULabel("lbNSelezioni", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;
         }
 
-        public void SetTheme_lbCandidati_PresCDA(ref TextBlock c)
+        public void SetTheme_lbCandidati_PresCDA(ref UTextBlock c)
         {
             // mi arriva un controllo qualsiasi
             Rect a = new Rect();
-            if (IsThemed) { if (!ThemeToLabel("lbCandidati_PresCDA", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
+            if (IsThemed) { if (!ThemeToULabel("lbCandidati_PresCDA", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;
         }
 
-        public void SetTheme_lbCandidati_Altern(ref TextBlock c)
+        public void SetTheme_lbCandidati_Altern(ref UTextBlock c)
         {
             // mi arriva un controllo qualsiasi
             Rect a = new Rect();
-            if (IsThemed) { if (!ThemeToLabel("lbCandidati_Altern", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
+            if (IsThemed) { if (!ThemeToULabel("lbCandidati_Altern", ref c, ref a)) GetZone(ref a, 30, 10, 99, 18); }
             c.Margin = new Thickness(a.Left, a.Top, 0, 0);
             c.Width = a.Width;
             c.Height = a.Height;

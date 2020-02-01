@@ -1,0 +1,12 @@
+﻿<Window x:Class="VotoTouch.WPF.ToolDebugError"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                BorderThickness="1" 
+         BorderBrush="Red"
+        Title="Application Error" Height="440" Width="800" x:Name="FToolDebugError" 
+        ResizeMode="CanResize" WindowStartupLocation="Manual" ShowInTaskbar="true">
+
+    <Grid>
+        <ListBox HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" x:Name="lbxErrors"  />
+    </Grid>
+</Window>

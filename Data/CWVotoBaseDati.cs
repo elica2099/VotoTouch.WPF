@@ -48,6 +48,15 @@ namespace VotoTouch.WPF
         // --------------------------------------------------------------------------
         //  LETTURA CONFIGURAZIONE NEL DATABASE
         // --------------------------------------------------------------------------
+        public virtual int getDatabaseMode()
+        {
+            return 0;
+        }
+
+        public virtual int getDatabaseVersion()
+        {
+            return 0;
+        }
 
         public virtual int CaricaConfigDB(ref int ABadgeLen, ref string ACodImpianto)
         {

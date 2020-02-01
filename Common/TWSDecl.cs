@@ -40,6 +40,9 @@ namespace VotoTouch.WPF
         public static bool IsAdmin = false;
         public static bool IsStandalone = false;
 
+        // CONFIGURAZIONE DB
+        public static int DBMode;
+        public static int DBVersion;
         // CONFIGURAZIONE GENERALE
         public static int ModoAssemblea;
         public static string ValAssemblea;
@@ -175,6 +178,16 @@ namespace VotoTouch.WPF
         internal const string ICM_MAIN_CLOSESTATUSPANEL = "ICM_MainCloseStatusPanel";
         internal const string ICM_MAIN_SHOWCONFIG = "ICM_MainShowConfig";
         #endregion
+
+        // Mode of the database
+        internal const int DBMODE_SPA = 0;
+        internal const int DBMODE_POP = 1;
+
+        // Mode of the database
+        internal const int DBVERS_10 = 10;
+        internal const int DBVERS_12 = 12;
+        internal const string DBVERS_10_STR = "v10";
+        internal const string DBVERS_12_STR = "v12";
 
         // language constants
         internal const int LANGUAGE_IT = 0;

@@ -118,6 +118,7 @@ namespace VotoTouch.WPF
             VTConfig.IsDemoMode = File.Exists(VTConfig.Data_Path + "VTS_DEMO.txt");
             VTConfig.IsAdmin = File.Exists(VTConfig.Data_Path + "VTS_ADMIN.txt");
             VTConfig.IsStandalone = File.Exists(VTConfig.Data_Path + "VTS_STANDALONE.txt");
+            ShowCPLogo = true;
 
             // finestra di start
             FWSStart FStart = new FWSStart {WindowStartupLocation = WindowStartupLocation.CenterScreen};
@@ -276,6 +277,8 @@ namespace VotoTouch.WPF
             if (oDBDati.DBConnect() != null)
             {
                 int DBOk = 0;  // variabile di controllo sul caricamento
+                VTConfig.DBMode = oDBDati.getDatabaseMode();
+                VTConfig.DBVersion = oDBDati.getDatabaseVersion();
                 // leggo la configurazione del badge/impianto
                 DBOk += oDBDati.CaricaConfigDB(ref VTConfig.BadgeLen, ref VTConfig.CodImpianto);
                 // leggo la configurazione generale
@@ -399,6 +402,7 @@ namespace VotoTouch.WPF
                     ShowNoBarcode = false;
             }
 
+            ShowCPLogo = false;
         }
 
         private void frmMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -781,14 +785,14 @@ namespace VotoTouch.WPF
                 }
 
                 // Stato
-                case Key.S when Keyboard.Modifiers == ModifierKeys.Alt:
                 case Key.W when Keyboard.Modifiers == ModifierKeys.Control:
+                case Key.P when Keyboard.Modifiers == ModifierKeys.Control:
                     e.Handled = true;
                     MostraPannelloStato(true, false);
                     break;
 
                 // Stato Azionista
-                case Key.A when Keyboard.Modifiers == ModifierKeys.Alt:
+                case Key.A when Keyboard.Modifiers == ModifierKeys.Control:
                     MostraPannelloStato(false, true);
                     break;
 
@@ -898,7 +902,7 @@ namespace VotoTouch.WPF
         private void MainWindow_OnPreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (!VTConfig.IsDebugMode) return;
-            TextBlock lblMouse = (TextBlock) this.mainGrid.FindName("lblMouse");
+            UTextBlock lblMouse = (UTextBlock) this.mainGrid.FindName("lblMouse");
             if (lblMouse == null) return;
             Point dd = e.GetPosition(this);
             lblMouse.Text = "ScreenActual: " + this.ActualWidth + " / " + (int)this.ActualHeight +
@@ -933,6 +937,17 @@ namespace VotoTouch.WPF
             }
         }
 
+        private bool _ShowCPLogo;  
+        public bool ShowCPLogo
+        {
+            get => _ShowCPLogo;
+            set
+            {
+                _ShowCPLogo = value;
+                OnPropertyChanged("ShowCPLogo");
+            }
+        }
+        
         // labels
         private string _TxtNomeDisgiunto;  
         public string TxtNomeDisgiunto
