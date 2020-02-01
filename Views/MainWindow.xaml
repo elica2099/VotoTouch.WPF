@@ -28,11 +28,13 @@
     </Window.Resources>
 
     <Grid x:Name="mainGrid" >
-        <!-- semaforo e com
+        <!-- semaforo e com -->
         <TextBlock Margin="8,8,0,0" Text="&#xf488;" FontSize="20" Style="{StaticResource FontAwesome}" Foreground="White" 
-                   Background="Red" Visibility="{Binding Path=ShowNoBarcode, Converter={StaticResource boolToVis}}"  />
+                   Background="Red" Visibility="{Binding Path=ShowNoBarcode, Converter={StaticResource boolToVis}}"
+                   Width="24" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" />
         <TextBlock Margin="8,28,0,0" Text="&#xf637;" FontSize="20" Style="{StaticResource FontAwesome}" Foreground="White" 
-                   Background="Red" Visibility="{Binding Path=ShowNoSemaph, Converter={StaticResource boolToVis}}"  /> -->
+                   Background="Red" Visibility="{Binding Path=ShowNoSemaph, Converter={StaticResource boolToVis}}" 
+                   Width="24" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
 
 

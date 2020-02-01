@@ -32,7 +32,7 @@ namespace VotoTouch.WPF
 
         public bool SelezionaTuttiCDA;
 
-        public int NListe { get { return (Liste == null) ? 0 : Liste.Count; } }
+        public int NListe => (Liste == null) ? 0 : Liste.Count;
         public int NPresentatoCDA { get { return (Liste == null) ? 0 : Liste.Count(a => a.PresentatodaCDA == true); } }               
 
         public int NMultiSelezioni
@@ -150,7 +150,6 @@ namespace VotoTouch.WPF
         {
             if (_Votazioni.Count > 0 && AIDVoto >= 0)
             {
-                //TNewVotazione voto = _Votazioni.First(v => v.IDVoto == AIDVoto);
                 TNewVotazione vot = _Votazioni.First(v => v.IDVoto == AIDVoto);
                 if (vot != null)
                 {
@@ -162,7 +161,6 @@ namespace VotoTouch.WPF
             }
             else
                 return false;
-            //return _Votazioni.Count != 0;
         }
 
         // --------------------------------------------------------------------------

@@ -35,16 +35,15 @@ namespace VotoTouch.WPF
 		private SqlConnection STDBConn;
 
         // stringhe sql
-	    private string qry_DammiDirittiDiVoto_Titolare = "";
-	    private string qry_DammiDirittiDiVoto_Deleganti = "";
-        private string qry_DammiVotazioniTotem = "";
-        private string qry_DammiBadgePresenteGeas = "";
-        private string qry_MettiBadgePresenteGeas = "";
+	    private readonly string qry_DammiDirittiDiVoto_Titolare;
+	    private readonly string qry_DammiDirittiDiVoto_Deleganti;
+        private readonly string qry_DammiVotazioniTotem;
+        private readonly string qry_DammiBadgePresenteGeas;
+        private readonly string qry_MettiBadgePresenteGeas;
 
         public CVotoDBDati(ConfigDbData AFDBConfig, Boolean AADataLocal, string AAData_path) : 
             base(AFDBConfig, AADataLocal, AAData_path)
 		{
-			//
 			STDBConn = new SqlConnection();
 			FConnesso = false;
 			// setto i parametri di default di DBConfig
@@ -155,9 +154,6 @@ namespace VotoTouch.WPF
         public override int CaricaConfigDB(ref int ABadgeLen, ref string ACodImpianto)
         {
             // mi dice la lunghezza del badge e il codice impianto per il lettore
-            SqlDataReader a;
-
-            // testo la connessione
             if (!OpenConnection("CaricaConfigDB")) return 0;
 
             ABadgeLen = 8;
@@ -168,12 +164,11 @@ namespace VotoTouch.WPF
             {
                 // Leggo ora da CONFIG_cfgParametri	
                 qryStd.CommandText = "select * from CONFIG_cfgParametri with (nolock)";
-                a = qryStd.ExecuteReader();
+                SqlDataReader a = qryStd.ExecuteReader();
                 if (a.HasRows)
                 {
                     // devo verificare 
                     a.Read();
-
                     ABadgeLen = a.IsDBNull(a.GetOrdinal("LenNumBadge")) ? 8 : Convert.ToInt32(a["LenNumBadge"]);
                     ACodImpianto = a.IsDBNull(a.GetOrdinal("CodImpRea")) ? "00" : (a["CodImpRea"]).ToString();
                 }
@@ -192,7 +187,6 @@ namespace VotoTouch.WPF
                 {
                     // devo verificare 
                     a.Read();
-
                     VTConfig.ValAssemblea = a.IsDBNull(a.GetOrdinal("ValAssem")) ? "O" : (a["ValAssem"]).ToString();
                 }
                 else
@@ -222,11 +216,7 @@ namespace VotoTouch.WPF
 
         public override int DammiConfigTotem() //, ref TTotemConfig TotCfg)
         {
-            SqlDataReader a;
-
-            // testo la connessione
             if (!OpenConnection("DammiConfigTotem")) return 0;
-            
             int result = 0;
             // preparo gli oggetti
             SqlCommand qryStd = new SqlCommand
@@ -242,7 +232,7 @@ namespace VotoTouch.WPF
 
             try
             {
-                a = qryStd.ExecuteReader();
+                SqlDataReader a = qryStd.ExecuteReader();
                 // se c'è il record
                 if (a.HasRows)
                 {
@@ -279,13 +269,23 @@ namespace VotoTouch.WPF
                 if (inserisci)
                 {
                     // non c'è configurazione, devo inserirla
-                    qryStd.CommandText = "INSERT into CONFIG_POSTAZIONI_TOTEM " +
-                        "(Postazione, Descrizione, IdSeggio, Attivo, VotoAperto, UsaSemaforo, "+
-                        " IPCOMSemaforo, TipoSemaforo, UsaLettore, PortaLettore, CodiceUscita, " +
-                        " UsaController, IPController, Sala) " +
-                        " VALUES ('" + VTConfig.NomeTotem + "', 'Desc_" + VTConfig.NomeTotem + "', 999, 1, 0, 0, " +
-                        "'127.0.0.1', 2, 0, 1, '999999', 0, '127.0.0.1', 1)";
-                    
+                    qryStd.CommandText = @"INSERT into CONFIG_POSTAZIONI_TOTEM
+                                                (Postazione, Descrizione, IdSeggio, Attivo, VotoAperto, UsaSemaforo,
+                                                IPCOMSemaforo, TipoSemaforo, UsaLettore, PortaLettore, CodiceUscita,
+                                                UsaController, IPController, Sala)
+                                            VALUES
+                                                (@NomeTotem, @NomeTotem2,  999, 1, 0, 0, 
+                                                    '127.0.0.1', 2, 0, 1, '999999', 0, '127.0.0.1', 1)";
+                    qryStd.Parameters.Clear();
+                    qryStd.Parameters.Add("@NomeTotem", System.Data.SqlDbType.VarChar).Value = VTConfig.NomeTotem;
+                    qryStd.Parameters.Add("@NomeTotem2", System.Data.SqlDbType.VarChar).Value = "Desc_" + VTConfig.NomeTotem;
+
+                    //qryStd.CommandText = "INSERT into CONFIG_POSTAZIONI_TOTEM " +
+                    //    "(Postazione, Descrizione, IdSeggio, Attivo, VotoAperto, UsaSemaforo, "+
+                    //    " IPCOMSemaforo, TipoSemaforo, UsaLettore, PortaLettore, CodiceUscita, " +
+                    //    " UsaController, IPController, Sala) " +
+                    //    " VALUES ('" + VTConfig.NomeTotem + "', 'Desc_" + VTConfig.NomeTotem + "', 999, 1, 0, 0, " +
+                    //    "'127.0.0.1', 2, 0, 1, '999999', 0, '127.0.0.1', 1)";
                     // metto in quadro i valori
                     VTConfig.Postazione = VTConfig.NomeTotem;
                     VTConfig.Descrizione = VTConfig.NomeTotem;
@@ -330,12 +330,8 @@ namespace VotoTouch.WPF
 
         public override int DammiConfigDatabase() //ref TTotemConfig TotCfg)
         {
-            SqlDataReader a;
-            int result = 0;
-
-            // testo la connessione
             if (!OpenConnection("DammiConfigDatabase")) return 0;
-
+            int result = 0;
             // preparo gli oggetti
             SqlCommand qryStd = new SqlCommand
                 {
@@ -345,7 +341,7 @@ namespace VotoTouch.WPF
             // la configurazione ci deve essere, non è necessario inserirla
             try
             {
-                a = qryStd.ExecuteReader();
+                SqlDataReader a = qryStd.ExecuteReader();
                 // se c'è il record
                 if (a.HasRows)
                 {
@@ -377,29 +373,7 @@ namespace VotoTouch.WPF
                     VTConfig.AbilitaDirittiNonVoglioVotare = Convert.ToBoolean(a["AbilitaDirittiNonVoglioVotare"]);
                     // AbilitaDifferenziatoSuRichiesta
                     VTConfig.AbilitaDifferenziatoSuRichiesta = Convert.ToBoolean(a["AbilitaDifferenziatoSuRichiesta"]);
-
-                    // qua dovrei in teoria controllare che vada bene
-                    // prima faccio un piccolo controllo, se è un valore a c..., metto scheda bianca che c'è sempre
-                    //if (IDSchedaForz == VSDecl.VOTO_SCHEDABIANCA || IDSchedaForz == VSDecl.VOTO_NONVOTO)
-                    //    TotCfg.IDSchedaUscitaForzata = IDSchedaForz;
-                    //else
-                    //    TotCfg.IDSchedaUscitaForzata = VSDecl.VOTO_SCHEDABIANCA;
-                    // ok, ora il tasto ricomincia da capo
-                    //TotCfg.TastoRicominciaDaCapo = Convert.ToBoolean(a["TastoRicominciaDaCapo"]);
                 }
-                //else
-                //{
-                //    VTConfig.SalvaLinkVoto = true;
-                //    VTConfig.SalvaVotoNonConfermato = false;
-                //    VTConfig.IDSchedaUscitaForzata = VSDecl.VOTO_NONVOTO;
-                //    VTConfig.ModoPosizioneAreeTouch = VSDecl.MODO_POS_TOUCH_NORMALE;
-                //    VTConfig.ControllaPresenze = VSDecl.PRES_CONTROLLA;
-                //    VTConfig.AbilitaBottoneUscita = false;
-                //    VTConfig.AttivaAutoRitornoVoto = false;
-                //    VTConfig.TimeAutoRitornoVoto = VSDecl.TIME_AUTOCLOSEVOTO;
-                //    VTConfig.AbilitaDirittiNonVoglioVotare = false;
-                //}
-                // chiudo
                 a.Close();
 
                 // chiudo la transazione
@@ -423,9 +397,7 @@ namespace VotoTouch.WPF
         
         public override int SalvaConfigurazione() //, ref TTotemConfig ATotCfg)
         {
-            // testo la connessione
             if (!OpenConnection("SalvaConfigurazione")) return 0;
-
             int result = 0;
             // preparo gli oggetti
             int usal = VTConfig.UsaLettore ? 1 : 0;
@@ -466,9 +438,7 @@ namespace VotoTouch.WPF
 
         public override int SalvaConfigurazionePistolaBarcode() //, ref TTotemConfig ATotCfg)
         {
-            // testo la connessione
             if (!OpenConnection("SalvaConfigurazionePistolaBarcode")) return 0;
-
             int result = 0;
             // preparo gli oggetti
             int usal = VTConfig.UsaLettore ? 1 : 0;
@@ -694,7 +664,6 @@ namespace VotoTouch.WPF
             // Il tutto in un unica transazione
             // naturalmente true indica che il controllo è andato a buon fine e può continuare
 
-            SqlDataReader a;
             SqlTransaction traStd = null;
             bool Presente = false, resCons, BAnnull = true, BNonEsiste = true, BAbilitato = false;
 
@@ -716,7 +685,7 @@ namespace VotoTouch.WPF
                 qryStd.Parameters.Clear();
                 qryStd.CommandText = "SELECT Annullato FROM GEAS_Titolari with (NOLOCK) WHERE Badge = @Badge"; //'" + AIDBadge.ToString() + "'";
                 qryStd.Parameters.Add("@Badge", System.Data.SqlDbType.VarChar).Value = AIDBadge.ToString();
-                a = qryStd.ExecuteReader();
+                SqlDataReader a = qryStd.ExecuteReader();
                 if (a.HasRows)
                 {
                     // annullato non può essere null 
@@ -878,7 +847,7 @@ namespace VotoTouch.WPF
             finally
             {
                 qryStd.Dispose();
-                if (traStd != null) traStd.Dispose();
+                traStd?.Dispose();
                 CloseConnection("");
             }
 
@@ -1113,7 +1082,6 @@ namespace VotoTouch.WPF
             SqlTransaction traStd = null;
             int result = 0; const int TopRand = VSDecl.MAX_ID_RANDOM;
             //double PNAzioni1 = 0, PNAzioni2 = 0;
-            Random random;
 
             // testo la connessione
             if (!OpenConnection("SalvaTutto")) return 0;
@@ -1143,7 +1111,7 @@ namespace VotoTouch.WPF
                 }
 
                 // 2. ora scrivo vs_conschede e vs_intonse_totem insieme
-                random = new Random();
+                Random random = new Random();
                 foreach (TAzionista az in AAzionisti.Azionisti)
                 {
                     // salva solo se ha votato
@@ -1198,7 +1166,7 @@ namespace VotoTouch.WPF
             }
             catch (Exception objExc)
             {
-                if (traStd != null) traStd.Rollback();
+                traStd?.Rollback();
                 result = 0;
                 Logging.WriteToLog("<dberror> fn SalvaTutto: " + AIDBadge.ToString() + " err: " + objExc.Message);
                 MessageBox.Show("Errore nella funzione SalvaTutto " + "\n\n" +
@@ -1210,7 +1178,7 @@ namespace VotoTouch.WPF
             {
                 qryStd.Dispose();
                 qryVoti.Dispose();
-                if (traStd != null) traStd.Dispose();
+                traStd?.Dispose();
                 CloseConnection("");
             }
             return result;
@@ -1220,7 +1188,6 @@ namespace VotoTouch.WPF
         {
             SqlCommand qryStd = null, qryVoti = null;
             SqlTransaction traStd = null;
-            SqlDataReader a;
             int result = 0;
             double PNAzioni = 0;
             string TipoAsse = "";
@@ -1239,7 +1206,7 @@ namespace VotoTouch.WPF
                 qryStd.Parameters.Clear();
                 qryStd.CommandText = @"select isnull(GEAS_MatchVot.ProgMozione, -1) as ProgMozione, TipoAsse from GEAS_MatchVot
 					                        where GEAS_MatchVot.VotoSegretoDettaglio > 0";
-                a = qryStd.ExecuteReader();
+                SqlDataReader a = qryStd.ExecuteReader();
                 if (a.HasRows)
                 {
                     // devo verificare, il campo non può essere null 
@@ -1378,10 +1345,8 @@ namespace VotoTouch.WPF
                             //qryVoti.Parameters.Add("@voti", System.Data.SqlDbType.Float).Value = PNAzioni;
                             //qryVoti.Parameters.Add("@IdCarica", System.Data.SqlDbType.Int).Value = vt.TipoCarica;
                             qryVoti.ExecuteNonQuery();
-
                         }
                     }
-
                     // chiudo la transazione
                     traStd.Commit();
                     result = 1;
@@ -1389,7 +1354,7 @@ namespace VotoTouch.WPF
             }
             catch (Exception objExc)
             {
-                if (traStd != null) traStd.Rollback();
+                traStd?.Rollback();
                 result = 0;
                 Logging.WriteToLog("<dberror> fn SalvaTuttoInGeas: " + AIDBadge.ToString() + " err: " + objExc.Message);
                 MessageBox.Show("Errore nella funzione SalvaTuttoInGeas " + "\n\n" +
@@ -1401,7 +1366,7 @@ namespace VotoTouch.WPF
             {
                 qryStd.Dispose();
                 qryVoti.Dispose();
-                if (traStd != null) traStd.Dispose();
+                traStd?.Dispose();
                 CloseConnection("");
             }
             return result;
@@ -1657,8 +1622,7 @@ namespace VotoTouch.WPF
 		// carica la configurazione 
         public override Boolean CaricaConfig()
 		{
-			string ss = "", GeasFileName = "";
-
+			string GeasFileName = "";
             // verifica se è locale oppure no
             if (ADataLocal)
             {
@@ -1679,7 +1643,7 @@ namespace VotoTouch.WPF
             try
             {               
                 StreamReader file1 = File.OpenText(GeasFileName);
-                ss = file1.ReadLine();
+                string ss = file1.ReadLine();
                 // testo se il file è giusto
                 if (ss.IndexOf("GEAS") >= 0)
                 //if (ss == "GEAS 2000 -- Stringa Connesione a SQL")
@@ -1713,26 +1677,19 @@ namespace VotoTouch.WPF
         public override bool DammiTuttiIBadgeValidi(ref ArrayList badgelist)
         {
             if (badgelist == null) return false;
-
-            SqlDataReader a;
-            string bdg = "0";
- 
             badgelist.Clear();
-
-            // testo la connessione
             if (!OpenConnection("DammiTuttiIBadgeValidi")) return false;
-
             SqlCommand qryStd = new SqlCommand { Connection = STDBConn };
             try
             {
                 // Leggo ora da GEAS_Titolari	
                 qryStd.CommandText = "select T.badge, T.idazion from geas_titolari T  where T.Reale=1 and T.Annullato = 0 order by Badge";
-                a = qryStd.ExecuteReader();
+                SqlDataReader a = qryStd.ExecuteReader();
                 if (a.HasRows)
                 {
                     while (a.Read()) // qua posso avere più righe
                     {
-                        bdg = a.IsDBNull(a.GetOrdinal("Badge")) ? "" : (a["Badge"]).ToString();
+                        string bdg = a.IsDBNull(a.GetOrdinal("Badge")) ? "" : (a["Badge"]).ToString();
                         badgelist.Add(bdg);
                     }
                 }

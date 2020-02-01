@@ -189,6 +189,8 @@ namespace VotoTouch.WPF
 
             // ok ora creo i controlli
             CreaControlli();
+            // set datacontext
+            this.DataContext = this;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -387,18 +389,16 @@ namespace VotoTouch.WPF
                 {
                     // ci sono stati errori con la com all'apertura
                     VTConfig.UsaLettore = false;
-                    MessageBox.Show(
-                        App.Instance.getLang("SAPP_START_ERRCOM1") + VTConfig.PortaLettore + 
-                        App.Instance.getLang("SAPP_START_ERRCOM2"),"Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    //MessageBox.Show(
+                    //    App.Instance.getLang("SAPP_START_ERRCOM1") + VTConfig.PortaLettore + 
+                    //    App.Instance.getLang("SAPP_START_ERRCOM2"),"Error",
+                    //    MessageBoxButton.OK, MessageBoxImage.Error);
                     ShowNoBarcode = true;
                 }
                 else
                     ShowNoBarcode = false;
             }
 
-            // set datacontext
-            this.DataContext = this;
         }
 
         private void frmMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
