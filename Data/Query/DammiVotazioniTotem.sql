@@ -1,5 +1,7 @@
-SELECT NumVotaz, GruppoVotaz, Argomento, TipoVotaz, TipoSubVotaz , NListe, SchedaBianca, SchedaNonVoto,
-		SchedaContrarioTutte, SchedaAstenutoTutte, SelezTuttiCDA, MaxScelte, MinScelte, PreIntermezzo,
-		(select AbilitaBottoneUscita from CONFIG_CfgVotoSegreto) as AbilitaBottoneUscita
+SELECT NumVotaz, MozioneRealeGeas, GruppoVotaz, Argomento, TipoVotaz, TipoSubVotaz , NListe,
+		SchedaContrarioTutte, SchedaAstenutoTutte, SelezTuttiCDA, MaxScelte, MinScelte,
+		(select VotoBottoneUscita from CONFIG_CfgVotoSegreto) as VotoBottoneUscita,
+		(select VotoSchedaBianca from CONFIG_CfgVotoSegreto) as VotoSchedaBianca,
+		(select VotoNonVotante from CONFIG_CfgVotoSegreto) as VotoNonVotante
  from VS_MatchVot_Totem with (NOLOCK)  where GruppoVotaz < 999 order by NumVotaz 
  

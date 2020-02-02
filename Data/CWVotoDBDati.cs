@@ -564,19 +564,20 @@ namespace VotoTouch.WPF
                         v = new TNewVotazione
                         {
                             IDVoto = Convert.ToInt32(a["NumVotaz"]),
+                            MozioneRealeGeas = Convert.ToInt32(a["MozioneRealeGeas"]),
                             IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
                             TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
                             TipoSubVoto = Convert.ToInt32(a["TipoSubVotaz"]),
                             Descrizione = a["Argomento"].ToString(),
-                            SkBianca = Convert.ToBoolean(a["SchedaBianca"]),
-                            SkNonVoto = Convert.ToBoolean(a["SchedaNonVoto"]),
+                            SkBianca = Convert.ToBoolean(a["VotoSchedaBianca"]),
+                            SkNonVoto = Convert.ToBoolean(a["VotoNonVotante"]),
                             SkContrarioTutte = Convert.ToBoolean(a["SchedaContrarioTutte"]),
                             SkAstenutoTutte = Convert.ToBoolean(a["SchedaAstenutoTutte"]),
                             SelezionaTuttiCDA = Convert.ToBoolean(a["SelezTuttiCDA"]),
                             //PreIntermezzo = Convert.ToBoolean(a["PreIntermezzo"]),
                             MaxScelte = a.IsDBNull(a.GetOrdinal("MaxScelte")) ? 1 : Convert.ToInt32(a["MaxScelte"]),
                             MinScelte = a.IsDBNull(a.GetOrdinal("MinScelte")) ? 1 : Convert.ToInt32(a["MinScelte"]),
-                            AbilitaBottoneUscita = Convert.ToBoolean(a["AbilitaBottoneUscita"])
+                            AbilitaBottoneUscita = Convert.ToBoolean(a["VotoBottoneUscita"])
                         };
                         AVotazioni.Add(v);               
                     }
