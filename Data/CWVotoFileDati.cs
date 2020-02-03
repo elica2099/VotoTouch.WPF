@@ -153,17 +153,17 @@ namespace VotoTouch.WPF
 
         #region CARICAMENTO DATI VOTAZIONI
 
-        public override bool CaricaVotazioniDaDatabase(ref List<TNewVotazione> AVotazioni)
+        public override bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
         {
             //int z;
             DataTable dt = new DataTable();
-            TNewVotazione v;
+            TVotazione v;
 
             dt.ReadXml(AData_path + "VS_MatchVot_Totem.xml");
 
             foreach (DataRow a in dt.Rows)
             {
-                v = new TNewVotazione();
+                v = new TVotazione();
 
                 v.IDVoto = Convert.ToInt32(a["NumVotaz"]);
                 v.IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]);
@@ -187,15 +187,15 @@ namespace VotoTouch.WPF
             return true;
         }
 
-        public override bool CaricaListeDaDatabase(ref List<TNewVotazione> AVotazioni)
+        public override bool CaricaListeDaDatabase(ref List<TVotazione> AVotazioni)
         {
             DataTable dt = new DataTable();
-            TNewLista Lista;
+            TLista Lista;
 
             dt.ReadXml(AData_path + "VS_Liste_Totem.xml");
             string ASort = "idlista asc";
             // cicla lungo le votazioni e carica le liste
-            foreach (TNewVotazione votaz in AVotazioni)
+            foreach (TVotazione votaz in AVotazioni)
             {
                 // faccio un sorting delle liste
                 switch (votaz.TipoVoto)
@@ -215,7 +215,7 @@ namespace VotoTouch.WPF
                 foreach (DataRow riga in dt.Select("NumVotaz = " +
                     votaz.IDVoto.ToString(), ASort))
                 {
-                    Lista = new TNewLista
+                    Lista = new TLista
                     {
                         NumVotaz = Convert.ToInt32(riga["NumVotaz"]),
                         IDLista = Convert.ToInt32(riga["idLista"]),
@@ -286,7 +286,7 @@ namespace VotoTouch.WPF
             AAzionisti.Clear();
             TAzionista a;
 
-            foreach (TNewVotazione voto in AVotazioni.Votazioni)
+            foreach (TVotazione voto in AVotazioni.Votazioni)
             {
                 IDVotazione = voto.IDVoto;
                 // un voto

@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using VotoTouch.WPF.Models;
 
 namespace VotoTouch.WPF
 {
@@ -19,7 +20,7 @@ namespace VotoTouch.WPF
             CustomPaint = true;
         }
 
-       public override void GetTouchVoteZone(TNewVotazione AVotazione)
+       public override void GetTouchVoteZone(TVotazione AVotazione)
         {
             // DR12 OK
             Tz.Clear();
@@ -46,7 +47,7 @@ namespace VotoTouch.WPF
         private static int x = basex;
         private static int r = x + deltax;
 
-        public void CalcolaTouch_Manutencoop(TNewVotazione AVotazione)
+        public void CalcolaTouch_Manutencoop(TVotazione AVotazione)
         {
             TTZone a;
 

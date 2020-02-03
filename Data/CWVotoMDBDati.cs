@@ -160,12 +160,12 @@ namespace VotoTouch.WPF
 
         #region CARICAMENTO DATI VOTAZIONI
 
-        public override bool CaricaVotazioniDaDatabase(ref List<TNewVotazione> AVotazioni)
+        public override bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
         {
             OleDbConnection conn = null;
             OleDbCommand qryStd = null;
             OleDbDataReader a = null;
-            TNewVotazione v;
+            TVotazione v;
             bool result = false;
 
             string source = AData_path + "DemoVotoTouchData.mdb";
@@ -188,7 +188,7 @@ namespace VotoTouch.WPF
                 {
                     while (a.Read())
                     {
-                        v = new TNewVotazione
+                        v = new TVotazione
                         {
                             IDVoto = Convert.ToInt32(a["NumVotaz"]),
                             IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
@@ -227,12 +227,12 @@ namespace VotoTouch.WPF
             return result;
         }
 
-        public override bool CaricaListeDaDatabase(ref List<TNewVotazione> AVotazioni)
+        public override bool CaricaListeDaDatabase(ref List<TVotazione> AVotazioni)
         {
             OleDbConnection conn = null;
             OleDbCommand qryStd = null;
             OleDbDataReader a = null;
-            TNewLista l;
+            TLista l;
             bool result = false; //, naz;
 
             string source = AData_path + "DemoVotoTouchData.mdb";
@@ -245,7 +245,7 @@ namespace VotoTouch.WPF
                 // open the connection
                 conn.Open();
                 // ciclo sulle votazioni e carico le liste
-                foreach (TNewVotazione votaz in AVotazioni)
+                foreach (TVotazione votaz in AVotazioni)
                 {
                     // ok ora carico le votazioni
                     qryStd.Parameters.Clear();
@@ -276,7 +276,7 @@ namespace VotoTouch.WPF
                     {
                         while (a.Read())
                         {
-                            l = new TNewLista
+                            l = new TLista
                             {
                                 NumVotaz = Convert.ToInt32(a["NumVotaz"]),
                                 IDLista = Convert.ToInt32(a["idLista"]),
@@ -414,7 +414,7 @@ namespace VotoTouch.WPF
             AAzionisti.Clear();
             TAzionista a;
 
-            foreach (TNewVotazione voto in AVotazioni.Votazioni)
+            foreach (TVotazione voto in AVotazioni.Votazioni)
             {
                 IDVotazione = voto.IDVoto;
                 // un voto

@@ -37,7 +37,7 @@ namespace VotoTouch.WPF
             {
                 case TAppStato.ssvBadge:
                     timAutoRitorno.Stop();
-                    oVotoTouch.CalcolaTouchSpecial(null);
+                    oVotoTouch.CalcolaTouchSpecial(TTipoTouchSpecial.ttsNone);
                     //oVotoTouch.CalcolaTouchSpecial(Stato, false);
                     SettaComponenti(false);
                     UscitaInVotazione = false;
@@ -83,8 +83,8 @@ namespace VotoTouch.WPF
 
                 case TAppStato.ssvVotoStart:
                     oVotoTouch.CalcolaTouchSpecial(Azionisti.HaDirittiDiVotoMultipli()
-                                                       ? Votazioni.ClasseTipoVotoStartDiff
-                                                       : Votazioni.ClasseTipoVotoStartNorm);
+                                                       ? TTipoTouchSpecial.ttsVotoStartDiff
+                                                       : TTipoTouchSpecial.ttsVotoStartNorm);
                     oSemaforo.SemaforoOccupato();
                     // quà metto il voto differenziato
                     MettiComponentiStartVoto();
@@ -193,7 +193,7 @@ namespace VotoTouch.WPF
                     break;
 
                 case TAppStato.ssvVotoConferma:
-                    oVotoTouch.CalcolaTouchSpecial(Votazioni.ClasseTipoVotoConferma);
+                    oVotoTouch.CalcolaTouchSpecial(TTipoTouchSpecial.ttsVotoConferma);
                     //oVotoTouch.CalcolaTouchSpecial(Stato, false);
                     SettaComponenti(false);
                     // ora metto in quadro l'immagine, che deve essere presa da un file composto da
@@ -204,12 +204,12 @@ namespace VotoTouch.WPF
                     break;
 
                 case TAppStato.ssvVotoContinua:
-                    oVotoTouch.CalcolaTouchSpecial(null);
+                    oVotoTouch.CalcolaTouchSpecial(TTipoTouchSpecial.ttsNone);
                     //oVotoTouch.CalcolaTouchSpecial(Stato, false);
                     break;
 
                 case TAppStato.ssvVotoFinito:
-                    oVotoTouch.CalcolaTouchSpecial(null);
+                    oVotoTouch.CalcolaTouchSpecial(TTipoTouchSpecial.ttsNone);
                     //oVotoTouch.CalcolaTouchSpecial(Stato, false);
                     TxtDirittiDiVotoVis = false;
                     SettaComponenti(false);

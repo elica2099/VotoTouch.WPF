@@ -18,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using VotoTouch.WPF.Models;
 using VotoTouch.WPF.Views.Tools;
 using VotoTouch.WPF.Views.UserControls;
 using WpfScreenHelper;
@@ -558,9 +559,10 @@ namespace VotoTouch.WPF
                     CaricaTemaInControlli();
                 }
 
+                // le videate speciali
+                oVotoTouch?.CalcolaTouchZoneSpeciali(FFormRect);
                 // ok ora le votazioni
-                Votazioni?.ResizeZoneVotazioni(FFormRect);
-                //Votazioni.CalcolaTouchZoneVotazioni(FFormRect);
+                Votazioni?.CalcolaTouchZoneVotazioni(FFormRect);
 
                 // ok, ora se è in demo mode faccio il resize dei controlli
                 if (VTConfig.IsDemoMode)

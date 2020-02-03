@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Windows;
 using Microsoft.Win32;
 using System.Threading;
+using VotoTouch.WPF.Models;
 
 // -----------------------------------------------------------------------
 //			VOTO TOUCH - TSTSQLCONN ClassE
@@ -537,31 +538,28 @@ namespace VotoTouch.WPF
 
         #region Caricamento dati votazioni
 
-        public override bool CaricaVotazioniDaDatabase(ref List<TNewVotazione> AVotazioni)
+        public override bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
         {
-            SqlDataReader a = null;
-            SqlCommand qryStd = null;
-            TNewVotazione v;
-            bool result = false; //, naz;
+            bool result = false; 
 
             // testo la connessione
             if (!OpenConnection("CaricaVotazioniDaDatabase")) return false;
 
             AVotazioni.Clear();
 
-            qryStd = new SqlCommand { Connection = STDBConn };
+            SqlCommand qryStd = new SqlCommand { Connection = STDBConn };
             try
             {
                 // ok ora carico le votazioni
                 qryStd.Parameters.Clear();
                 qryStd.CommandText = qry_DammiVotazioniTotem;
                 //qryStd.CommandText =   "SELECT * from VS_MatchVot_Totem with (NOLOCK)  where GruppoVotaz < 999 order by NumVotaz";
-                a = qryStd.ExecuteReader();
+                SqlDataReader a = qryStd.ExecuteReader();
                 if (a.HasRows)
                 {
                     while (a.Read())
                     {
-                        v = new TNewVotazione
+                        TVotazione v = new TVotazione
                         {
                             IDVoto = Convert.ToInt32(a["NumVotaz"]),
                             MozioneRealeGeas = Convert.ToInt32(a["MozioneRealeGeas"]),
@@ -579,7 +577,7 @@ namespace VotoTouch.WPF
                             MinScelte = a.IsDBNull(a.GetOrdinal("MinScelte")) ? 1 : Convert.ToInt32(a["MinScelte"]),
                             AbilitaBottoneUscita = Convert.ToBoolean(a["VotoBottoneUscita"])
                         };
-                        AVotazioni.Add(v);               
+                        AVotazioni.Add(v);
                     }
                 }
                 a.Close();
@@ -597,22 +595,19 @@ namespace VotoTouch.WPF
             return result;
         }
 
-        public override bool CaricaListeDaDatabase(ref List<TNewVotazione> AVotazioni)
+        public override bool CaricaListeDaDatabase(ref List<TVotazione> AVotazioni)
         {
-            SqlDataReader a = null;
-            SqlCommand qryStd = null;
-            TNewLista l;
             bool result = false; //, naz;
 
             // testo la connessione
             if (!OpenConnection("CaricaVotazioniDaDatabase")) return false;
 
-            qryStd = new SqlCommand { Connection = STDBConn };
+            SqlCommand qryStd = new SqlCommand { Connection = STDBConn };
             try
             {
                 // TODO: CaricaListeDaDatabase da vedere in futuro di fare un solo ciclo di caricamento senza ordine
                 // ciclo sulle votazioni e carico le liste
-                foreach (TNewVotazione votaz in AVotazioni)
+                foreach (TVotazione votaz in AVotazioni)
                 {
                     // ok ora carico le votazioni
                     qryStd.Parameters.Clear();
@@ -636,12 +631,12 @@ namespace VotoTouch.WPF
                             break;
                     }
                     qryStd.Parameters.Add("@IDVoto", System.Data.SqlDbType.Int).Value = votaz.IDVoto;
-                    a = qryStd.ExecuteReader();
+                    SqlDataReader a = qryStd.ExecuteReader();
                     if (a.HasRows)
                     {
                         while (a.Read())
                         {
-                            l = new TNewLista
+                            TLista l = new TLista
                             {
                                 NumVotaz = Convert.ToInt32(a["NumVotaz"]),
                                 IDLista = Convert.ToInt32(a["idLista"]),
@@ -660,22 +655,25 @@ namespace VotoTouch.WPF
                 
                     // TODO: DA RIVEDERE CHE FUNZIONA SOLO SU UN VOTO SOLO
                     // carica la dicitira astenuto e contrario
-                    int IDScheda;
-                    string DescrLista;
                     qryStd.Parameters.Clear();
                     qryStd.CommandText = @"select distinct IDscheda, descrLista from VS_Liste_Totem
                                             where IdScheda = 226 or IdScheda = 227 ";
-                     a = qryStd.ExecuteReader();
+                    a = qryStd.ExecuteReader();
                     if (a.HasRows)
                     {
                         while (a.Read())
                         {
-                            IDScheda = Convert.ToInt32(a["idScheda"]);
-                            DescrLista = a.IsDBNull(a.GetOrdinal("DescrLista")) ? "DESCRIZIONE" : a["DescrLista"].ToString();
-                            if (IDScheda == VSDecl.VOTO_CONTRARIO_TUTTI)
-                                VTConfig.ContrarioATutti = DescrLista;
-                            if (IDScheda == VSDecl.VOTO_ASTENUTO_TUTTI)
-                                VTConfig.AstenutoATutti = DescrLista;
+                            int IDScheda = Convert.ToInt32(a["idScheda"]);
+                            string DescrLista = a.IsDBNull(a.GetOrdinal("DescrLista")) ? "DESCRIZIONE" : a["DescrLista"].ToString();
+                            switch (IDScheda)
+                            {
+                                case VSDecl.VOTO_CONTRARIO_TUTTI:
+                                    VTConfig.ContrarioATutti = DescrLista;
+                                    break;
+                                case VSDecl.VOTO_ASTENUTO_TUTTI:
+                                    VTConfig.AstenutoATutti = DescrLista;
+                                    break;
+                            }
                         }
                     }
                     a.Close();
@@ -981,7 +979,7 @@ namespace VotoTouch.WPF
                 // ciclo sul voto per crearmi l'array dei diritti di voto per ogni singola votazione
                 //for (int i = 0  ; i < NVoti; i++)
                 // TODO: CVotoDBDati|CaricaDirittidiVotoDaDatabase - Inutile chiamare n volte la query
-                foreach (TNewVotazione voto in AVotazioni.Votazioni)
+                foreach (TVotazione voto in AVotazioni.Votazioni)
                 {
                     IDVotazione = voto.IDVoto;
 

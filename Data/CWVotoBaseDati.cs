@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections;
 using System.Reflection;
 using System.IO;
+using VotoTouch.WPF.Models;
 
 namespace VotoTouch.WPF
 {
@@ -87,12 +88,12 @@ namespace VotoTouch.WPF
         //  CARICAMENTO DATI VOTAZIONI
         // --------------------------------------------------------------------------
 
-        public virtual bool CaricaVotazioniDaDatabase(ref List<TNewVotazione> AVotazioni)
+        public virtual bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
         {
             return true;
         }
 
-        public virtual bool CaricaListeDaDatabase(ref List<TNewVotazione> AVotazioni)
+        public virtual bool CaricaListeDaDatabase(ref List<TVotazione> AVotazioni)
 
         {
             return true;

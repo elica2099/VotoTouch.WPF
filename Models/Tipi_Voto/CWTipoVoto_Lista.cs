@@ -20,7 +20,7 @@ namespace VotoTouch.WPF
 
         //override public void GetTouchVoteZone(TAppStato AStato, TNewVotazione AVotazione, 
         //                                                bool ADiffer, ref ArrayList Tz )
-        public override void GetTouchVoteZone(TNewVotazione AVotazione)
+        public override void GetTouchVoteZone(TVotazione AVotazione)
         {
             // DR12 OK
             TTZone a;

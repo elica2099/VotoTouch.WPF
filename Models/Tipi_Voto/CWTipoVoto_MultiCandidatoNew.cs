@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using VotoTouch.WPF.Models;
 
 namespace VotoTouch.WPF
 {
@@ -21,7 +22,7 @@ namespace VotoTouch.WPF
 
         //override public void GetTouchVoteZone(TAppStato AStato, TNewVotazione AVotazione, 
         //                                                bool ADiffer, ref ArrayList Tz )
-        public override void GetTouchVoteZone(TNewVotazione AVotazione)
+        public override void GetTouchVoteZone(TVotazione AVotazione)
         {
             // DR12 OK
             Tz.Clear();
@@ -40,11 +41,11 @@ namespace VotoTouch.WPF
 
         #region calcolo candidato/multicandidato touch nuovo
 
-        public void NewCalcolaTouchCandidatoPagina(TNewVotazione AVotazione)
+        public void NewCalcolaTouchCandidatoPagina(TVotazione AVotazione)
         {
             // DR12 OK
             TTZone a;
-            TNewLista li;
+            TLista li;
             int z, PosPresCda, PosCandAlt;
             TTEvento evento;
             TAreaVotazione Tarea;
@@ -90,7 +91,7 @@ namespace VotoTouch.WPF
             #region  ok, ciclo lungo i candidati per metterli nell'area giusta
             for (z = 0; z < AVotazione.NListe; z++)
             {
-                li = (TNewLista)AVotazione.Liste[z];
+                li = (TLista)AVotazione.Liste[z];
 
                 // Devo testare se il candidato è presentato dal cda
                 if (li.PresentatodaCDA)
@@ -374,7 +375,7 @@ namespace VotoTouch.WPF
         //  CALCOLO DEL TOUCH TABS
         // --------------------------------------------------------------
 
-        public void CalcolaTouchTabsPagina(TNewVotazione AVotazione)
+        public void CalcolaTouchTabsPagina(TVotazione AVotazione)
         {
             // DR12 OK
             // se non ho bisogno di tab è inutile, tanto vale uscire

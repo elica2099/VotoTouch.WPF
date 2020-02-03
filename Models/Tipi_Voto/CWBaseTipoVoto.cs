@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using System.Media;
 using System.Windows;
+using VotoTouch.WPF.Models;
 
 namespace VotoTouch.WPF
 {
@@ -40,7 +41,7 @@ namespace VotoTouch.WPF
         //  FUNZIONI VIRTUALI
         // --------------------------------------------------------------------------
 
-        public virtual void GetTouchVoteZone(TNewVotazione AVotazione) //ref ArrayList Tz)
+        public virtual void GetTouchVoteZone(TVotazione AVotazione) //ref ArrayList Tz)
         {
             // l'implementazione è nelle varie classi
 
@@ -83,7 +84,7 @@ namespace VotoTouch.WPF
         //  SCHEDE SPECIALI
         // --------------------------------------------------------------
 
-        protected void MettiSchedeSpeciali(TNewVotazione AVotazione)
+        protected void MettiSchedeSpeciali(TVotazione AVotazione)
         {
             TTZone a;
             

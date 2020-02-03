@@ -9,42 +9,32 @@ using System.Data.SqlClient;
 using System.Reflection;
 using System.Windows;
 
-namespace VotoTouch.WPF
+namespace VotoTouch.WPF.Models
 {
     // DR16 - Classe intera
     public class TListaVotazioni
     {
         // oggetto lista votazioni
-        protected List<TNewVotazione> _Votazioni;
-        public List<TNewVotazione> Votazioni
-        {
-            get => _Votazioni;
-            set => _Votazioni = value;
-        }
+        public List<TVotazione> Votazioni;
 
         private int idxVotoCorrente;
-        public TNewVotazione VotoCorrente
+        public TVotazione VotoCorrente
         {
-            get => _Votazioni.Count == 0 ? null : _Votazioni[idxVotoCorrente];
+            get => Votazioni.Count == 0 ? null : Votazioni[idxVotoCorrente];
             set
             {
-                if (_Votazioni.Count > 0)
-                    _Votazioni[idxVotoCorrente] = value;
+                if (Votazioni.Count > 0)
+                    Votazioni[idxVotoCorrente] = value;
             }
         }
 
         private readonly CVotoBaseDati DBDati;
 
-        // oggetti conferma e inizio voto
-        public CBaseTipoVoto ClasseTipoVotoStartNorm = null;
-        public CBaseTipoVoto ClasseTipoVotoStartDiff = null;
-        public CBaseTipoVoto ClasseTipoVotoConferma = null;
-
         public TListaVotazioni(CVotoBaseDati ADBDati)
         {
             // costruttore
             DBDati = ADBDati;
-            _Votazioni = new List<TNewVotazione>();
+            Votazioni = new List<TVotazione>();
 
             idxVotoCorrente = 0;
         }
@@ -60,17 +50,17 @@ namespace VotoTouch.WPF
 
         public int NVotazioni()
         {
-            return _Votazioni.Count;
+            return Votazioni.Count;
         }
 
         public bool SetVotoCorrente(int AIDVoto)
         {
-            if (_Votazioni.Count > 0 && AIDVoto >= 0)
+            if (Votazioni.Count > 0 && AIDVoto >= 0)
             {
-                TNewVotazione vot = _Votazioni.First(v => v.IDVoto == AIDVoto);
+                TVotazione vot = Votazioni.First(v => v.IDVoto == AIDVoto);
                 if (vot != null)
                 {
-                    idxVotoCorrente = _Votazioni.IndexOf(vot);
+                    idxVotoCorrente = Votazioni.IndexOf(vot);
                     return true;
                 }
                 else
@@ -106,13 +96,13 @@ namespace VotoTouch.WPF
             Logging.WriteToLog("Caricamento Liste/Votazioni");
             bool result = false;
 
-            _Votazioni.Clear();
+            Votazioni.Clear();
 
             // carica le votazioni dal database
-            if (DBDati.CaricaVotazioniDaDatabase(ref _Votazioni))
+            if (DBDati.CaricaVotazioniDaDatabase(ref Votazioni))
             {
                 // carica i dettagli delle votazioni
-                if (DBDati.CaricaListeDaDatabase(ref _Votazioni))
+                if (DBDati.CaricaListeDaDatabase(ref Votazioni))
                 {
                     result = true;
                 }
@@ -127,7 +117,7 @@ namespace VotoTouch.WPF
                 // votazioni
                 CalcolaTouchZoneVotazioni(AFormRect);
                 // speciali
-                CalcolaTouchZoneSpeciali(AFormRect);
+                //CalcolaTouchZoneSpeciali(AFormRect);
             }
 
             // NOTA: Nelle liste il nome può contenere anche la data di nascita, inserita
@@ -136,21 +126,11 @@ namespace VotoTouch.WPF
             return result;
         }
 
-        public void ResizeZoneVotazioni(Rect AFormRect)
-        {
-            // votazioni
-            CalcolaTouchZoneVotazioni(AFormRect);
-            // speciali
-            CalcolaTouchZoneSpeciali(AFormRect);
-        }
-
-        // --------------------------------------------------------------------------
-        //  Calcolo delle TouchZone
-        // --------------------------------------------------------------------------
+        //  Calcolo delle TouchZone --------------------------------------------------------------------------
 
         public void CalcolaTouchZoneVotazioni(Rect AFormRect)
         {
-            foreach (TNewVotazione voto in _Votazioni)
+            foreach (TVotazione voto in Votazioni)
             {
                 // prima cancello eventuali oggetti se ci sono
                 if (voto.TouchZoneVoto != null)
@@ -223,31 +203,6 @@ namespace VotoTouch.WPF
             }
         }
 
-        public void CalcolaTouchZoneSpeciali(Rect AFormRect)
-        {
-            // start normale
-            if (ClasseTipoVotoStartNorm != null)
-                ClasseTipoVotoStartNorm.FFormRect = AFormRect;
-            else
-                ClasseTipoVotoStartNorm = new CTipoVoto_AStart(AFormRect);
-            ClasseTipoVotoStartNorm.GetTouchSpecialZone(TAppStato.ssvVotoStart, false, false);
-
-            // start diff
-            if (ClasseTipoVotoStartDiff != null)
-                ClasseTipoVotoStartDiff.FFormRect = AFormRect;
-            else
-                ClasseTipoVotoStartDiff = new CTipoVoto_AStart(AFormRect);
-            ClasseTipoVotoStartDiff.GetTouchSpecialZone(TAppStato.ssvVotoStart, true, false);
-
-            // start conferma
-            if (ClasseTipoVotoConferma != null)
-                ClasseTipoVotoConferma.FFormRect = AFormRect;
-            else
-                ClasseTipoVotoConferma = new CTipoVoto_AConferma(AFormRect);
-            ClasseTipoVotoConferma.GetTouchSpecialZone(TAppStato.ssvVotoConferma, false, VTConfig.AbilitaBottoneUscita);
-
-        }
-
         // --------------------------------------------------------------------------
         //  Area di votazione
         // --------------------------------------------------------------------------
@@ -269,7 +224,7 @@ namespace VotoTouch.WPF
             // area di voto standard x Candidati è:
             // x: 20 y:180 ax:980 (w:960) ay:810 (h:630)  
 
-            foreach (TNewVotazione votazione in _Votazioni)
+            foreach (TVotazione votazione in Votazioni)
             {
                 // solo se il voto è di candidato continuo
                 if (votazione.TipoVoto == VSDecl.VOTO_CANDIDATO ||
@@ -397,13 +352,8 @@ namespace VotoTouch.WPF
             // - campo Pagind che contiene l'indice enciclopedico della pagina 
             //   (es A - CG, CH - TF, TG - Z)
 
-            int z, pg, pgind;
-            string sp;
-            TNewLista li;
-            TIndiceListe idx; //, idx1;
-
             // innanzitutto ciclo sulle votazioni
-            foreach (TNewVotazione votazione in _Votazioni)
+            foreach (TVotazione votazione in Votazioni)
             {
                 // solo se il voto è di candidato continuo
                 if (votazione.TipoVoto == VSDecl.VOTO_CANDIDATO ||
@@ -416,19 +366,19 @@ namespace VotoTouch.WPF
                     // e settare le pagine
                     // NOTA : i candidati presentati dal cda sono SEMPRE in pagina 0
                     // in più mi creo un array dei range di cognomi
-                    pg = 1;
-                    pgind = 1;
-                    sp = "";
+                    int pg = 1;
+                    int pgind = 1;
+                    string sp = "";
                     // la prima pagina, quella del cda la metto sempre, anche se non c'è il candidato
-                    idx = new TIndiceListe();
-                    idx.pag = 0;
-                    idx.indice = "A - Z";
+                    TIndiceListe idx = new TIndiceListe {pag = 0, indice = "A - Z"}; //, idx1;
                     votazione.Pagine.Add(idx);
                     // ok, ora ciclo
+                    int z;
+                    TLista li;
                     for (z = 0; z < votazione.Liste.Count; z++)
                     {
                         // prelevo la lista che dovrebbe già essere ordinata in modo alfabetico
-                        li = (TNewLista)votazione.Liste[z];
+                        li = (TLista)votazione.Liste[z];
                         // testo se è presentato dal cda
                         if (li.PresentatodaCDA)
                         {
@@ -482,7 +432,7 @@ namespace VotoTouch.WPF
                     for (z = 0; z < votazione.Liste.Count; z++)
                     {
                         // prelevo la lista che dovrebbe già essere ordinata in modo alfabetico
-                        li = (TNewLista)votazione.Liste[z];
+                        li = (TLista)votazione.Liste[z];
                         // controllo per scrupolo l'indice
                         if (li.Pag < votazione.Liste.Count)
                         {

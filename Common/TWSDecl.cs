@@ -17,94 +17,15 @@ using System.Windows.Media;
 namespace VotoTouch.WPF
 {
 	
-	public enum TTipoVoto:  int  {stvNormale, stvLista, stvMulti};
+	public enum TTipoVoto:  int  {Normale, Lista, Candidato, MultiCandidato};
+    public enum TTipoSubVoto:  int  {Normale, Nuovo, Manutencoop};
+
+    public enum TTipoTouchSpecial:  int  {ttsNone, ttsVotoStartNorm, ttsVotoStartDiff, ttsVotoConferma};
 
 	public enum TAppStato: int {ssvBadge, ssvVotoStart, ssvVoto, ssvVotoConferma,ssvVotoContinua, ssvSalvaVoto, 
                                 ssvVotoFinito, ssvPreIntermezzo, ssvConfermaNonVoto};
     public enum TStatoSemaforo: int {stsNulla, stsLibero, stsOccupato, stsErrore, stsFineoccupato, stsChiusoVoto};
 
-    // configurazione del programma
-    //    static public class TTotemConfig
-    public static class VTConfig
-    {
-        // PATH DEL PROGRAMMA
-        public static string Exe_Path  = "";                // path del'eseguibile
-        public static string Data_Path  = "";                // path della cartella data
-        public static string Img_Path  = "";                // path della cartella immagini
-
-        // CONFIGURAZIONE DINAMICA
-        public static string NomeTotem;
-        public static bool IsDemoMode = false;
-        public static bool IsDebugMode = false;
-        public static bool IsPaintTouch = false;
-        public static bool IsAdmin = false;
-        public static bool IsStandalone = false;
-
-        // CONFIGURAZIONE DB
-        public static int DBMode;
-        public static int DBVersion;
-        // CONFIGURAZIONE GENERALE
-        public static int ModoAssemblea;
-        public static string ValAssemblea;
-        public static bool SalvaLinkVoto;
-        public static bool SalvaVotoNonConfermato;
-        public static bool SalvaVotoInGeas;
-        public static int MaxDeleghe;
-        public static bool AbilitaDifferenziatoSuRichiesta;
-        public static int IDSchedaUscitaForzata;
-        public static int ModoPosizioneAreeTouch;
-        public static int ControllaPresenze;
-        public static bool AbilitaBottoneUscita;
-        public static bool AttivaAutoRitornoVoto;
-        public static int TimeAutoRitornoVoto;
-        public static bool AbilitaDirittiNonVoglioVotare;
-        
-        // CONFIGURAZIONE LOCALE
-        public static string Postazione;
-        public static string Descrizione;
-        public static int IDSeggio;
-        public static bool Attivo;
-        public static bool VotoAperto;
-        public static int Sala;
-        // Semaforo
-        public static bool UsaSemaforo;
-        public static string IP_Com_Semaforo;
-        public static int TipoSemaforo;
-        // Variabili di configurazione Lettore
-        public static bool UsaLettore;
-        public static int PortaLettore;
-        public static string CodiceUscita;
-        // codici impianto
-        public static int BadgeLen;
-        public static string CodImpianto;
-
-        public static bool IsOrdinaria; // = ValAssemblea.Contains("O"); //CheckOrdinariaValAssem();
-        public static bool IsStraordinaria; // = ValAssemblea.Contains("S"); //CheckStraordinariaValAssem();
-
-        // Diciture Votazioni
-        public static string ContrarioATutti;
-        public static string AstenutoATutti;
-
-
-        static VTConfig()
-        {
-            SalvaLinkVoto = true;
-            SalvaVotoNonConfermato = false;
-            IDSchedaUscitaForzata = VSDecl.VOTO_NONVOTO;
-            ModoPosizioneAreeTouch = VSDecl.MODO_POS_TOUCH_NORMALE;
-            ControllaPresenze = VSDecl.PRES_CONTROLLA;
-            AbilitaBottoneUscita = false;
-            AttivaAutoRitornoVoto = false;
-            AbilitaDifferenziatoSuRichiesta = false;
-            TimeAutoRitornoVoto = VSDecl.TIME_AUTOCLOSEVOTO;
-            AbilitaDirittiNonVoglioVotare = false;
-            NomeTotem = "";
-            ContrarioATutti = App.Instance.getLang("SAPP_SKCONTRARIOTUTTI");
-            AstenutoATutti = App.Instance.getLang("SAPP_SKASTENUTOTUTTI");
-        }
-    }
-
-    // struttura di configurazione del database
     public struct ConfigDbData
     {
         public bool DB_ConfigOK;
@@ -116,9 +37,7 @@ namespace VotoTouch.WPF
         public string DB_Server;
     }
 
-    // ------------------------------------------------------------------
-    // STRUTTURE PER LE VOTAZIONI
-    // ------------------------------------------------------------------
+    // STRUTTURE PER LE VOTAZIONI  ------------------------------------------------------------------
     
     public struct TAreaVotazione
     {
@@ -194,6 +113,22 @@ namespace VotoTouch.WPF
         internal const int LANGUAGE_EN = 1;
         internal const int LANGUAGE_DE = 2;
 
+        // Modo Assemblea
+        public const int MODO_AGM_POP = 0;            // popolari
+        public const int MODO_AGM_SPA = 1;            // spa
+
+        // tipi di Votazione
+        public const int VOTO_LISTA = 1;            // voto di lista
+        public const int VOTO_CANDIDATO = 2;        // voto per candidato a pagine
+        public const int VOTO_CANDIDATO_SING = 3;   // voto per candidato singola pagina (da cancellare)
+        public const int VOTO_MULTICANDIDATO = 4;   // voto multicandidato
+
+        // tipo di sottovoto
+        public const int SUBVOTO_NORMAL = 0;
+        public const int SUBVOTO_NEW = 1;
+        public const int SUBVOTO_CUSTOM_MANUTENCOOP = 40;
+
+
         public const string RIPETIZ_VOTO = "88889999";
         public const string ABILITA_DIFFERENZIATO = "88889900";
         public const string CONFIGURA = "88889990";
@@ -238,21 +173,6 @@ namespace VotoTouch.WPF
         public const string IMG_voto = "voto_";
         public const string IMG_voto_c = "_conf";
         public const string IMG_voto_pre = "_pre";
-
-        // Modo Assemblea
-        public const int MODO_AGM_POP = 0;            // popolari
-        public const int MODO_AGM_SPA = 1;            // spa
-
-        // tipi di Votazione
-        public const int VOTO_LISTA = 1;            // voto di lista
-        public const int VOTO_CANDIDATO = 2;        // voto per candidato a pagine
-        public const int VOTO_CANDIDATO_SING = 3;   // voto per candidato singola pagina (da cancellare)
-        public const int VOTO_MULTICANDIDATO = 4;   // voto multicandidato
-
-        // tipo di sottovoto
-        public const int SUBVOTO_NORMAL = 0;
-        public const int SUBVOTO_NEW = 1;
-        public const int SUBVOTO_CUSTOM_MANUTENCOOP = 40;
 
         // Voti
         public const int LISTA_1 = 0;

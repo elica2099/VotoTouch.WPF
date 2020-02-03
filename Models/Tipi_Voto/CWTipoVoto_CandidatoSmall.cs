@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using VotoTouch.WPF.Models;
 
 namespace VotoTouch.WPF
 {
@@ -21,10 +22,10 @@ namespace VotoTouch.WPF
 
         //override public void GetTouchVoteZone(TAppStato AStato, TNewVotazione AVotazione, 
         //                                                bool ADiffer, ref ArrayList Tz )
-        public override void GetTouchVoteZone(TNewVotazione AVotazione)
+        public override void GetTouchVoteZone(TVotazione AVotazione)
         {
             TTZone a;
-            TNewLista li;
+            TLista li;
 
             Tz.Clear();
 

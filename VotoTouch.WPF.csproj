@@ -68,7 +68,7 @@
     <Compile Include="Common\ToolDebugError.xaml.cs">
       <DependentUpon>ToolDebugError.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\TWAzionisti.cs" />
+    <Compile Include="Models\TWAzionista.cs" />
     <Compile Include="Models\TWVotazione.cs" />
     <Compile Include="Helpers\WpfScreenHelper\ExternDll.cs" />
     <Compile Include="Helpers\WpfScreenHelper\MouseHelper.cs" />

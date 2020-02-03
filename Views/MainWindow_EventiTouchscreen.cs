@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using VotoTouch.WPF.Models;
 using VotoTouch.WPF.Views.Tools;
 
 namespace VotoTouch.WPF
@@ -87,7 +88,7 @@ namespace VotoTouch.WPF
 
             // ok, questo evento arriva quando, nella selezione del voto, è stata
             // premuta una zona valida devo veder in funzione della lista selezionata
-            TNewLista a;
+            TLista a;
             TVotoEspresso VExp;
             // verifico se è null
             if (Votazioni.VotoCorrente.Liste == null) return;
@@ -137,8 +138,6 @@ namespace VotoTouch.WPF
         {
             // in realtà corrisponde all'AVANTI
             if (voti == null) return;  // in teoria non serve
-            TNewLista a;
-            TVotoEspresso vt;
             int ct = Votazioni.VotoCorrente.Liste.Count;
             VotoEspressoStr = "";
             VotoEspressoStrUp = "";      // "Scheda Bianca";
@@ -147,13 +146,13 @@ namespace VotoTouch.WPF
             {
                 if (voti[i] >= 0 && voti[i] < ct)
                 {
-                    a = Votazioni.VotoCorrente.Liste[voti[i]];
-                    vt = new TVotoEspresso
-                        {
-                            NumVotaz = a.NumVotaz,
-                            TipoCarica = a.TipoCarica,
-                            VotoExp_IDScheda = a.IDScheda,
-                        };
+                    TLista a = Votazioni.VotoCorrente.Liste[voti[i]];
+                    TVotoEspresso vt = new TVotoEspresso
+                    {
+                        NumVotaz = a.NumVotaz,
+                        TipoCarica = a.TipoCarica,
+                        VotoExp_IDScheda = a.IDScheda,
+                    };
                     FVotiExpr.Add(vt);
                     // ora aggiungo il candidato
                     VotoEspressoStr += a.ListaElenco + ";";

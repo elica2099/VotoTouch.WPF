@@ -5,24 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VotoTouch.WPF
+namespace VotoTouch.WPF.Models
 {
-    public class TNewVotazione
+    public class TVotazione
     {
-        public int IDVoto { get; set; }
-        public int MozioneRealeGeas { get; set; }
-        public int IDGruppoVoto { get; set; }
-        public string Descrizione { get; set; }
-        public int TipoVoto { get; set; }                //1.norm, 2.Lista, 3.Multi
-        public int TipoSubVoto { get; set; }             // a seconda del tipo principale 
-        public bool SkBianca { get; set; }               // ha scheda bianca
-        public bool SkNonVoto { get; set; }              // ha il non voto
-        public bool SkContrarioTutte { get; set; }       // ha il contraio a tutte       
-        public bool SkAstenutoTutte { get; set; }       // ha il astenuto a tutte       
-        public int MaxScelte { get; set; }               // n scelte max nel caso di multi
-        public int MinScelte { get; set; }               // n scelte min nel caso di multi
-        //public bool NeedConferma { get; set; }           // indica che dopo questa votazione necessita la conferma
-        public bool AbilitaBottoneUscita { get; set; }
+        public int IDVoto;
+        public int MozioneRealeGeas;
+        public int IDGruppoVoto;
+        public string Descrizione;
+        public int TipoVoto;                
+        public int TipoSubVoto;            
+        public bool SkBianca;              
+        public bool SkNonVoto;             
+        public bool SkContrarioTutte;      
+        public bool SkAstenutoTutte;       
+        public int MaxScelte;              
+        public int MinScelte;              
+        //public bool NeedConferma;        
+        public bool AbilitaBottoneUscita;
         public bool SelezionaTuttiCDA;
 
         public int NListe => Liste?.Count ?? 0;
@@ -32,12 +32,12 @@ namespace VotoTouch.WPF
         public CBaseTipoVoto TouchZoneVoto;
         public TAreaVotazione AreaVoto;
 
-        public List<TNewLista> Liste;     // collection di strutture Tliste
-        public ArrayList Pagine;    // collection delle pagine (per le votazioni candidato)
+        public List<TLista> Liste;     
+        public ArrayList Pagine;    
 
-        public TNewVotazione()
+        public TVotazione()
         {
-            Liste = new List<TNewLista>();
+            Liste = new List<TLista>();
             Pagine = new ArrayList();
             TouchZoneVoto = null;
             AbilitaBottoneUscita = false;
@@ -53,7 +53,7 @@ namespace VotoTouch.WPF
             return TipoVoto == VSDecl.VOTO_MULTICANDIDATO ? MinScelte : 0;
         }
 
-        ~TNewVotazione()
+        ~TVotazione()
         {
             // Distruttore
             Liste.Clear();
@@ -61,7 +61,11 @@ namespace VotoTouch.WPF
         }
     }
 
-    public class TNewLista
+    public class TSubVotazione
+    {
+    }
+
+    public class TLista
     {
         public int NumVotaz;
         public int IDLista;
@@ -75,7 +79,7 @@ namespace VotoTouch.WPF
         public int Pag;
         public string PagInd;
 
-        public TNewLista()
+        public TLista()
         {
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using VotoTouch.WPF.Models;
 
 
 namespace VotoTouch.WPF.Views.UserControls
@@ -58,7 +59,7 @@ namespace VotoTouch.WPF.Views.UserControls
             {
                 // ok ora le votazioni
                 stato.Add("=== Votazioni ===");
-                foreach (TNewVotazione fVoto in AVotaz.Votazioni)
+                foreach (TVotazione fVoto in AVotaz.Votazioni)
                 {
                     stato.Add("Voto: " + fVoto.IDVoto.ToString() + ", Tipo: " +
                               fVoto.TipoVoto.ToString() + ", " + fVoto.Descrizione);
@@ -67,7 +68,7 @@ namespace VotoTouch.WPF.Views.UserControls
                     stato.Add("   SKBianca: " + fVoto.SkBianca.ToString() +
                               ", SKNonVoto: " + fVoto.SkNonVoto);
                     // Le liste
-                    foreach (TNewLista a in fVoto.Liste)
+                    foreach (TLista a in fVoto.Liste)
                     {
                         stato.Add("    Lista:" + a.IDLista.ToString() + ", IdSk:" +
                                   a.IDScheda.ToString() + ", " + a.DescrLista + ", p" +

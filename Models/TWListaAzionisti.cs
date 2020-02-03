@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace VotoTouch.WPF
+namespace VotoTouch.WPF.Models
 {
     
 
@@ -16,11 +16,8 @@ namespace VotoTouch.WPF
         protected List<TAzionista> _Azionisti;
         public List<TAzionista> Azionisti
         {
-            get { return _Azionisti; }
-            set
-            {
-                _Azionisti = value;
-            }
+            get => _Azionisti;
+            set => _Azionisti = value;
         }
 
         // oggetto voto corrente

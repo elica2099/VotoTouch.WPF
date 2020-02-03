@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using VotoTouch.WPF.Models;
 
 
 namespace VotoTouch.WPF
@@ -114,6 +115,11 @@ namespace VotoTouch.WPF
         public bool PaintTouchOnScreen;
         private ArrayList Tz;
 
+        // oggetti conferma e inizio voto
+        public CBaseTipoVoto ClasseTipoVotoStartNorm = null;
+        public CBaseTipoVoto ClasseTipoVotoStartDiff = null;
+        public CBaseTipoVoto ClasseTipoVotoConferma = null;
+
         /*
         public Bitmap btnBmpCand;
         public Bitmap btnBmpCandCda;
@@ -200,9 +206,7 @@ namespace VotoTouch.WPF
             timTouchWatchDog.Tick += timTouchWatchDog_Tick;
 		}
 
-        // --------------------------------------------------------------
-        //  CALCOLO DEL RESIZE
-        // --------------------------------------------------------------
+        //  CALCOLO DELLE ZONE DI TOCCO --------------------------------------------------------------
 
         /*
         public void CalcolaVotoTouch(Rectangle AFormRect)
@@ -265,15 +269,36 @@ namespace VotoTouch.WPF
         }
 
 */
-        public int CalcolaTouchSpecial(CBaseTipoVoto ASpecial)
+        
+        //public int CalcolaTouchSpecial(CBaseTipoVoto ASpecial)
+        //{
+        //    Tz = null;
+        //    if (ASpecial != null && ASpecial.TouchZone != null)
+        //        Tz = ASpecial.TouchZone;
+        //    return 0;
+        //}
+
+        public void CalcolaTouchSpecial(TTipoTouchSpecial ATipoTouch)
         {
             Tz = null;
-            if (ASpecial != null && ASpecial.TouchZone != null)
-                Tz = ASpecial.TouchZone;
-            return 0;
+            switch (ATipoTouch)
+            {
+                case TTipoTouchSpecial.ttsNone:
+                    Tz = null;
+                    break;
+                case TTipoTouchSpecial.ttsVotoStartNorm:
+                    Tz = ClasseTipoVotoStartNorm.TouchZone;
+                    break;
+                case TTipoTouchSpecial.ttsVotoStartDiff:
+                    Tz = ClasseTipoVotoStartDiff.TouchZone;
+                    break;
+                case TTipoTouchSpecial.ttsVotoConferma:
+                    Tz = ClasseTipoVotoConferma.TouchZone;
+                    break;
+            }
         }
 
-        public int CalcolaTouchVote(TNewVotazione FVotaz)
+        public int CalcolaTouchVote(TVotazione FVotaz)
         {
             Tz = null;
             if (FVotaz != null && FVotaz.TouchZoneVoto != null && FVotaz.TouchZoneVoto.TouchZone != null)
@@ -287,6 +312,30 @@ namespace VotoTouch.WPF
                 MinMultiCandSelezionabili = FVotaz.DammiMinMultiCandSelezionabili();
             }
             return 0;
+        }
+
+        public void CalcolaTouchZoneSpeciali(Rect AFormRect)
+        {
+            // start normale
+            if (ClasseTipoVotoStartNorm != null)
+                ClasseTipoVotoStartNorm.FFormRect = AFormRect;
+            else
+                ClasseTipoVotoStartNorm = new CTipoVoto_AStart(AFormRect);
+            ClasseTipoVotoStartNorm.GetTouchSpecialZone(TAppStato.ssvVotoStart, false, false);
+
+            // start diff
+            if (ClasseTipoVotoStartDiff != null)
+                ClasseTipoVotoStartDiff.FFormRect = AFormRect;
+            else
+                ClasseTipoVotoStartDiff = new CTipoVoto_AStart(AFormRect);
+            ClasseTipoVotoStartDiff.GetTouchSpecialZone(TAppStato.ssvVotoStart, true, false);
+
+            // start conferma
+            if (ClasseTipoVotoConferma != null)
+                ClasseTipoVotoConferma.FFormRect = AFormRect;
+            else
+                ClasseTipoVotoConferma = new CTipoVoto_AConferma(AFormRect);
+            ClasseTipoVotoConferma.GetTouchSpecialZone(TAppStato.ssvVotoConferma, false, VTConfig.AbilitaBottoneUscita);
         }
 
         // --------------------------------------------------------------
