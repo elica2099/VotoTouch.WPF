@@ -61,8 +61,8 @@ namespace VotoTouch.WPF.Views.UserControls
                 stato.Add("=== Votazioni ===");
                 foreach (TVotazione fVoto in AVotaz.Votazioni)
                 {
-                    stato.Add("Voto: " + fVoto.IDVoto.ToString() + ", Tipo: " +
-                              fVoto.TipoVoto.ToString() + ", " + fVoto.Descrizione);
+                    stato.Add("Voto: " + fVoto.NumVotaz.ToString() + ", Tipo: " +
+                              fVoto.TipoVoto.ToString() + ", " + fVoto.Argomento);
                     stato.Add("   NListe: " + fVoto.NListe + ", MaxScelte: " +
                               fVoto.MaxScelte);
                     stato.Add("   SKBianca: " + fVoto.SkBianca.ToString() +

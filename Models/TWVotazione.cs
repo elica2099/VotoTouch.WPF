@@ -9,10 +9,10 @@ namespace VotoTouch.WPF.Models
 {
     public class TVotazione
     {
-        public int IDVoto;
+        public int NumVotaz;
         public int MozioneRealeGeas;
         public int IDGruppoVoto;
-        public string Descrizione;
+        public string Argomento;
         public int TipoVoto;                
         public int TipoSubVoto;            
         public bool SkBianca;              
@@ -25,18 +25,20 @@ namespace VotoTouch.WPF.Models
         public bool AbilitaBottoneUscita;
         public bool SelezionaTuttiCDA;
 
-        public int NListe => Liste?.Count ?? 0;
-        public int NPresentatoCDA => Liste?.Count(a => a.PresentatodaCDA == true) ?? 0;             
-        public int NMultiSelezioni => TouchZoneVoto.TouchZone.Cast<TTZone>().Count(item => item.Multi > 0);
-
+        public List<TSubVotazione> SubVotazioni;
         public CBaseTipoVoto TouchZoneVoto;
         public TAreaVotazione AreaVoto;
-
         public List<TLista> Liste;     
         public ArrayList Pagine;    
 
+        public int NListe => Liste?.Count ?? 0;
+        public int NPresentatoCDA => Liste?.Count(a => a.PresentatodaCDA == true) ?? 0;             
+        public int NMultiSelezioni => TouchZoneVoto.TouchZone.Cast<TTZone>().Count(item => item.Multi > 0);
+        public bool HaSubVotazioni => SubVotazioni.Count > 0;
+
         public TVotazione()
         {
+            SubVotazioni = new List<TSubVotazione>();
             Liste = new List<TLista>();
             Pagine = new ArrayList();
             TouchZoneVoto = null;
@@ -63,11 +65,17 @@ namespace VotoTouch.WPF.Models
 
     public class TSubVotazione
     {
+        public int NumSubVotaz;
+        public int MozioneRealeGeas;
+        public int IDGruppoVoto;
+        public int TipoSubVoto;                
+        public string Argomento;
     }
 
     public class TLista
     {
         public int NumVotaz;
+        public int NumSubVotaz;
         public int IDLista;
         public int IDScheda;
         public string DescrLista;

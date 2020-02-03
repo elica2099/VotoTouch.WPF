@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using VotoTouch.WPF.Models;
 
 namespace VotoTouch.WPF
 {
@@ -165,11 +166,11 @@ namespace VotoTouch.WPF
             {
                 v = new TVotazione();
 
-                v.IDVoto = Convert.ToInt32(a["NumVotaz"]);
+                v.NumVotaz = Convert.ToInt32(a["NumVotaz"]);
                 v.IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]);
                 v.TipoVoto = Convert.ToInt32(a["TipoVotaz"]);
                 v.TipoSubVoto = 0;
-                v.Descrizione = a["Argomento"].ToString();
+                v.Argomento = a["Argomento"].ToString();
                 v.SkBianca = Convert.ToBoolean(a["SchedaBianca"]);
                 v.SkNonVoto = Convert.ToBoolean(a["SchedaNonVoto"]);
                 v.SkContrarioTutte = Convert.ToBoolean(a["SchedaContrarioTutte"]);
@@ -206,14 +207,14 @@ namespace VotoTouch.WPF
                         break;
                     // se è candidato ordino in modo alfabetico
                     case VSDecl.VOTO_CANDIDATO:
-                    case VSDecl.VOTO_CANDIDATO_SING:
+                    //case VSDecl.VOTO_CANDIDATO_SING:
                     case VSDecl.VOTO_MULTICANDIDATO:
                         ASort = "PresentatoDaCdA desc, OrdineCarica, DescrLista asc";
                         break;
                 }
 
                 foreach (DataRow riga in dt.Select("NumVotaz = " +
-                    votaz.IDVoto.ToString(), ASort))
+                    votaz.NumVotaz.ToString(), ASort))
                 {
                     Lista = new TLista
                     {
@@ -288,7 +289,7 @@ namespace VotoTouch.WPF
 
             foreach (TVotazione voto in AVotazioni.Votazioni)
             {
-                IDVotazione = voto.IDVoto;
+                IDVotazione = voto.NumVotaz;
                 // un voto
                 if (AIDBadge == 1000)
                 {

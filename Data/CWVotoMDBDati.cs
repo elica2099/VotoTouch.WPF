@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Windows;
+using VotoTouch.WPF.Models;
 
 
 namespace VotoTouch.WPF
@@ -190,11 +191,11 @@ namespace VotoTouch.WPF
                     {
                         v = new TVotazione
                         {
-                            IDVoto = Convert.ToInt32(a["NumVotaz"]),
+                            NumVotaz = Convert.ToInt32(a["NumVotaz"]),
                             IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
                             TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
                             TipoSubVoto = 0,
-                            Descrizione = a["Argomento"].ToString(),
+                            Argomento = a["Argomento"].ToString(),
                             SkBianca = Convert.ToBoolean(a["SchedaBianca"]),
                             SkNonVoto = Convert.ToBoolean(a["SchedaNonVoto"]),
                             SkContrarioTutte = Convert.ToBoolean(a["SchedaContrarioTutte"]),
@@ -262,7 +263,7 @@ namespace VotoTouch.WPF
                             break;
                         // se è candidato ordino in modo alfabetico
                         case VSDecl.VOTO_CANDIDATO:
-                        case VSDecl.VOTO_CANDIDATO_SING:
+                        //case VSDecl.VOTO_CANDIDATO_SING:
                         case VSDecl.VOTO_MULTICANDIDATO:
                             qryStd.CommandText += " order by PresentatoDaCdA desc, OrdineCarica, DescrLista "; //DescrLista ";
                             break;
@@ -270,7 +271,7 @@ namespace VotoTouch.WPF
                             qryStd.CommandText += " order by idlista";
                             break;
                     }
-                    qryStd.Parameters.AddWithValue("@IDVoto", votaz.IDVoto); // System.Data.SqlDbType.Int).Value = votaz.IDVoto;
+                    qryStd.Parameters.AddWithValue("@IDVoto", votaz.NumVotaz); // System.Data.SqlDbType.Int).Value = votaz.IDVoto;
                     a = qryStd.ExecuteReader();
                     if (a.HasRows)
                     {
@@ -416,7 +417,7 @@ namespace VotoTouch.WPF
 
             foreach (TVotazione voto in AVotazioni.Votazioni)
             {
-                IDVotazione = voto.IDVoto;
+                IDVotazione = voto.NumVotaz;
                 // un voto
                 if (AIDBadge == 1000)
                 {

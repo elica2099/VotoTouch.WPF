@@ -57,7 +57,7 @@ namespace VotoTouch.WPF.Models
         {
             if (Votazioni.Count > 0 && AIDVoto >= 0)
             {
-                TVotazione vot = Votazioni.First(v => v.IDVoto == AIDVoto);
+                TVotazione vot = Votazioni.First(v => v.NumVotaz == AIDVoto);
                 if (vot != null)
                 {
                     idxVotoCorrente = Votazioni.IndexOf(vot);
@@ -186,10 +186,10 @@ namespace VotoTouch.WPF.Models
 
                             #region VOTAZIONE DI CANDIDATO SINGOLO ** MULTI PAGINA ** (era VECCHIO, OBSOLETO)
 
-                        case VSDecl.VOTO_CANDIDATO_SING:
-                            // chiamo la classe del voto apposito
-                            voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);
-                            break;
+                        //case VSDecl.VOTO_CANDIDATO_SING:
+                        //    // chiamo la classe del voto apposito
+                        //    voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);
+                        //    break;
 
                             #endregion
 
@@ -228,7 +228,7 @@ namespace VotoTouch.WPF.Models
             {
                 // solo se il voto è di candidato continuo
                 if (votazione.TipoVoto == VSDecl.VOTO_CANDIDATO ||
-                    votazione.TipoVoto == VSDecl.VOTO_CANDIDATO_SING ||
+                    //votazione.TipoVoto == VSDecl.VOTO_CANDIDATO_SING ||
                     votazione.TipoVoto == VSDecl.VOTO_MULTICANDIDATO)
                 {
                     // 1° step aree di voto
@@ -357,7 +357,7 @@ namespace VotoTouch.WPF.Models
             {
                 // solo se il voto è di candidato continuo
                 if (votazione.TipoVoto == VSDecl.VOTO_CANDIDATO ||
-                    votazione.TipoVoto == VSDecl.VOTO_CANDIDATO_SING ||
+                    //votazione.TipoVoto == VSDecl.VOTO_CANDIDATO_SING ||
                     votazione.TipoVoto == VSDecl.VOTO_MULTICANDIDATO)
                 {
                     // comunque cancello la collection delle pagine

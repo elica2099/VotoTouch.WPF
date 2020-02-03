@@ -590,7 +590,7 @@ namespace VotoTouch.WPF
             {
                 TVotoEspresso vz = new TVotoEspresso
                     {
-                        NumVotaz = Votazioni.VotoCorrente.IDVoto,
+                        NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                         VotoExp_IDScheda = VTConfig.IDSchedaUscitaForzata,
                         TipoCarica = 0,
                         //Str_ListaElenco = "",

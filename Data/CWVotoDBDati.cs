@@ -561,12 +561,12 @@ namespace VotoTouch.WPF
                     {
                         TVotazione v = new TVotazione
                         {
-                            IDVoto = Convert.ToInt32(a["NumVotaz"]),
+                            NumVotaz = Convert.ToInt32(a["NumVotaz"]),
                             MozioneRealeGeas = Convert.ToInt32(a["MozioneRealeGeas"]),
                             IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
                             TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
                             TipoSubVoto = Convert.ToInt32(a["TipoSubVotaz"]),
-                            Descrizione = a["Argomento"].ToString(),
+                            Argomento = a["Argomento"].ToString(),
                             SkBianca = Convert.ToBoolean(a["VotoSchedaBianca"]),
                             SkNonVoto = Convert.ToBoolean(a["VotoNonVotante"]),
                             SkContrarioTutte = Convert.ToBoolean(a["SchedaContrarioTutte"]),
@@ -581,11 +581,38 @@ namespace VotoTouch.WPF
                     }
                 }
                 a.Close();
+
+                // ok ora carico le subvotazioni
+                foreach (TVotazione votazione in AVotazioni)
+                {
+                    qryStd.Parameters.Clear();
+                    qryStd.CommandText = @"select * from VS_MatchVot_Gruppo_Totem 
+                                where gruppovotaz = @gruppovotaz order by numsubvotaz";
+                    qryStd.Parameters.Add("@gruppovotaz", System.Data.SqlDbType.Int).Value = votazione.IDGruppoVoto;
+                    SqlDataReader b = qryStd.ExecuteReader();
+                    if (b.HasRows)
+                    {
+                        while (b.Read())
+                        {
+                            TSubVotazione subvoto = new TSubVotazione()
+                            {
+                                NumSubVotaz = Convert.ToInt32(b["NumSubVotaz"]),
+                                MozioneRealeGeas = Convert.ToInt32(b["MozioneRealeGeas"]),
+                                IDGruppoVoto = Convert.ToInt32(b["GruppoVotaz"]),
+                                TipoSubVoto = Convert.ToInt32(b["TipoVotaz"]),
+                                Argomento = b["Argomento"].ToString()
+                            };
+                            votazione.SubVotazioni.Add(subvoto);
+                        }
+                    }
+                    b.Close();
+                }
+
                 result = true;
             }
             catch (Exception objExc)
             {
-                Utils.errorCall("CaricaListeVotazioniDaDatabase", objExc.Message);
+                Utils.errorCall("CaricaVotazioniDaDatabase", objExc.Message);
             }
             finally
             {
@@ -622,7 +649,7 @@ namespace VotoTouch.WPF
                             break;
                         // se è candidato ordino in modo alfabetico
                         case VSDecl.VOTO_CANDIDATO:
-                        case VSDecl.VOTO_CANDIDATO_SING:
+                        //case VSDecl.VOTO_CANDIDATO_SING:
                         case VSDecl.VOTO_MULTICANDIDATO:
                             qryStd.CommandText += " order by PresentatoDaCdA desc, OrdineCarica, DescrLista "; //DescrLista ";
                             break;
@@ -630,7 +657,7 @@ namespace VotoTouch.WPF
                             qryStd.CommandText += " order by idlista";
                             break;
                     }
-                    qryStd.Parameters.Add("@IDVoto", System.Data.SqlDbType.Int).Value = votaz.IDVoto;
+                    qryStd.Parameters.Add("@IDVoto", System.Data.SqlDbType.Int).Value = votaz.NumVotaz;
                     SqlDataReader a = qryStd.ExecuteReader();
                     if (a.HasRows)
                     {
@@ -639,6 +666,7 @@ namespace VotoTouch.WPF
                             TLista l = new TLista
                             {
                                 NumVotaz = Convert.ToInt32(a["NumVotaz"]),
+                                NumSubVotaz = Convert.ToInt32(a["NumSubVotaz"]),
                                 IDLista = Convert.ToInt32(a["idLista"]),
                                 IDScheda = Convert.ToInt32(a["idScheda"]),
                                 DescrLista = a.IsDBNull(a.GetOrdinal("DescrLista")) ? "DESCRIZIONE" : a["DescrLista"].ToString(),
@@ -981,7 +1009,7 @@ namespace VotoTouch.WPF
                 // TODO: CVotoDBDati|CaricaDirittidiVotoDaDatabase - Inutile chiamare n volte la query
                 foreach (TVotazione voto in AVotazioni.Votazioni)
                 {
-                    IDVotazione = voto.IDVoto;
+                    IDVotazione = voto.NumVotaz;
 
                     // resetto la query
                     qryStd.Parameters.Clear();
@@ -1219,7 +1247,7 @@ namespace VotoTouch.WPF
             SqlCommand qryStd = null, qryVoti = null;
             SqlTransaction traStd = null;
             int result = 0;
-            double PNAzioni = 0;
+            //double PNAzioni = 0;
             string TipoAsse = "";
 
             // TODO: GEAS VERSIONE (Salvataggio voti Geas NOTA: FUNZIONA SOLO CON UN VOTO)

@@ -122,7 +122,7 @@ namespace VotoTouch.WPF
                 VotoEspressoStrNote = "";
                 VExp = new TVotoEspresso
                 {
-                    NumVotaz = Votazioni.VotoCorrente.IDVoto,
+                    NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                     VotoExp_IDScheda = VSDecl.VOTO_SCHEDABIANCA,
                     TipoCarica = 0,
                 };
@@ -181,7 +181,7 @@ namespace VotoTouch.WPF
             // nuova versione array
             TVotoEspresso VExp = new TVotoEspresso
                 {
-                    NumVotaz = Votazioni.VotoCorrente.IDVoto,
+                    NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                     VotoExp_IDScheda = VSDecl.VOTO_SCHEDABIANCA,
                     TipoCarica = 0,
                 };
@@ -201,7 +201,7 @@ namespace VotoTouch.WPF
             // nuova versione array
             TVotoEspresso VExp = new TVotoEspresso
             {
-                NumVotaz = Votazioni.VotoCorrente.IDVoto,
+                NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                 VotoExp_IDScheda = VSDecl.VOTO_CONTRARIO_TUTTI,
                 TipoCarica = 0,
             };
@@ -221,7 +221,7 @@ namespace VotoTouch.WPF
             // nuova versione array
             TVotoEspresso VExp = new TVotoEspresso
             {
-                NumVotaz = Votazioni.VotoCorrente.IDVoto,
+                NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                 VotoExp_IDScheda = VSDecl.VOTO_ASTENUTO_TUTTI,
                 TipoCarica = 0,
             };
@@ -241,7 +241,7 @@ namespace VotoTouch.WPF
             // nuova versione array
             TVotoEspresso VExp = new TVotoEspresso
                 {
-                    NumVotaz = Votazioni.VotoCorrente.IDVoto,
+                    NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                     VotoExp_IDScheda = VSDecl.VOTO_NONVOTO,
                     TipoCarica = 0,
                 };

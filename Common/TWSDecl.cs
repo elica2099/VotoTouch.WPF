@@ -120,7 +120,7 @@ namespace VotoTouch.WPF
         // tipi di Votazione
         public const int VOTO_LISTA = 1;            // voto di lista
         public const int VOTO_CANDIDATO = 2;        // voto per candidato a pagine
-        public const int VOTO_CANDIDATO_SING = 3;   // voto per candidato singola pagina (da cancellare)
+        //public const int VOTO_CANDIDATO_SING = 3;   // voto per candidato singola pagina (da cancellare)
         public const int VOTO_MULTICANDIDATO = 4;   // voto multicandidato
 
         // tipo di sottovoto

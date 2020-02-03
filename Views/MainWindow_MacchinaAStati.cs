@@ -117,7 +117,7 @@ namespace VotoTouch.WPF
                         // cancello i voti temporanei correnti 
                         CancellaTempVotiCorrenti();
                         // ora metto in quadro l'immagine, che deve essere presa da un file composto da
-                        oVotoImg.LoadImages(VSDecl.IMG_voto + Votazioni.VotoCorrente.IDVoto.ToString());
+                        oVotoImg.LoadImages(VSDecl.IMG_voto + Votazioni.VotoCorrente.NumVotaz.ToString());
                         // mostro comunque i diritti di voto in lbDirittiDiVoto e il nome di quello corrente
                         TxtNomeDisgiunto = App.Instance.getLang("SAPP_VOTE_D_RASO") + "\n" +
                                                Azionisti.DammiNomeAzionistaInVoto_VotoCorrente(IsVotazioneDifferenziata);
@@ -137,8 +137,8 @@ namespace VotoTouch.WPF
         
                         // se la votazione corrente è di candidato su più pagine disegno i rettangoli
                         if (Stato == TAppStato.ssvVoto && 
-                            (Votazioni.VotoCorrente.TipoVoto == VSDecl.VOTO_CANDIDATO ||
-                             Votazioni.VotoCorrente.TipoVoto == VSDecl.VOTO_CANDIDATO_SING))
+                            (Votazioni.VotoCorrente.TipoVoto == VSDecl.VOTO_CANDIDATO))
+                            //|| Votazioni.VotoCorrente.TipoVoto == VSDecl.VOTO_CANDIDATO_SING))
                         {
                             // ora lbCandidati_PresCDA
                             if (Votazioni.VotoCorrente.NPresentatoCDA > 0)
@@ -197,7 +197,7 @@ namespace VotoTouch.WPF
                     //oVotoTouch.CalcolaTouchSpecial(Stato, false);
                     SettaComponenti(false);
                     // ora metto in quadro l'immagine, che deve essere presa da un file composto da
-                    oVotoImg.LoadImages(VSDecl.IMG_voto + Votazioni.VotoCorrente.IDVoto.ToString() + VSDecl.IMG_voto_c);
+                    oVotoImg.LoadImages(VSDecl.IMG_voto + Votazioni.VotoCorrente.NumVotaz.ToString() + VSDecl.IMG_voto_c);
                     // conferma
                     MettiComponentiConferma();
                     TxtNomeDisgiuntoVis = true; // (IsVotazioneDifferenziata || Azionisti.DammiCountDirittiDiVoto_VotoCorrente() == 1);
