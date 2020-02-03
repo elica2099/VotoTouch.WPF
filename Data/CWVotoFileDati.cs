@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Windows.Documents;
 using VotoTouch.WPF.Models;
 
 namespace VotoTouch.WPF
@@ -154,41 +156,33 @@ namespace VotoTouch.WPF
 
         #region CARICAMENTO DATI VOTAZIONI
 
-        public override bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
+        public override List<CDB_Votazione> CaricaVotazioniDaDatabase()
+        //public override bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
         {
-            //int z;
             DataTable dt = new DataTable();
-            TVotazione v;
-
             dt.ReadXml(AData_path + "VS_MatchVot_Totem.xml");
 
-            foreach (DataRow a in dt.Rows)
+            List<CDB_Votazione> votaz = (from DataRow a in dt.Rows
+            select new CDB_Votazione
             {
-                v = new TVotazione();
-
-                v.NumVotaz = Convert.ToInt32(a["NumVotaz"]);
-                v.IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]);
-                v.TipoVoto = Convert.ToInt32(a["TipoVotaz"]);
-                v.TipoSubVoto = 0;
-                v.Argomento = a["Argomento"].ToString();
-                v.SkBianca = Convert.ToBoolean(a["SchedaBianca"]);
-                v.SkNonVoto = Convert.ToBoolean(a["SchedaNonVoto"]);
-                v.SkContrarioTutte = Convert.ToBoolean(a["SchedaContrarioTutte"]);
-                v.SkAstenutoTutte = Convert.ToBoolean(a["SchedaAstenutoTutte"]);
-                v.SelezionaTuttiCDA = Convert.ToBoolean(a["SelezTuttiCDA"]);
-                //PreIntermezzo = false,
-                v.MaxScelte = Convert.ToInt32(a["MaxScelte"]);
-                v.AbilitaBottoneUscita = Convert.ToBoolean(a["AbilitaBottoneUscita"]);
-                
-                AVotazioni.Add(v);
-            }
-
+                DB_NumVotaz = Convert.ToInt32(a["NumVotaz"]),
+                DB_IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
+                DB_TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
+                DB_TipoSubVoto = 0,
+                DB_Argomento = a["Argomento"].ToString(),
+                DB_SkBianca = Convert.ToBoolean(a["SchedaBianca"]),
+                DB_SkNonVoto = Convert.ToBoolean(a["SchedaNonVoto"]),
+                DB_SkContrarioTutte = Convert.ToBoolean(a["SchedaContrarioTutte"]),
+                DB_SkAstenutoTutte = Convert.ToBoolean(a["SchedaAstenutoTutte"]),
+                DB_SelezionaTuttiCDA = Convert.ToBoolean(a["SelezTuttiCDA"]),
+                DB_MaxScelte = Convert.ToInt32(a["MaxScelte"]),
+                DB_AbilitaBottoneUscita = Convert.ToBoolean(a["AbilitaBottoneUscita"])
+            }).ToList();
             dt.Dispose();
-
-            return true;
+            return votaz;
         }
 
-        public override bool CaricaListeDaDatabase(ref List<TVotazione> AVotazioni)
+        public override bool CaricaListeDaDatabase(ref List<CVotazione> AVotazioni)
         {
             DataTable dt = new DataTable();
             TLista Lista;
@@ -196,7 +190,7 @@ namespace VotoTouch.WPF
             dt.ReadXml(AData_path + "VS_Liste_Totem.xml");
             string ASort = "idlista asc";
             // cicla lungo le votazioni e carica le liste
-            foreach (TVotazione votaz in AVotazioni)
+            foreach (CVotazione votaz in AVotazioni)
             {
                 // faccio un sorting delle liste
                 switch (votaz.TipoVoto)
@@ -281,13 +275,13 @@ namespace VotoTouch.WPF
         #region CaricaDirittidiVotoDaDatabase
 
         public override bool CaricaDirittidiVotoDaDatabase(int AIDBadge, ref List<TAzionista> AAzionisti,
-                                                  ref TAzionista ATitolare_badge, ref TListaVotazioni AVotazioni)
+                                                  ref TAzionista ATitolare_badge, ref CListaVotazioni AVotazioni)
         {
             int IDVotazione = -1;
             AAzionisti.Clear();
             TAzionista a;
 
-            foreach (TVotazione voto in AVotazioni.Votazioni)
+            foreach (CVotazione voto in AVotazioni.Votazioni)
             {
                 IDVotazione = voto.NumVotaz;
                 // un voto

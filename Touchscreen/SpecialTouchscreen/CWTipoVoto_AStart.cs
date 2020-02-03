@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace VotoTouch.WPF
+namespace VotoTouch.WPF.Touchscreen
 {
-    public class CTipoVoto_AStart: CBaseTipoVoto
+    public class CTipoVoto_AStart: CBaseSpecialTouch
     {
 
         // CLASSE DELLA PAGINA DI START

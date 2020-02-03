@@ -12,13 +12,13 @@ using System.Windows;
 namespace VotoTouch.WPF.Models
 {
     // DR16 - Classe intera
-    public class TListaVotazioni
+    public class CListaVotazioni
     {
         // oggetto lista votazioni
-        public List<TVotazione> Votazioni;
+        public List<CVotazione> Votazioni;
 
         private int idxVotoCorrente;
-        public TVotazione VotoCorrente
+        public CVotazione VotoCorrente
         {
             get => Votazioni.Count == 0 ? null : Votazioni[idxVotoCorrente];
             set
@@ -30,16 +30,16 @@ namespace VotoTouch.WPF.Models
 
         private readonly CVotoBaseDati DBDati;
 
-        public TListaVotazioni(CVotoBaseDati ADBDati)
+        public CListaVotazioni(CVotoBaseDati ADBDati)
         {
             // costruttore
             DBDati = ADBDati;
-            Votazioni = new List<TVotazione>();
+            Votazioni = new List<CVotazione>();
 
             idxVotoCorrente = 0;
         }
 
-        ~TListaVotazioni()
+        ~CListaVotazioni()
         {
             // Distruttore
         }
@@ -57,7 +57,7 @@ namespace VotoTouch.WPF.Models
         {
             if (Votazioni.Count > 0 && AIDVoto >= 0)
             {
-                TVotazione vot = Votazioni.First(v => v.NumVotaz == AIDVoto);
+                CVotazione vot = Votazioni.First(v => v.NumVotaz == AIDVoto);
                 if (vot != null)
                 {
                     idxVotoCorrente = Votazioni.IndexOf(vot);
@@ -80,9 +80,7 @@ namespace VotoTouch.WPF.Models
         //    return rit != null ? rit.
         //}
 
-        // --------------------------------------------------------------------------
-        //  Caricamento dati
-        // --------------------------------------------------------------------------
+        //  Caricamento dati --------------------------------------------------------------------------
 
         public bool CaricaListeVotazioni(string AData_path, Rect AFormRect, bool AInLoading)
         {
@@ -98,15 +96,75 @@ namespace VotoTouch.WPF.Models
 
             Votazioni.Clear();
 
-            // carica le votazioni dal database
-            if (DBDati.CaricaVotazioniDaDatabase(ref Votazioni))
+            // carica le votazioni raw dal db
+            List<CDB_Votazione> dbVotazione = DBDati.CaricaVotazioniDaDatabase();
+
+            // ora crea le votazioni secondo il tipo
+            if (dbVotazione != null && dbVotazione.Count > 0)
             {
+                // crea
+                foreach (CDB_Votazione dbvotaz in dbVotazione)
+                {
+                    CVotazione votaz = null;
+                    switch (dbvotaz.DB_TipoVoto)
+                    {
+                        case VSDecl.VOTO_NORMALE:
+                            break;
+                        case VSDecl.VOTO_LISTA:
+                            votaz =  new CVotazione_Lista(AFormRect);
+                            break;
+                        case VSDecl.VOTO_CANDIDATO:
+                            votaz =  new CVotazione_Candidato(AFormRect);
+                            break;
+                        case VSDecl.VOTO_MULTICANDIDATO:
+                            switch (dbvotaz.DB_TipoSubVoto)
+                            {
+                                case VSDecl.SUBVOTO_NORMAL:
+                                    votaz = new CVotazione_MultiCandidatoOriginal(AFormRect);
+                                    break;
+                                case VSDecl.SUBVOTO_NEW:
+                                    votaz = new CVotazione_MultiCandidatoNew(AFormRect);
+                                    break;
+
+                                // subvoti speciali
+                                case VSDecl.SUBVOTO_CUSTOM_MANUTENCOOP:
+                                    votaz = new CVotazione_Custom_Multi_Manutencoop(AFormRect);
+                                    break;
+
+                                default:
+                                    votaz = new CVotazione_MultiCandidatoOriginal(AFormRect);
+                                    break;
+                            }
+                            break;
+                        default:
+                            votaz = new CVotazione_Lista(AFormRect);
+                            break;
+                    }
+                    votaz?.CopyFromDB_Votazione(dbvotaz);
+                    Votazioni.Add(votaz);
+                }
+
+                // ok ora che ho creato le votazioni carico i subvoti
+
+
                 // carica i dettagli delle votazioni
                 if (DBDati.CaricaListeDaDatabase(ref Votazioni))
                 {
                     result = true;
                 }
             }
+
+
+
+            //// carica le votazioni dal database
+            //if (DBDati.CaricaVotazioniDaDatabase(ref Votazioni))
+            //{
+            //    // carica i dettagli delle votazioni
+            //    if (DBDati.CaricaListeDaDatabase(ref Votazioni))
+            //    {
+            //        result = true;
+            //    }
+            //}
             // Calcolo l'area di voto per Candidati e multicandidati
             CalcolaAreaDiVotoCandidatiMultiCandidato();
             // ok, ora ordino le liste nel caso in cui siano di candidato
@@ -116,8 +174,6 @@ namespace VotoTouch.WPF.Models
             {
                 // votazioni
                 CalcolaTouchZoneVotazioni(AFormRect);
-                // speciali
-                //CalcolaTouchZoneSpeciali(AFormRect);
             }
 
             // NOTA: Nelle liste il nome può contenere anche la data di nascita, inserita
@@ -130,77 +186,85 @@ namespace VotoTouch.WPF.Models
 
         public void CalcolaTouchZoneVotazioni(Rect AFormRect)
         {
-            foreach (TVotazione voto in Votazioni)
+            // devo solo aggiornare ogni singola votazione con la nuova FormRect 
+            foreach (CVotazione voto in Votazioni)
             {
-                // prima cancello eventuali oggetti se ci sono
-                if (voto.TouchZoneVoto != null)
-                {
-                    voto.TouchZoneVoto.FFormRect = AFormRect;
-                }
-                else
-                {
-                    switch (voto.TipoVoto)
-                    {
-                        case VSDecl.VOTO_LISTA:
-                            voto.TouchZoneVoto = new CTipoVoto_Lista(AFormRect);
-                            break;
-
-                        case VSDecl.VOTO_CANDIDATO:
-                            // chiamo la classe del voto apposito
-                            switch (voto.TipoSubVoto)
-                            {
-                                case VSDecl.SUBVOTO_NORMAL:
-                                    if (voto.NListe <= 6)
-                                         voto.TouchZoneVoto = new CTipoVoto_CandidatoSmall(AFormRect);
-                                    else
-                                        voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);                                    
-                                    break;
-
-                                default:
-                                    voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);
-                                    break;
-                            } 
-                            break;
-
-                        case VSDecl.VOTO_MULTICANDIDATO:
-                            // chiamo la classe del voto apposito
-                            switch (voto.TipoSubVoto)
-                            {
-                                case VSDecl.SUBVOTO_NORMAL:
-                                    voto.TouchZoneVoto = new CTipoVoto_MultiCandidatoOriginal(AFormRect);
-                                    break;
-                                case VSDecl.SUBVOTO_NEW:
-                                    voto.TouchZoneVoto = new CTipoVoto_MultiCandidatoNew(AFormRect);
-                                    break;
-
-                                // subvoti speciali
-                                case VSDecl.SUBVOTO_CUSTOM_MANUTENCOOP:
-                                    voto.TouchZoneVoto = new CTipoVoto_Custom_Multi_Manutencoop(AFormRect);
-                                    break;
-
-                                default:
-                                    voto.TouchZoneVoto = new CTipoVoto_MultiCandidatoOriginal(AFormRect);
-                                    break;
-                            }
-                            break;
-
-                            #region VOTAZIONE DI CANDIDATO SINGOLO ** MULTI PAGINA ** (era VECCHIO, OBSOLETO)
-
-                        //case VSDecl.VOTO_CANDIDATO_SING:
-                        //    // chiamo la classe del voto apposito
-                        //    voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);
-                        //    break;
-
-                            #endregion
-
-                        default:
-                            voto.TouchZoneVoto = new CTipoVoto_Lista(AFormRect);
-                            break;
-                    }
-                }
-                // calcolo le zone
-                voto.TouchZoneVoto.GetTouchVoteZone(voto);
+                voto.FFormRect = AFormRect;
+                voto.GetTouchVoteZone();
             }
+
+            /*
+             NOTA era nel ciclo foreach
+            // prima cancello eventuali oggetti se ci sono
+            if (voto.TouchZoneVoto != null)
+            {
+                voto.TouchZoneVoto.FFormRect = AFormRect;
+            }
+            else
+            {
+                switch (voto.TipoVoto)
+                {
+                    case VSDecl.VOTO_LISTA:
+                        voto.TouchZoneVoto = new CTipoVoto_Lista(AFormRect);
+                        break;
+
+                    case VSDecl.VOTO_CANDIDATO:
+                        // chiamo la classe del voto apposito
+                        switch (voto.TipoSubVoto)
+                        {
+                            case VSDecl.SUBVOTO_NORMAL:
+                                if (voto.NListe <= 6)
+                                     voto.TouchZoneVoto = new CTipoVoto_CandidatoSmall(AFormRect);
+                                else
+                                    voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);                                    
+                                break;
+
+                            default:
+                                voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);
+                                break;
+                        } 
+                        break;
+
+                    case VSDecl.VOTO_MULTICANDIDATO:
+                        // chiamo la classe del voto apposito
+                        switch (voto.TipoSubVoto)
+                        {
+                            case VSDecl.SUBVOTO_NORMAL:
+                                voto.TouchZoneVoto = new CTipoVoto_MultiCandidatoOriginal(AFormRect);
+                                break;
+                            case VSDecl.SUBVOTO_NEW:
+                                voto.TouchZoneVoto = new CTipoVoto_MultiCandidatoNew(AFormRect);
+                                break;
+
+                            // subvoti speciali
+                            case VSDecl.SUBVOTO_CUSTOM_MANUTENCOOP:
+                                voto.TouchZoneVoto = new CTipoVoto_Custom_Multi_Manutencoop(AFormRect);
+                                break;
+
+                            default:
+                                voto.TouchZoneVoto = new CTipoVoto_MultiCandidatoOriginal(AFormRect);
+                                break;
+                        }
+                        break;
+
+                        #region VOTAZIONE DI CANDIDATO SINGOLO ** MULTI PAGINA ** (era VECCHIO, OBSOLETO)
+
+                    //case VSDecl.VOTO_CANDIDATO_SING:
+                    //    // chiamo la classe del voto apposito
+                    //    voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);
+                    //    break;
+
+                        #endregion
+
+                    default:
+                        voto.TouchZoneVoto = new CTipoVoto_Lista(AFormRect);
+                        break;
+                }
+            }
+            // calcolo le zone
+            voto.TouchZoneVoto.GetTouchVoteZone(voto);
+        */
+
         }
 
         // --------------------------------------------------------------------------
@@ -224,7 +288,7 @@ namespace VotoTouch.WPF.Models
             // area di voto standard x Candidati è:
             // x: 20 y:180 ax:980 (w:960) ay:810 (h:630)  
 
-            foreach (TVotazione votazione in Votazioni)
+            foreach (CVotazione votazione in Votazioni)
             {
                 // solo se il voto è di candidato continuo
                 if (votazione.TipoVoto == VSDecl.VOTO_CANDIDATO ||
@@ -353,7 +417,7 @@ namespace VotoTouch.WPF.Models
             //   (es A - CG, CH - TF, TG - Z)
 
             // innanzitutto ciclo sulle votazioni
-            foreach (TVotazione votazione in Votazioni)
+            foreach (CVotazione votazione in Votazioni)
             {
                 // solo se il voto è di candidato continuo
                 if (votazione.TipoVoto == VSDecl.VOTO_CANDIDATO ||

@@ -22,7 +22,7 @@ namespace VotoTouch.WPF
 
         //override public void GetTouchVoteZone(TAppStato AStato, TNewVotazione AFVotaz, 
         //                                                bool ADiffer, ref ArrayList Tz )
-        public override void GetTouchVoteZone(TVotazione AVotazione)
+        public override void GetTouchVoteZone(CVotazione AVotazione)
         {
             // DR12 OK
             Tz.Clear();
@@ -40,7 +40,7 @@ namespace VotoTouch.WPF
 
         #region calcolo candidato/multicandidato touch nuovo
 
-        public void NewCalcolaTouchCandidatoPagina(TVotazione AFVotaz)
+        public void NewCalcolaTouchCandidatoPagina(CVotazione AFVotaz)
         {
             // DR12 OK
             TTZone a;
@@ -276,7 +276,7 @@ namespace VotoTouch.WPF
         //  CALCOLO DEL TOUCH TABS
         // --------------------------------------------------------------
 
-        public void CalcolaTouchTabsPagina(TVotazione AFVotaz)
+        public void CalcolaTouchTabsPagina(CVotazione AFVotaz)
         {
             // DR12 OK
             // se non ho bisogno di tab è inutile, tanto vale uscire

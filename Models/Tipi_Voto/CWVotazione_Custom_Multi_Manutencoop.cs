@@ -9,26 +9,26 @@ using VotoTouch.WPF.Models;
 
 namespace VotoTouch.WPF
 {
-    public class CTipoVoto_Custom_Multi_Manutencoop: CBaseTipoVoto
+    public class CVotazione_Custom_Multi_Manutencoop: CVotazione
     {
 
         // CLASSE CUSTOM PER MANUTENCOOP 2017
         
-        public CTipoVoto_Custom_Multi_Manutencoop(Rect AFormRect) : base(AFormRect)
+        public CVotazione_Custom_Multi_Manutencoop(Rect AFormRect) : base(AFormRect)
         {
             // costruttore
             CustomPaint = true;
         }
 
-       public override void GetTouchVoteZone(TVotazione AVotazione)
+       public override void GetTouchVoteZone()
         {
             // DR12 OK
-            Tz.Clear();
+            TouchZoneVoto.Clear();
 
-            CalcolaTouch_Manutencoop(AVotazione);
+            CalcolaTouch_Manutencoop();
             
             // nella classe base c'è qualcosa
-            base.GetTouchVoteZone(AVotazione);
+            base.GetTouchVoteZone();
         }
 
         // --------------------------------------------------------------
@@ -47,49 +47,49 @@ namespace VotoTouch.WPF
         private static int x = basex;
         private static int r = x + deltax;
 
-        public void CalcolaTouch_Manutencoop(TVotazione AVotazione)
+        public void CalcolaTouch_Manutencoop()
         {
             TTZone a;
 
             // prima colonna
             // 1 - LEVORATO CLAUDIO
-            Tz.Add(calczone(0, "LEVORATO CLAUDIO"));
+            TouchZoneVoto.Add(calczone(0, "LEVORATO CLAUDIO"));
             y += deltay; b += deltay;
 
             // 2 - ENZO GRENZI
-            Tz.Add(calczone(1, "ENZO GRENZI"));
+            TouchZoneVoto.Add(calczone(1, "ENZO GRENZI"));
             y += deltay; b += deltay;
 
             // 3 - CHIARA FILIPPI
-            Tz.Add(calczone(2, "CHIARA FILIPPI"));
+            TouchZoneVoto.Add(calczone(2, "CHIARA FILIPPI"));
             y += deltay; b += deltay;
 
             // 4 - LUCA BUGLIONE
-            Tz.Add(calczone(3, "LUCA BUGLIONE"));
+            TouchZoneVoto.Add(calczone(3, "LUCA BUGLIONE"));
             y += deltay; b += deltay;
 
             // 5 - STEFANIA LORI
-            Tz.Add(calczone(4, "STEFANIA LORI"));
+            TouchZoneVoto.Add(calczone(4, "STEFANIA LORI"));
             y += deltay; b += deltay;
 
             // 6 - CARMELA ARMENTO
-            Tz.Add(calczone(5, "CARMELA ARMENTO"));
+            TouchZoneVoto.Add(calczone(5, "CARMELA ARMENTO"));
             y += deltay; b += deltay;
 
             // 7 - ALESSANDRO BENSI
-            Tz.Add(calczone(6, "ALESSANDRO BENSI"));
+            TouchZoneVoto.Add(calczone(6, "ALESSANDRO BENSI"));
             y += deltay; b += deltay;
 
             // 8 - SERGIO CAPPE’
-            Tz.Add(calczone(7, "SERGIO CAPPE’"));
+            TouchZoneVoto.Add(calczone(7, "SERGIO CAPPE’"));
             y += deltay; b += deltay;
 
             // 9 - FABRIZIO LAGHI
-            Tz.Add(calczone(8, "FABRIZIO LAGHI"));
+            TouchZoneVoto.Add(calczone(8, "FABRIZIO LAGHI"));
             y += deltay; b += deltay;
 
             // 10 - GINO SERGIO BENASSI
-            Tz.Add(calczone(9, "GINO SERGIO BENASSI"));
+            TouchZoneVoto.Add(calczone(9, "GINO SERGIO BENASSI"));
             y += deltay; b += deltay;
 
             // seconda colonna
@@ -99,39 +99,39 @@ namespace VotoTouch.WPF
             b = y + deltay;
 
             // 11 - RAFFAELE POTRINO
-            Tz.Add(calczone(10, "RAFFAELE POTRINO"));
+            TouchZoneVoto.Add(calczone(10, "RAFFAELE POTRINO"));
             y += deltay; b += deltay;
 
             // 12 - LUIGI FACCHINI
-            Tz.Add(calczone(11, "LUIGI FACCHINI"));
+            TouchZoneVoto.Add(calczone(11, "LUIGI FACCHINI"));
             y += deltay; b += deltay;
 
             // 13 - EMMA RAPONE
-            Tz.Add(calczone(12, "EMMA RAPONE"));
+            TouchZoneVoto.Add(calczone(12, "EMMA RAPONE"));
             y += deltay; b += deltay;
 
             // 14 - MARIANGELA FONTANA
-            Tz.Add(calczone(13, "MARIANGELA FONTANA"));
+            TouchZoneVoto.Add(calczone(13, "MARIANGELA FONTANA"));
             y += deltay; b += deltay;
 
             // 15 - GIULIANO DI BERNARDO
-            Tz.Add(calczone(14, "GIULIANO DI BERNARDO"));
+            TouchZoneVoto.Add(calczone(14, "GIULIANO DI BERNARDO"));
             y += deltay; b += deltay;
 
             // 16 - CLAUDIO BONAFE’
-            Tz.Add(calczone(15, "CLAUDIO BONAFE’"));
+            TouchZoneVoto.Add(calczone(15, "CLAUDIO BONAFE’"));
             y += deltay; b += deltay;
 
             // 17 - SABRINA ANNOVI
-            Tz.Add(calczone(16, "SABRINA ANNOVI"));
+            TouchZoneVoto.Add(calczone(16, "SABRINA ANNOVI"));
             y += deltay; b += deltay;
 
             // 18 - MARIA D’AMELIO
-            Tz.Add(calczone(17, "MARIA D’AMELIO"));
+            TouchZoneVoto.Add(calczone(17, "MARIA D’AMELIO"));
             y += deltay; b += deltay;
 
             // 19 - ALESSANDRO DALLA TORRE
-            Tz.Add(calczone(18, "ALESSANDRO DALLA TORRE"));
+            TouchZoneVoto.Add(calczone(18, "ALESSANDRO DALLA TORRE"));
             y += deltay; b += deltay;
 
             // terza colonna
@@ -141,39 +141,39 @@ namespace VotoTouch.WPF
             b = y + deltay;
 
             // 20 - LICIA AVRAAM
-            Tz.Add(calczone(19, "LICIA AVRAAM"));
+            TouchZoneVoto.Add(calczone(19, "LICIA AVRAAM"));
             y += deltay; b += deltay;
 
             // 21 - PAOLO ZANIBONI
-            Tz.Add(calczone(20, "PAOLO ZANIBONI"));
+            TouchZoneVoto.Add(calczone(20, "PAOLO ZANIBONI"));
             y += deltay; b += deltay;
 
             // 22 - FRANCO PALAGANO
-            Tz.Add(calczone(21, "FRANCO PALAGANO"));
+            TouchZoneVoto.Add(calczone(21, "FRANCO PALAGANO"));
             y += deltay; b += deltay;
 
             // 23 - ENRICO INVERNO
-            Tz.Add(calczone(22, "ENRICO INVERNO"));
+            TouchZoneVoto.Add(calczone(22, "ENRICO INVERNO"));
             y += deltay; b += deltay;
 
             // 24 - CINZIA CATERI
-            Tz.Add(calczone(23, "CINZIA CATERI"));
+            TouchZoneVoto.Add(calczone(23, "CINZIA CATERI"));
             y += deltay; b += deltay;
 
             // 25 - ALFREDO DELLISANTI
-            Tz.Add(calczone(24, "ALFREDO DELLISANTI"));
+            TouchZoneVoto.Add(calczone(24, "ALFREDO DELLISANTI"));
             y += deltay; b += deltay;
 
             // 26 - LAURA DUO’
-            Tz.Add(calczone(25, "LAURA DUO’"));
+            TouchZoneVoto.Add(calczone(25, "LAURA DUO’"));
             y += deltay; b += deltay;
 
             // 27 - GABRIELE STANZANI
-            Tz.Add(calczone(26, "GABRIELE STANZANI"));
+            TouchZoneVoto.Add(calczone(26, "GABRIELE STANZANI"));
             y += deltay; b += deltay;
 
             // 28 - CRISTINA CAVICCHIOLI
-            Tz.Add(calczone(27, "CRISTINA CAVICCHIOLI"));
+            TouchZoneVoto.Add(calczone(27, "CRISTINA CAVICCHIOLI"));
             y += deltay; b += deltay;
 
             // devo aggiungere il tasto avanti con evento           
@@ -181,7 +181,7 @@ namespace VotoTouch.WPF
             GetZone(ref a, 670, 820, 1000, 1000);
             a.expr = VSDecl.VOTO_MULTIAVANTI;
             a.Text = ""; a.ev = TTEvento.steMultiAvanti; a.pag = 0; a.cda = false; a.Multi = 0;
-            Tz.Add(a);
+            TouchZoneVoto.Add(a);
 
             //// devo aggiungere il tasto uscita           
             //a = new TTZone();

@@ -75,7 +75,7 @@ namespace VotoTouch.WPF
         public bool CtrlPrimoAvvio;             // serve per chiudere la finestra in modo corretto
         
         // Votazioni
-	    public TListaVotazioni Votazioni;
+	    public CListaVotazioni Votazioni;
         // Dati dell'azionista e delle deleghe che si porta dietro
         public TListaAzionisti Azionisti;
         // variabili relative alla votazione
@@ -289,7 +289,7 @@ namespace VotoTouch.WPF
                 if (VTConfig.VotoAperto) Logging.WriteToLog("Votazione già aperta");
                 // carica le votazioni, le carica comunque all'inizio
                 Rect FFormRect = new Rect(0, 0, Width, Height);
-                Votazioni = new TListaVotazioni(oDBDati);
+                Votazioni = new CListaVotazioni(oDBDati);
                 Votazioni.CaricaListeVotazioni(VTConfig.Data_Path, FFormRect, false);
                 // ok, finisce
                 if (DBOk == 0)

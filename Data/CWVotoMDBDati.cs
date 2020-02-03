@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Windows;
+using System.Windows.Documents;
 using VotoTouch.WPF.Models;
 
 
@@ -161,59 +162,51 @@ namespace VotoTouch.WPF
 
         #region CARICAMENTO DATI VOTAZIONI
 
-        public override bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
+        public override List<CDB_Votazione> CaricaVotazioniDaDatabase()
         {
-            OleDbConnection conn = null;
-            OleDbCommand qryStd = null;
-            OleDbDataReader a = null;
-            TVotazione v;
-            bool result = false;
-
             string source = AData_path + "DemoVotoTouchData.mdb";
-            // create the connection 
-            conn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;Data Source=" + source);
+            OleDbConnection conn = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;Data Source=" + source);
 
+            List<CDB_Votazione> votaz =  new List<CDB_Votazione>();
             // create the command
-            qryStd = new OleDbCommand
-                {
-                    Connection = conn,
-                    CommandText = "select * from VS_MatchVot_Totem where GruppoVotaz < 999 order by NumVotaz"
-                };
+            OleDbCommand qryStd = new OleDbCommand
+            {
+                Connection = conn,
+                CommandText = "select * from VS_MatchVot_Totem where GruppoVotaz < 999 order by NumVotaz"
+            };
             try
             {
                 // open the connection
                 conn.Open();
                 // open the query
-                a = qryStd.ExecuteReader();
+                OleDbDataReader a = qryStd.ExecuteReader();
                 if (a != null && a.HasRows)
                 {
                     while (a.Read())
                     {
-                        v = new TVotazione
+                        CDB_Votazione v = new CDB_Votazione
                         {
-                            NumVotaz = Convert.ToInt32(a["NumVotaz"]),
-                            IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
-                            TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
-                            TipoSubVoto = 0,
-                            Argomento = a["Argomento"].ToString(),
-                            SkBianca = Convert.ToBoolean(a["SchedaBianca"]),
-                            SkNonVoto = Convert.ToBoolean(a["SchedaNonVoto"]),
-                            SkContrarioTutte = Convert.ToBoolean(a["SchedaContrarioTutte"]),
-                            SkAstenutoTutte = Convert.ToBoolean(a["SchedaAstenutoTutte"]),
-                            SelezionaTuttiCDA = Convert.ToBoolean(a["SelezTuttiCDA"]),
-                            //PreIntermezzo = Convert.ToBoolean(a["PreIntermezzo"]),
-                            MaxScelte = a.IsDBNull(a.GetOrdinal("MaxScelte")) ? 1 : Convert.ToInt32(a["MaxScelte"]),
-                            AbilitaBottoneUscita = VTConfig.AbilitaBottoneUscita
+                            DB_NumVotaz = Convert.ToInt32(a["NumVotaz"]),
+                            DB_IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
+                            DB_TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
+                            DB_TipoSubVoto = 0,
+                            DB_Argomento = a["Argomento"].ToString(),
+                            DB_SkBianca = Convert.ToBoolean(a["SchedaBianca"]),
+                            DB_SkNonVoto = Convert.ToBoolean(a["SchedaNonVoto"]),
+                            DB_SkContrarioTutte = Convert.ToBoolean(a["SchedaContrarioTutte"]),
+                            DB_SkAstenutoTutte = Convert.ToBoolean(a["SchedaAstenutoTutte"]),
+                            DB_SelezionaTuttiCDA = Convert.ToBoolean(a["SelezTuttiCDA"]),
+                            DB_MaxScelte = a.IsDBNull(a.GetOrdinal("MaxScelte")) ? 1 : Convert.ToInt32(a["MaxScelte"]),
+                            DB_AbilitaBottoneUscita = VTConfig.AbilitaBottoneUscita
                         };
-                        AVotazioni.Add(v);
+                        votaz.Add(v);
                     }
                     a.Close();
                 }
-                result = true;
             }
             catch (Exception objExc)
             {
-                result = false;
+                votaz = null;
                 Logging.WriteToLog("<dberror> Errore nella funzione DammiConfigDatabaseMDB: " + objExc.Message);
 #if DEBUG
                 MessageBox.Show("Errore nella funzione DammiConfigDatabaseMDB" + "\n" + "Eccezione : \n" + objExc.Message, "Error");
@@ -225,10 +218,10 @@ namespace VotoTouch.WPF
                 conn.Close();
             }
 
-            return result;
+            return votaz;
         }
 
-        public override bool CaricaListeDaDatabase(ref List<TVotazione> AVotazioni)
+        public override bool CaricaListeDaDatabase(ref List<CVotazione> AVotazioni)
         {
             OleDbConnection conn = null;
             OleDbCommand qryStd = null;
@@ -246,7 +239,7 @@ namespace VotoTouch.WPF
                 // open the connection
                 conn.Open();
                 // ciclo sulle votazioni e carico le liste
-                foreach (TVotazione votaz in AVotazioni)
+                foreach (CVotazione votaz in AVotazioni)
                 {
                     // ok ora carico le votazioni
                     qryStd.Parameters.Clear();
@@ -409,13 +402,13 @@ namespace VotoTouch.WPF
         #region METODI SUI BADGE
 
         public override bool CaricaDirittidiVotoDaDatabase(int AIDBadge, ref List<TAzionista> AAzionisti,
-                                                  ref TAzionista ATitolare_badge, ref TListaVotazioni AVotazioni)
+                                                  ref TAzionista ATitolare_badge, ref CListaVotazioni AVotazioni)
         {
             int IDVotazione = -1;
             AAzionisti.Clear();
             TAzionista a;
 
-            foreach (TVotazione voto in AVotazioni.Votazioni)
+            foreach (CVotazione voto in AVotazioni.Votazioni)
             {
                 IDVotazione = voto.NumVotaz;
                 // un voto

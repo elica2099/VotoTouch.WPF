@@ -69,22 +69,21 @@
       <DependentUpon>ToolDebugError.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\TWAzionista.cs" />
-    <Compile Include="Models\TWVotazione.cs" />
+    <Compile Include="Models\CWVotazione.cs" />
     <Compile Include="Helpers\WpfScreenHelper\ExternDll.cs" />
     <Compile Include="Helpers\WpfScreenHelper\MouseHelper.cs" />
     <Compile Include="Helpers\WpfScreenHelper\NativeMethods.cs" />
     <Compile Include="Helpers\WpfScreenHelper\Screen.cs" />
     <Compile Include="Helpers\WpfScreenHelper\SystemInformation.cs" />
-    <Compile Include="Models\Tipi_Voto\CWBaseTipoVoto.cs" />
-    <Compile Include="Models\Tipi_Voto\CWTipoVoto_AConferma.cs" />
-    <Compile Include="Models\Tipi_Voto\CWTipoVoto_AStart.cs" />
-    <Compile Include="Models\Tipi_Voto\CWTipoVoto_CandidatoOld.cs" />
-    <Compile Include="Models\Tipi_Voto\CWTipoVoto_CandidatoOriginal.cs" />
-    <Compile Include="Models\Tipi_Voto\CWTipoVoto_CandidatoSmall.cs" />
-    <Compile Include="Models\Tipi_Voto\CWTipoVoto_Custom_Multi_Manutencoop.cs" />
-    <Compile Include="Models\Tipi_Voto\CWTipoVoto_Lista.cs" />
-    <Compile Include="Models\Tipi_Voto\CWTipoVoto_MultiCandidatoNew.cs" />
-    <Compile Include="Models\Tipi_Voto\CWTipoVoto_MultiCandidatoOriginal.cs" />
+    <Compile Include="Touchscreen\CTouch.cs" />
+    <Compile Include="Touchscreen\SpecialTouchscreen\CWBaseSpecialTouch.cs" />
+    <Compile Include="Touchscreen\SpecialTouchscreen\CWTipoVoto_AConferma.cs" />
+    <Compile Include="Touchscreen\SpecialTouchscreen\CWTipoVoto_AStart.cs" />
+    <Compile Include="Models\Tipi_Voto\CWVotazione_Candidato.cs" />
+    <Compile Include="Models\Tipi_Voto\CWVotazione_Custom_Multi_Manutencoop.cs" />
+    <Compile Include="Models\Tipi_Voto\CWVotazione_Lista.cs" />
+    <Compile Include="Models\Tipi_Voto\CWVotazione_MultiCandidatoNew.cs" />
+    <Compile Include="Models\Tipi_Voto\CWVotazione_MultiCandidatoOriginal.cs" />
     <Compile Include="Touchscreen\CWVotoImages.cs" />
     <Compile Include="Touchscreen\CWVotoTheme.cs" />
     <Compile Include="Touchscreen\CWVotoTouchScreen.cs" />
@@ -146,7 +145,7 @@
     <Compile Include="Data\CWVotoFileDati.cs" />
     <Compile Include="Data\CWVotoMDBDati.cs" />
     <Compile Include="Models\TWListaAzionisti.cs" />
-    <Compile Include="Models\TWListaVotazioni.cs" />
+    <Compile Include="Models\CWListaVotazioni.cs" />
     <Compile Include="Hardware\CWBaseSemaphore.cs" />
     <Compile Include="Hardware\CWComInfo.cs" />
     <Compile Include="Hardware\CWComSemaphore.cs" />
@@ -232,9 +231,7 @@
     <EmbeddedResource Include="Data\Query\DammiVotazioniTotem.sql" />
     <EmbeddedResource Include="Data\Query\MettiBadgePresenteGeas.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Images\CPLogo_purple.png" />
   </ItemGroup>

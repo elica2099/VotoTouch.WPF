@@ -14,9 +14,9 @@ namespace VotoTouch.WPF.Views.UserControls
     {
         private readonly TAppStato Stato;
         private readonly CVotoBaseDati oDBDati;
-        private readonly TListaVotazioni Votazioni;
+        private readonly CListaVotazioni Votazioni;
         
-        public UStatusPanel(TListaVotazioni AVotaz, TListaAzionisti AAzion, TAppStato AStato, CVotoBaseDati AoDBDati)
+        public UStatusPanel(CListaVotazioni AVotaz, TListaAzionisti AAzion, TAppStato AStato, CVotoBaseDati AoDBDati)
         {
             InitializeComponent();
 
@@ -27,7 +27,7 @@ namespace VotoTouch.WPF.Views.UserControls
             CaricaListaStato(AVotaz, AAzion);
         }
 
-        public void CaricaListaStato(TListaVotazioni AVotaz, TListaAzionisti AAzion)
+        public void CaricaListaStato(CListaVotazioni AVotaz, TListaAzionisti AAzion)
         {
             // inizio con il caricare lo stato
             ObservableCollection<string> stato = new ObservableCollection<string>
@@ -59,7 +59,7 @@ namespace VotoTouch.WPF.Views.UserControls
             {
                 // ok ora le votazioni
                 stato.Add("=== Votazioni ===");
-                foreach (TVotazione fVoto in AVotaz.Votazioni)
+                foreach (CVotazione fVoto in AVotaz.Votazioni)
                 {
                     stato.Add("Voto: " + fVoto.NumVotaz.ToString() + ", Tipo: " +
                               fVoto.TipoVoto.ToString() + ", " + fVoto.Argomento);

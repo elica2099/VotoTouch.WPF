@@ -538,6 +538,61 @@ namespace VotoTouch.WPF
 
         #region Caricamento dati votazioni
 
+        public override List<CDB_Votazione> CaricaVotazioniDaDatabase()
+        {
+            // testo la connessione
+            if (!OpenConnection("CaricaVotazioniDaDatabase")) return null;
+
+            List<CDB_Votazione> votaz =  new List<CDB_Votazione>();
+
+            SqlCommand qryStd = new SqlCommand { Connection = STDBConn };
+            try
+            {
+                // ok ora carico le votazioni
+                qryStd.Parameters.Clear();
+                qryStd.CommandText = qry_DammiVotazioniTotem;
+                SqlDataReader a = qryStd.ExecuteReader();
+                if (a.HasRows)
+                {
+                    while (a.Read())
+                    {
+                        CDB_Votazione v = new CDB_Votazione
+                        {
+                            DB_NumVotaz = Convert.ToInt32(a["NumVotaz"]),
+                            DB_MozioneRealeGeas = Convert.ToInt32(a["MozioneRealeGeas"]),
+                            DB_IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
+                            DB_TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
+                            DB_TipoSubVoto = Convert.ToInt32(a["TipoSubVotaz"]),
+                            DB_Argomento = a["Argomento"].ToString(),
+                            DB_SkBianca = Convert.ToBoolean(a["VotoSchedaBianca"]),
+                            DB_SkNonVoto = Convert.ToBoolean(a["VotoNonVotante"]),
+                            DB_SkContrarioTutte = Convert.ToBoolean(a["SchedaContrarioTutte"]),
+                            DB_SkAstenutoTutte = Convert.ToBoolean(a["SchedaAstenutoTutte"]),
+                            DB_SelezionaTuttiCDA = Convert.ToBoolean(a["SelezTuttiCDA"]),
+                            //PreIntermezzo = Convert.ToBoolean(a["PreIntermezzo"]),
+                            DB_MaxScelte = a.IsDBNull(a.GetOrdinal("MaxScelte")) ? 1 : Convert.ToInt32(a["MaxScelte"]),
+                            DB_MinScelte = a.IsDBNull(a.GetOrdinal("MinScelte")) ? 1 : Convert.ToInt32(a["MinScelte"]),
+                            DB_AbilitaBottoneUscita = Convert.ToBoolean(a["VotoBottoneUscita"])
+                        };
+                        votaz.Add(v);
+                    }
+                }
+                a.Close();
+            }
+            catch (Exception objExc)
+            {
+                votaz = null;
+                Utils.errorCall("CaricaVotazioniDaDatabase", objExc.Message);
+            }
+            finally
+            {
+                qryStd.Dispose();
+                CloseConnection("");
+            }
+            return votaz;
+        }
+
+        /*
         public override bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
         {
             bool result = false; 
@@ -621,8 +676,9 @@ namespace VotoTouch.WPF
             }
             return result;
         }
+        */
 
-        public override bool CaricaListeDaDatabase(ref List<TVotazione> AVotazioni)
+        public override bool CaricaListeDaDatabase(ref List<CVotazione> AVotazioni)
         {
             bool result = false; //, naz;
 
@@ -634,7 +690,7 @@ namespace VotoTouch.WPF
             {
                 // TODO: CaricaListeDaDatabase da vedere in futuro di fare un solo ciclo di caricamento senza ordine
                 // ciclo sulle votazioni e carico le liste
-                foreach (TVotazione votaz in AVotazioni)
+                foreach (CVotazione votaz in AVotazioni)
                 {
                     // ok ora carico le votazioni
                     qryStd.Parameters.Clear();
@@ -982,7 +1038,7 @@ namespace VotoTouch.WPF
         #region Caricamento dati Azionista 
 
         public override bool CaricaDirittidiVotoDaDatabase(int AIDBadge, ref List<TAzionista> AAzionisti,
-                                                                ref TAzionista ATitolare_badge, ref TListaVotazioni AVotazioni)
+                                                                ref TAzionista ATitolare_badge, ref CListaVotazioni AVotazioni)
         {
             // ok, questa funziomne carica i diritti di voto in funzione
             // del idbadge, in pratica alla fine avrò una lista di diritti *per ogni votazione*
@@ -1007,7 +1063,7 @@ namespace VotoTouch.WPF
                 // ciclo sul voto per crearmi l'array dei diritti di voto per ogni singola votazione
                 //for (int i = 0  ; i < NVoti; i++)
                 // TODO: CVotoDBDati|CaricaDirittidiVotoDaDatabase - Inutile chiamare n volte la query
-                foreach (TVotazione voto in AVotazioni.Votazioni)
+                foreach (CVotazione voto in AVotazioni.Votazioni)
                 {
                     IDVotazione = voto.NumVotaz;
 

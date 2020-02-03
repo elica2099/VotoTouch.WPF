@@ -118,6 +118,7 @@ namespace VotoTouch.WPF
         public const int MODO_AGM_SPA = 1;            // spa
 
         // tipi di Votazione
+        public const int VOTO_NORMALE = 0;            // voto fav ast contr
         public const int VOTO_LISTA = 1;            // voto di lista
         public const int VOTO_CANDIDATO = 2;        // voto per candidato a pagine
         //public const int VOTO_CANDIDATO_SING = 3;   // voto per candidato singola pagina (da cancellare)
@@ -127,6 +128,10 @@ namespace VotoTouch.WPF
         public const int SUBVOTO_NORMAL = 0;
         public const int SUBVOTO_NEW = 1;
         public const int SUBVOTO_CUSTOM_MANUTENCOOP = 40;
+
+        // costanti del touchscreen
+        //public const float Nqx = VSDecl.VOTESCREEN_DIVIDE_WIDTH;
+        //public const float Nqy = VSDecl.VOTESCREEN_DIVIDE_HEIGHT;
 
 
         public const string RIPETIZ_VOTO = "88889999";
@@ -215,8 +220,9 @@ namespace VotoTouch.WPF
         public const int MODO_POS_TOUCH_BIG_BTN = 2;
         
         // paint mode TTZone
-        public const float VOTESCREEN_DIVIDE_WIDTH = 1000;
-        public const float VOTESCREEN_DIVIDE_HEIGHT = 1000;
+        public const float VSCREEN_DIV_WIDTH = 1000;
+        public const float VSCREEN_DIV_HEIGHT = 1000;
+        public const float HRETT_CANDIDATO = 6F; //67px;
 
         public const int SEMAFORO_IP = 1;
         public const int SEMAFORO_COM = 2;

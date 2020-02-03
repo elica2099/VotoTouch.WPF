@@ -88,12 +88,13 @@ namespace VotoTouch.WPF
         //  CARICAMENTO DATI VOTAZIONI
         // --------------------------------------------------------------------------
 
-        public virtual bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
+        //public virtual bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
+        public virtual List<CDB_Votazione> CaricaVotazioniDaDatabase()
         {
-            return true;
+            return null;
         }
 
-        public virtual bool CaricaListeDaDatabase(ref List<TVotazione> AVotazioni)
+        public virtual bool CaricaListeDaDatabase(ref List<CVotazione> AVotazioni)
 
         {
             return true;
@@ -134,7 +135,7 @@ namespace VotoTouch.WPF
 		// --------------------------------------------------------------------------
 
         public virtual bool CaricaDirittidiVotoDaDatabase(int AIDBadge, ref List<TAzionista> AAzionisti,
-                                                          ref TAzionista ATitolare_badge, ref TListaVotazioni AVotazioni)
+                                                          ref TAzionista ATitolare_badge, ref CListaVotazioni AVotazioni)
         {
             return true;
         }

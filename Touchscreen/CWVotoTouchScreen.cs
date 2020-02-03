@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using VotoTouch.WPF.Models;
+using VotoTouch.WPF.Touchscreen;
 
 
 namespace VotoTouch.WPF
@@ -116,9 +117,9 @@ namespace VotoTouch.WPF
         private ArrayList Tz;
 
         // oggetti conferma e inizio voto
-        public CBaseTipoVoto ClasseTipoVotoStartNorm = null;
-        public CBaseTipoVoto ClasseTipoVotoStartDiff = null;
-        public CBaseTipoVoto ClasseTipoVotoConferma = null;
+        public CBaseSpecialTouch ClasseTipoVotoStartNorm = null;
+        public CBaseSpecialTouch ClasseTipoVotoStartDiff = null;
+        public CBaseSpecialTouch ClasseTipoVotoConferma = null;
 
         /*
         public Bitmap btnBmpCand;
@@ -298,7 +299,7 @@ namespace VotoTouch.WPF
             }
         }
 
-        public int CalcolaTouchVote(TVotazione FVotaz)
+        public int CalcolaTouchVote(CVotazione FVotaz)
         {
             Tz = null;
             if (FVotaz != null && FVotaz.TouchZoneVoto != null && FVotaz.TouchZoneVoto.TouchZone != null)

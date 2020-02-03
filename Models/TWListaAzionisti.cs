@@ -386,7 +386,7 @@ namespace VotoTouch.WPF.Models
         //  Caricamento dati da database
         // --------------------------------------------------------------------------
 
-        public bool CaricaDirittidiVotoDaDatabase(int AIDBadge, ref TListaVotazioni AVotazioni)
+        public bool CaricaDirittidiVotoDaDatabase(int AIDBadge, ref CListaVotazioni AVotazioni)
         {
             // ok, questa funziomne carica i diritti di voto in funzione
             // del idbadge, in pratica alla fine avrò una lista di diritti *per ogni votazione*

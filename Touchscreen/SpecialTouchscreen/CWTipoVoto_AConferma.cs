@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 
-namespace VotoTouch.WPF
+namespace VotoTouch.WPF.Touchscreen
 {
-    public class CTipoVoto_AConferma: CBaseTipoVoto
+    public class CTipoVoto_AConferma: CBaseSpecialTouch
     {
 
         // CLASSE DELLA votazione di candidato
