@@ -548,27 +548,25 @@ namespace VotoTouch.WPF
             //pbSalvaDati.Left = (this.Width / 2) - (pbSalvaDati.Width / 2);
             //pbSalvaDati.Top = (this.Height / 2) - (pbSalvaDati.Height  / 2);
 
-            if (this.IsLoaded)
+            if (!this.IsLoaded) return;
+            Rect FFormRect = new Rect(0, 0, this.ActualWidth, this.ActualHeight);
+
+            // lo stesso faccio per la classe del thema che si occupa di disegnare 
+            if (oVotoTheme != null)
             {
-                Rect FFormRect = new Rect(0, 0, this.ActualWidth, this.ActualHeight);
+                oVotoTheme.FFormRect = FFormRect;
+                CaricaTemaInControlli();
+            }
 
-                // lo stesso faccio per la classe del thema che si occupa di disegnare 
-                if (oVotoTheme != null)
-                {
-                    oVotoTheme.FFormRect = FFormRect;
-                    CaricaTemaInControlli();
-                }
+            // le videate speciali
+            oVotoTouch?.CalcolaTouchZoneSpeciali(FFormRect);
+            // ok ora le votazioni
+            Votazioni?.CalcolaTouchZoneVotazioni(FFormRect);
 
-                // le videate speciali
-                oVotoTouch?.CalcolaTouchZoneSpeciali(FFormRect);
-                // ok ora le votazioni
-                Votazioni?.CalcolaTouchZoneVotazioni(FFormRect);
-
-                // ok, ora se è in demo mode faccio il resize dei controlli
-                if (VTConfig.IsDemoMode)
-                {
-                    ResizeControlliDemo();
-                }
+            // ok, ora se è in demo mode faccio il resize dei controlli
+            if (VTConfig.IsDemoMode)
+            {
+                ResizeControlliDemo();
             }
         }
 

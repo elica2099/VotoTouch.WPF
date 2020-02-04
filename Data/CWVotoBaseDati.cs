@@ -94,6 +94,11 @@ namespace VotoTouch.WPF
             return null;
         }
 
+        public virtual List<CDB_Votazione> CaricaSubVotazioniDaDatabase()
+        {
+            return null;
+        }
+
         public virtual bool CaricaListeDaDatabase(ref List<CVotazione> AVotazioni)
 
         {

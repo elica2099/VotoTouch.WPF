@@ -97,7 +97,7 @@ namespace VotoTouch.WPF
                     // lo vedo caricando di volta in volta l'azionista che non ha diritti di voto espressi (havotato = false)
                     if (!RitornaDaAnnulla)
                     {
-                        foreach (TTZone item in Votazioni.VotoCorrente.TouchZoneVoto.TouchZone)
+                        foreach (TTZone item in Votazioni.VotoCorrente.TouchZoneVoto)
                         {
                             item.Multi = 0;
                         }

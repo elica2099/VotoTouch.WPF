@@ -188,7 +188,6 @@ namespace VotoTouch.WPF.Models
         }
         #endregion
 
-
     }
 
     public class CSubVotazione
@@ -198,6 +197,20 @@ namespace VotoTouch.WPF.Models
         public int IDGruppoVoto;
         public int TipoSubVoto;                
         public string Argomento;
+
+        public CSubVotazione()
+        {
+            // normale
+        }
+
+        public CSubVotazione(CDB_Votazione AVotaz)
+        {
+            NumSubVotaz = AVotaz.DB_NumVotaz;
+            MozioneRealeGeas = AVotaz.DB_MozioneRealeGeas;
+            IDGruppoVoto = AVotaz.DB_IDGruppoVoto;
+            TipoSubVoto = AVotaz.DB_TipoVoto;
+            Argomento = AVotaz.DB_Argomento;
+        }
     }
 
     public class TLista
@@ -218,6 +231,7 @@ namespace VotoTouch.WPF.Models
         public TLista()
         {
         }
+
     }
 
     public class CDB_Votazione

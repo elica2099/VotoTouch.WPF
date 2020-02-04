@@ -592,6 +592,53 @@ namespace VotoTouch.WPF
             return votaz;
         }
 
+        public override List<CDB_Votazione> CaricaSubVotazioniDaDatabase()
+        {
+            // testo la connessione
+            if (!OpenConnection("CaricaSubVotazioniDaDatabase")) return null;
+
+            List<CDB_Votazione> votaz =  new List<CDB_Votazione>();
+
+            SqlCommand qryStd = new SqlCommand { Connection = STDBConn };
+            try
+            {
+                // ok ora carico le votazioni
+                qryStd.Parameters.Clear();
+                qryStd.CommandText = qry_DammiVotazioniTotem;
+                qryStd.CommandText = @"select * from VS_MatchVot_Gruppo_Totem 
+                                        where attivo = 1 order by gruppovotaz, numsubvotaz";
+                SqlDataReader a = qryStd.ExecuteReader();
+                if (a.HasRows)
+                {
+                    while (a.Read())
+                    {
+                        // uso ugalmente cdb_votazione
+                        CDB_Votazione v = new CDB_Votazione
+                        {
+                            DB_NumVotaz = Convert.ToInt32(a["NumSubVotaz"]),
+                            DB_IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
+                            DB_MozioneRealeGeas = Convert.ToInt32(a["MozioneRealeGeas"]),
+                            DB_TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
+                            DB_Argomento = a["Argomento"].ToString()
+                        };
+                        votaz.Add(v);
+                    }
+                }
+                a.Close();
+            }
+            catch (Exception objExc)
+            {
+                votaz = null;
+                Utils.errorCall("CaricaSubVotazioniDaDatabase", objExc.Message);
+            }
+            finally
+            {
+                qryStd.Dispose();
+                CloseConnection("");
+            }
+            return votaz;
+        }
+
         /*
         public override bool CaricaVotazioniDaDatabase(ref List<TVotazione> AVotazioni)
         {
@@ -677,6 +724,7 @@ namespace VotoTouch.WPF
             return result;
         }
         */
+
 
         public override bool CaricaListeDaDatabase(ref List<CVotazione> AVotazioni)
         {

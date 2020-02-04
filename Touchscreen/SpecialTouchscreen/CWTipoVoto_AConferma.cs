@@ -24,11 +24,10 @@ namespace VotoTouch.WPF.Touchscreen
         public override void GetTouchSpecialZone(TAppStato AStato, bool ADiffer, bool ABtnUscita)
         {
             // DR12 OK
-            TTZone a;
             Tz.Clear();
 
 			 // Bottone Annulla
-			 a = new TTZone();
+             TTZone a = new TTZone();
              if (VTConfig.ModoPosizioneAreeTouch == VSDecl.MODO_POS_TOUCH_NORMALE)
                  GetZone(ref a, 80, 600, 450, 900); 
              else

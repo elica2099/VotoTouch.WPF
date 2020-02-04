@@ -307,7 +307,7 @@ namespace VotoTouch.WPF
 
         public void CancellaTempMultiVotiCorrenti()
         {
-            foreach (TTZone item in Votazioni.VotoCorrente.TouchZoneVoto.TouchZone)
+            foreach (TTZone item in Votazioni.VotoCorrente.TouchZoneVoto)
             {
                 item.Multi = 0;
             }

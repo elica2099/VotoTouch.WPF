@@ -70,16 +70,6 @@ namespace VotoTouch.WPF.Models
                 return false;
         }
 
-        // --------------------------------------------------------------------------
-        //  Ritorno dati / Settaggio voto corrente
-        // --------------------------------------------------------------------------
-
-        //public string DammiListaElencoPerIDVotazione(int AIDVoto, int AIDLista)
-        //{
-        //    var rit = _Votazioni.FirstOrDefault((a => a.IDVoto == AIDVoto);
-        //    return rit != null ? rit.
-        //}
-
         //  Caricamento dati --------------------------------------------------------------------------
 
         public bool CaricaListeVotazioni(string AData_path, Rect AFormRect, bool AInLoading)
@@ -145,37 +135,33 @@ namespace VotoTouch.WPF.Models
                 }
 
                 // ok ora che ho creato le votazioni carico i subvoti
+                List<CDB_Votazione> dbSubVotaz = DBDati.CaricaSubVotazioniDaDatabase();
+                foreach (CVotazione votazione in Votazioni)
+                {
+                    // carico i subvoti
+                    votazione.SubVotazioni = (from CDB_Votazione a in 
+                            dbSubVotaz.Where(x => x.DB_IDGruppoVoto == votazione.IDGruppoVoto).OrderBy(x => x.DB_NumVotaz)
+                            select new CSubVotazione(a)).ToList();
+                }
 
-
-                // carica i dettagli delle votazioni
+                // carica le liste delle votazioni
                 if (DBDati.CaricaListeDaDatabase(ref Votazioni))
                 {
                     result = true;
                 }
+
+                // Calcolo l'area di voto per Candidati e multicandidati
+                CalcolaAreaDiVotoCandidatiMultiCandidato();
+                // ok, ora ordino le liste nel caso in cui siano di candidato
+                OrdinaListeInPagineCandidatiMultiCandidato();
+                // calcolo le zone touch
+                if (!AInLoading)
+                {
+                    // votazioni
+                    CalcolaTouchZoneVotazioni(AFormRect);
+                }
             }
-
-
-
-            //// carica le votazioni dal database
-            //if (DBDati.CaricaVotazioniDaDatabase(ref Votazioni))
-            //{
-            //    // carica i dettagli delle votazioni
-            //    if (DBDati.CaricaListeDaDatabase(ref Votazioni))
-            //    {
-            //        result = true;
-            //    }
-            //}
-            // Calcolo l'area di voto per Candidati e multicandidati
-            CalcolaAreaDiVotoCandidatiMultiCandidato();
-            // ok, ora ordino le liste nel caso in cui siano di candidato
-            OrdinaListeInPagineCandidatiMultiCandidato();
-            // calcolo le zone touch
-            if (!AInLoading)
-            {
-                // votazioni
-                CalcolaTouchZoneVotazioni(AFormRect);
-            }
-
+            
             // NOTA: Nelle liste il nome può contenere anche la data di nascita, inserita
             // come token tra ( e ). Serve nel caso di omonimia. La routine di disegno riconoscerà
             // questo e lo tratterà come scritta piccola a lato

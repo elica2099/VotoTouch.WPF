@@ -14,14 +14,14 @@ namespace VotoTouch.WPF.Touchscreen
     public class CBaseSpecialTouch : CTouch
     {
 
-        protected ArrayList Tz;
+        protected List<TTZone> Tz;
 
-        public ArrayList TouchZone => Tz ?? null;
+        public List<TTZone> TouchZone => Tz ?? null;
 
         public CBaseSpecialTouch(Rect AFormRect): base(AFormRect)		
         {
             // costruttore
-            Tz = new ArrayList();
+            Tz = new List<TTZone>();
         }
 
         //  FUNZIONI VIRTUALI --------------------------------------------------------------------------

@@ -114,7 +114,7 @@ namespace VotoTouch.WPF
         public event ehTouchWatchDog TouchWatchDog;
 
         public bool PaintTouchOnScreen;
-        private ArrayList Tz;
+        private List<TTZone> Tz;
 
         // oggetti conferma e inizio voto
         public CBaseSpecialTouch ClasseTipoVotoStartNorm = null;
@@ -302,13 +302,13 @@ namespace VotoTouch.WPF
         public int CalcolaTouchVote(CVotazione FVotaz)
         {
             Tz = null;
-            if (FVotaz != null && FVotaz.TouchZoneVoto != null && FVotaz.TouchZoneVoto.TouchZone != null)
+            if (FVotaz != null && FVotaz.TouchZoneVoto != null && FVotaz.TouchZoneVoto != null)
             {
                 //foreach (TTZone item in FVotaz.TouchZoneVoto.TouchZone)
                 //{
                 //    item.Multi = 0;
                 //}
-                Tz = FVotaz.TouchZoneVoto.TouchZone;
+                Tz = FVotaz.TouchZoneVoto;
                 MaxMultiCandSelezionabili = FVotaz.DammiMaxMultiCandSelezionabili();
                 MinMultiCandSelezionabili = FVotaz.DammiMinMultiCandSelezionabili();
             }

@@ -221,6 +221,11 @@ namespace VotoTouch.WPF
             return votaz;
         }
 
+        public override List<CDB_Votazione> CaricaSubVotazioniDaDatabase()
+        {
+            return null;
+        }
+
         public override bool CaricaListeDaDatabase(ref List<CVotazione> AVotazioni)
         {
             OleDbConnection conn = null;
