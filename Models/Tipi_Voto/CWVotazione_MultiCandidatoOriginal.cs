@@ -5,9 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using VotoTouch.WPF.Models;
 
-namespace VotoTouch.WPF
+namespace VotoTouch.WPF.Models
 {
     public class CVotazione_MultiCandidatoOriginal: CVotazione
     {

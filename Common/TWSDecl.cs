@@ -83,8 +83,6 @@ namespace VotoTouch.WPF
         public int NumVotaz;
         public int TipoCarica;
         public int VotoExp_IDScheda;
-        //public string Str_ListaElenco;
-        //public string StrUp_DescrLista;
     }
 
     public class VSDecl
@@ -118,11 +116,12 @@ namespace VotoTouch.WPF
         public const int MODO_AGM_SPA = 1;            // spa
 
         // tipi di Votazione
-        public const int VOTO_NORMALE = 0;            // voto fav ast contr
-        public const int VOTO_LISTA = 1;            // voto di lista
-        public const int VOTO_CANDIDATO = 2;        // voto per candidato a pagine
-        //public const int VOTO_CANDIDATO_SING = 3;   // voto per candidato singola pagina (da cancellare)
-        public const int VOTO_MULTICANDIDATO = 4;   // voto multicandidato
+        public const int VOTO_NORMALE = 0;              // voto fav ast contr
+        public const int VOTO_LISTA = 1;                // voto di lista
+        public const int VOTO_CANDIDATO = 2;            // voto per candidato a pagine
+        //public const int VOTO_CANDIDATO_SING = 3;     // voto per candidato singola pagina (da cancellare)
+        public const int VOTO_MULTICANDIDATO = 4;       // voto multicandidato
+        public const int VOTO_GRUPPO_VOTO = 5;          // voto di gruppo
 
         // tipo di sottovoto
         public const int SUBVOTO_NORMAL = 0;
@@ -189,6 +188,7 @@ namespace VotoTouch.WPF
         public const int VOTO_SCHEDABIANCA = -1;
         public const int VOTO_NONVOTO = -2;
         public const int VOTO_MULTIAVANTI = -10;
+        public const int VOTO_GRUPPOAVANTI = -11;
         public const int VOTO_ASTENUTO_TUTTI = 226;
         public const int VOTO_CONTRARIO_TUTTI = 227;
         public const int VOTO_BTN_USCITA = -3;

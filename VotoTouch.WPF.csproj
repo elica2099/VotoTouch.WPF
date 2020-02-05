@@ -68,6 +68,12 @@
     <Compile Include="Common\ToolDebugError.xaml.cs">
       <DependentUpon>ToolDebugError.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tipi_Voto\CWVotazione_GruppoVoto.cs" />
+    <Compile Include="Models\Tipi_Voto\CWVotazione_Normale.cs" />
+    <Compile Include="Models\Tipi_Voto_UserControl\CBaseVoto_UserControl.cs" />
+    <Compile Include="Models\Tipi_Voto_UserControl\UCWVotazione_GruppoVoto.xaml.cs">
+      <DependentUpon>UCWVotazione_GruppoVoto.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\TWAzionista.cs" />
     <Compile Include="Models\CWVotazione.cs" />
     <Compile Include="Helpers\WpfScreenHelper\ExternDll.cs" />
@@ -121,6 +127,10 @@
     <Page Include="Common\ToolDebugError.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Models\Tipi_Voto_UserControl\UCWVotazione_GruppoVoto.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\CommonDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>

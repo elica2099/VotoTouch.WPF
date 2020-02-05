@@ -8,12 +8,12 @@ using System.Windows;
 
 namespace VotoTouch.WPF.Models
 {
-    public class CVotazione_Lista: CVotazione
+    public class CVotazione_Normale: CVotazione
     {
 
-        // CLASSE DELLA votazione di lista
+        // CLASSE DELLA votazione contrario astenuto favorevole
         
-        public CVotazione_Lista(Rect AFormRect) : base(AFormRect)
+        public CVotazione_Normale(Rect AFormRect) : base(AFormRect)
         {
             // costruttore
         }

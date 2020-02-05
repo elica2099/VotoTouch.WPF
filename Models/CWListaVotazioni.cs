@@ -99,6 +99,7 @@ namespace VotoTouch.WPF.Models
                     switch (dbvotaz.DB_TipoVoto)
                     {
                         case VSDecl.VOTO_NORMALE:
+                            votaz =  new CVotazione_Normale(AFormRect);
                             break;
                         case VSDecl.VOTO_LISTA:
                             votaz =  new CVotazione_Lista(AFormRect);
@@ -125,6 +126,9 @@ namespace VotoTouch.WPF.Models
                                     votaz = new CVotazione_MultiCandidatoOriginal(AFormRect);
                                     break;
                             }
+                            break;
+                        case VSDecl.VOTO_GRUPPO_VOTO:
+                            votaz =  new CVotazione_GruppoVoto(AFormRect);
                             break;
                         default:
                             votaz = new CVotazione_Lista(AFormRect);
@@ -177,80 +181,8 @@ namespace VotoTouch.WPF.Models
             {
                 voto.FFormRect = AFormRect;
                 voto.GetTouchVoteZone();
+                voto.GetVotoUserControl();
             }
-
-            /*
-             NOTA era nel ciclo foreach
-            // prima cancello eventuali oggetti se ci sono
-            if (voto.TouchZoneVoto != null)
-            {
-                voto.TouchZoneVoto.FFormRect = AFormRect;
-            }
-            else
-            {
-                switch (voto.TipoVoto)
-                {
-                    case VSDecl.VOTO_LISTA:
-                        voto.TouchZoneVoto = new CTipoVoto_Lista(AFormRect);
-                        break;
-
-                    case VSDecl.VOTO_CANDIDATO:
-                        // chiamo la classe del voto apposito
-                        switch (voto.TipoSubVoto)
-                        {
-                            case VSDecl.SUBVOTO_NORMAL:
-                                if (voto.NListe <= 6)
-                                     voto.TouchZoneVoto = new CTipoVoto_CandidatoSmall(AFormRect);
-                                else
-                                    voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);                                    
-                                break;
-
-                            default:
-                                voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);
-                                break;
-                        } 
-                        break;
-
-                    case VSDecl.VOTO_MULTICANDIDATO:
-                        // chiamo la classe del voto apposito
-                        switch (voto.TipoSubVoto)
-                        {
-                            case VSDecl.SUBVOTO_NORMAL:
-                                voto.TouchZoneVoto = new CTipoVoto_MultiCandidatoOriginal(AFormRect);
-                                break;
-                            case VSDecl.SUBVOTO_NEW:
-                                voto.TouchZoneVoto = new CTipoVoto_MultiCandidatoNew(AFormRect);
-                                break;
-
-                            // subvoti speciali
-                            case VSDecl.SUBVOTO_CUSTOM_MANUTENCOOP:
-                                voto.TouchZoneVoto = new CTipoVoto_Custom_Multi_Manutencoop(AFormRect);
-                                break;
-
-                            default:
-                                voto.TouchZoneVoto = new CTipoVoto_MultiCandidatoOriginal(AFormRect);
-                                break;
-                        }
-                        break;
-
-                        #region VOTAZIONE DI CANDIDATO SINGOLO ** MULTI PAGINA ** (era VECCHIO, OBSOLETO)
-
-                    //case VSDecl.VOTO_CANDIDATO_SING:
-                    //    // chiamo la classe del voto apposito
-                    //    voto.TouchZoneVoto = new CTipoVoto_CandidatoOriginal(AFormRect);
-                    //    break;
-
-                        #endregion
-
-                    default:
-                        voto.TouchZoneVoto = new CTipoVoto_Lista(AFormRect);
-                        break;
-                }
-            }
-            // calcolo le zone
-            voto.TouchZoneVoto.GetTouchVoteZone(voto);
-        */
-
         }
 
         // --------------------------------------------------------------------------
@@ -300,10 +232,7 @@ namespace VotoTouch.WPF.Models
                             // ok, ora setto l'area in pixel dei Alt
                             votazione.AreaVoto.XAlt = 3; //40px;
                             votazione.AreaVoto.YAlt = 25; //265px;
-                            if (votazione.AreaVoto.NeedTabs)
-                                votazione.AreaVoto.WAlt = 72; //930px;
-                            else
-                                votazione.AreaVoto.WAlt = 94; //1200px;
+                            votazione.AreaVoto.WAlt = votazione.AreaVoto.NeedTabs ? 72 : 94;
                             votazione.AreaVoto.HAlt = 52; //535px;
                             votazione.AreaVoto.CandidatiPerPagina = VSDecl.CANDXPAG_10;
                             if (CandAlt < votazione.AreaVoto.CandidatiPerPagina)
@@ -358,10 +287,7 @@ namespace VotoTouch.WPF.Models
                             // ok, ora setto l'area in pixel dei Alt
                             votazione.AreaVoto.XAlt = 3; //40px;
                             votazione.AreaVoto.YAlt = 51; //520px;
-                            if (votazione.AreaVoto.NeedTabs)
-                                votazione.AreaVoto.WAlt = 72; //930px;
-                            else
-                                votazione.AreaVoto.WAlt = 94; //1200px;
+                            votazione.AreaVoto.WAlt = votazione.AreaVoto.NeedTabs ? 72 : 94;
                             votazione.AreaVoto.HAlt = 27; //280px;
                             votazione.AreaVoto.CandidatiPerPagina = VSDecl.CANDXPAG_6;
                             if (CandAlt < votazione.AreaVoto.CandidatiPerPagina)
@@ -449,10 +375,9 @@ namespace VotoTouch.WPF.Models
                                 z == (votazione.Liste.Count - 1))
                             {
                                 // cognome di fine e aggiungo pagina
-                                idx = new TIndiceListe();
-                                idx.pag = pg;
-                                idx.sp = sp + "    ";  // metto gli spazi per il substring dopo
-                                idx.ep = li.DescrLista + "    "; // come sopra, brutta ma efficace
+                                idx = new TIndiceListe {pag = pg, sp = sp + "    ", ep = li.DescrLista + "    "};
+                                // metto gli spazi per il substring dopo
+                                // come sopra, brutta ma efficace
                                 votazione.Pagine.Add(idx);
 
                                 // setto le variabili per la pagina successiva

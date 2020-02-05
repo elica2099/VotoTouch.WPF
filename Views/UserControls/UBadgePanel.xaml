@@ -7,20 +7,22 @@
              mc:Ignorable="d" 
              Background="Gainsboro"
              d:DesignHeight="140" d:DesignWidth="150"
-             Height="130" Width="170">
+             Height="100" Width="210"
+             Opacity="0.70">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.40*" />
             <RowDefinition Height="0.30*" />
-            <RowDefinition Height="0.30*" />
         </Grid.RowDefinitions>
 
         <TextBox Grid.Row="0" x:Name="edtBadge" Margin="5" FontSize="24" />
-        <Button Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="6,0,0,0"
-                Content="999999" Click="Button999999_OnClick" Height="30" Width="70" />
-        <Button Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="6,0,0,0"
-                Content="88889999" Click="Button88889999_OnClick" Height="30" Width="70" />
-        <Button Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,6,0"
-                Content="88889000" Click="Button88889000_OnClick" Height="30" Width="70" />
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button  VerticalAlignment="Center" HorizontalAlignment="Left" Margin="6,0,0,0"
+                     Content="999999" Click="Button999999_OnClick" Height="30" Width="60" />
+            <Button  VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0"
+                    Content="88889999" Click="Button88889999_OnClick" Height="30" Width="60" />
+            <Button  VerticalAlignment="Center" HorizontalAlignment="Right" Margin="6,0,6,0"
+                    Content="88889000" Click="Button88889000_OnClick" Height="30" Width="60" />
+        </StackPanel>
     </Grid>
 </UserControl>

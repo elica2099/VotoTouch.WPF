@@ -24,7 +24,7 @@ namespace VotoTouch.WPF
     public enum TTEvento : int { steVotaNormale, steVotaDiffer, steConferma, 
         steAnnulla, steVotoValido, steInvalido, steTabs, steSkBianca, steSkNonVoto,
         steMultiValido, steMultiAvanti, steMultiSelezTuttiCDA, steSelezTuttiCDAAvanti,
-        steBottoneUscita, steSkContrarioTutti, steSkAstenutoTutti
+        steBottoneUscita, steSkContrarioTutti, steSkAstenutoTutti, steGruppoAvanti
     };
 
     // struttura zone dello schermo
@@ -63,53 +63,39 @@ namespace VotoTouch.WPF
     public delegate void testEventHandler(object source, string messaggio);
     public delegate void ehShowPopup(object source, string messaggio);
 
-    public delegate void ehPremutoVotaNormale(object source, int VParam);
-    public delegate void ehPremutoVotaDifferenziato(object source, int VParam);
-    public delegate void ehPremutoConferma(object source, int VParam);
-    public delegate void ehPremutoAnnulla(object source, int VParam);
+    // delegato un parametro
+    public delegate void ehPremutoVotoSingolo(object source, int VParam);
+    // delegati voto più parametri
     public delegate void ehPremutoVotoValido(object source, int VParam, bool ZParam);
-    public delegate void ehPremutoInvalido(object source, int VParam);
-    public delegate void ehPremutoTab(object source, int VParam);
-    // sk bianca + non voto (v. 3.1)
-    public delegate void ehPremutoSchedaBianca(object source, int VParam);
-    public delegate void ehPremutoNonVoto(object source, int VParam);
-    // multivotazione (v. 3.2)
     public delegate void ehPremutoMultiAvanti(object source, int VParam, ref List<int> voti);
     public delegate void ehPremutoMulti(object source, int VParam);
-    // (v. 4.0) btnUscita contraritutti astenutitutti
-    public delegate void ehPremutoBottoneUscita(object source, int VParam);
-    public delegate void ehPremutoContrarioTutti(object source, int VParam);
-    public delegate void ehPremutoAstenutoTutti(object source, int VParam);
 
     public delegate void ehTouchWatchDog(object source, int VParam);
 
-    /// <summary>
-	/// Summary description for CVotoTouchScreen.
-	/// </summary>
-	public class CVotoTouchScreen
+ 	public class CVotoTouchScreen
 	{
         public const int TIMER_TOUCH_INTERVAL = 250;
         public const int TIMER_TOUCHWATCH_INTERVAL = 1000;
 
         public event ehShowPopup ShowPopup;
 
-        public event ehPremutoVotaNormale PremutoVotaNormale;
-        public event ehPremutoVotaDifferenziato PremutoVotaDifferenziato;
-        public event ehPremutoConferma PremutoConferma;
-        public event ehPremutoAnnulla PremutoAnnulla;
+        public event ehPremutoVotoSingolo PremutoVotaNormale;
+        public event ehPremutoVotoSingolo PremutoVotaDifferenziato;
+        public event ehPremutoVotoSingolo PremutoConferma;
+        public event ehPremutoVotoSingolo PremutoAnnulla;
         public event ehPremutoVotoValido PremutoVotoValido;
-        public event ehPremutoInvalido PremutoInvalido;
-        public event ehPremutoTab PremutoTab;
+        public event ehPremutoVotoSingolo PremutoInvalido;
+        public event ehPremutoVotoSingolo PremutoTab;
         // sk bianca + non voto (v. 3.1)
-        public event ehPremutoSchedaBianca PremutoSchedaBianca;
-        public event ehPremutoNonVoto PremutoNonVoto;
+        public event ehPremutoVotoSingolo PremutoSchedaBianca;
+        public event ehPremutoVotoSingolo PremutoNonVoto;
         // multivotazione (v. 3.2)
         public event ehPremutoMultiAvanti PremutoMultiAvanti;
         public event ehPremutoMulti PremutoMulti;               // serve per il repaint
         // (v. 4.0) btnUscita contraritutti astenutitutti
-        public event ehPremutoBottoneUscita PremutoBottoneUscita;
-        public event ehPremutoContrarioTutti PremutoContrarioTutti;
-        public event ehPremutoAstenutoTutti PremutoAstenutoTutti;
+        public event ehPremutoVotoSingolo PremutoBottoneUscita;
+        public event ehPremutoVotoSingolo PremutoContrarioTutti;
+        public event ehPremutoVotoSingolo PremutoAstenutoTutti;
 
         public event ehTouchWatchDog TouchWatchDog;
 
@@ -209,76 +195,6 @@ namespace VotoTouch.WPF
 
         //  CALCOLO DELLE ZONE DI TOCCO --------------------------------------------------------------
 
-        /*
-        public void CalcolaVotoTouch(Rectangle AFormRect)
-        {
-            // viene richiamata ad ogni resize della finestra
-            FFormRect = AFormRect;
-
-            if (ClasseTipoVotoStartNorm != null)
-            {
-                ClasseTipoVotoStartNorm.FFormRect = AFormRect;
-                ClasseTipoVotoStartNorm.GetTouchSpecialZone(TAppStato.ssvVotoStart, false, false);
-            }
-
-            if (ClasseTipoVotoStartDiff != null)
-            {
-                ClasseTipoVotoStartDiff.FFormRect = AFormRect;
-                ClasseTipoVotoStartDiff.GetTouchSpecialZone(TAppStato.ssvVotoStart, true, false);
-            }
-
-            if (ClasseTipoVotoConferma != null)
-            {
-                ClasseTipoVotoConferma.FFormRect = AFormRect;
-                ClasseTipoVotoConferma.GetTouchSpecialZone(TAppStato.ssvVotoConferma, false, VTConfig.AbilitaBottoneUscita);
-                //ClasseTipoVotoConferma.GetTouchSpecialZone(Stato, Differ);
-            }
-        }
-
-        public int CalcolaTouchSpecial(TNewVotazione FVotaz, TAppStato Stato, bool AIsVotazioneDifferenziata)
-        {
-            Tz = null;
-            // switcho in funzione dello stato
-            switch (Stato)
-            {
-                case TAppStato.ssvVotoStart:
-                    // chiamo la classe apposita
-                    if (AIsVotazioneDifferenziata)
-                        Tz = FVotaz.ClasseTipoVotoStartDiff.TouchZone;
-                    else
-                        Tz = FVotaz.ClasseTipoVotoStartNorm.TouchZone;
-                    break;
-
-                // conferma del voto
-                case TAppStato.ssvVotoConferma:
-                    // chiamo la classe apposita
-                    Tz = FVotaz.ClasseTipoVotoConferma.TouchZone;
-                    break;
-
-                // salvataggio/fine del voto
-                case TAppStato.ssvVotoFinito:
-                case TAppStato.ssvSalvaVoto:
-                    // non fare nulla
-                    break;
-
-                default:
-                    // non fare nulla
-                    break;
-            }
-
-            return 0;
-        }
-
-*/
-        
-        //public int CalcolaTouchSpecial(CBaseTipoVoto ASpecial)
-        //{
-        //    Tz = null;
-        //    if (ASpecial != null && ASpecial.TouchZone != null)
-        //        Tz = ASpecial.TouchZone;
-        //    return 0;
-        //}
-
         public void CalcolaTouchSpecial(TTipoTouchSpecial ATipoTouch)
         {
             Tz = null;
@@ -304,10 +220,6 @@ namespace VotoTouch.WPF
             Tz = null;
             if (FVotaz != null && FVotaz.TouchZoneVoto != null && FVotaz.TouchZoneVoto != null)
             {
-                //foreach (TTZone item in FVotaz.TouchZoneVoto.TouchZone)
-                //{
-                //    item.Multi = 0;
-                //}
                 Tz = FVotaz.TouchZoneVoto;
                 MaxMultiCandSelezionabili = FVotaz.DammiMaxMultiCandSelezionabili();
                 MinMultiCandSelezionabili = FVotaz.DammiMinMultiCandSelezionabili();
@@ -389,16 +301,6 @@ namespace VotoTouch.WPF
                     }
                 }
 
-                //if ((e.X >= a.x) && (e.X <= a.r) && (e.Y >= a.y) && (e.Y <= a.b))
-                //{
-                //    // serve per le multivotazioni
-                //    if (a.pag == CurrPag || a.pag == 0)
-                //    {
-                //        Trovato = i;
-                //        break;
-                //    }
-                //}
-
             }
             // ok, lancio l'evento
             if (Trovato >= 0)
@@ -445,7 +347,6 @@ namespace VotoTouch.WPF
                         // manda l'evento di Paint alla finestra principale
                         if (PremutoMulti != null) { PremutoMulti(this, a.expr); }
                         break;
-
 
                     case TTEvento.steMultiAvanti:
                         // ricostruisco chi è stato votato, per trasmetterlo alla routine sopra
@@ -512,6 +413,11 @@ namespace VotoTouch.WPF
                     //    votiCDA.Clear();
                     //    votiCDA = null;
                     //    break;
+
+                    case TTEvento.steGruppoAvanti:
+                        // qua il gruppo
+
+                        break;
 
                     case TTEvento.steSkBianca:
                         // manda l'evento di scheda bianca

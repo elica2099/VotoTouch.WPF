@@ -133,21 +133,21 @@ namespace VotoTouch.WPF
             // inizializzazione Classe del TouchScreen
             oVotoTouch = new CVotoTouchScreen(); //ref TotCfg);
             oVotoTouch.ShowPopup += new ehShowPopup(oVotoTouch_ShowPopup);
-            oVotoTouch.PremutoVotaNormale += new ehPremutoVotaNormale(onPremutoVotaNormale);
-            oVotoTouch.PremutoVotaDifferenziato += new ehPremutoVotaDifferenziato(onPremutoVotaDifferenziato);
-            oVotoTouch.PremutoConferma += new ehPremutoConferma(onPremutoConferma);
-            oVotoTouch.PremutoAnnulla += new ehPremutoAnnulla(onPremutoAnnulla);
-            oVotoTouch.PremutoVotoValido += new ehPremutoVotoValido(onPremutoVotoValido);
-            oVotoTouch.PremutoSchedaBianca += new ehPremutoSchedaBianca(onPremutoSchedaBianca);
-            oVotoTouch.PremutoNonVoto += new ehPremutoNonVoto(onPremutoNonVoto);
-            oVotoTouch.PremutoInvalido += new ehPremutoInvalido(onPremutoInvalido);
-            oVotoTouch.PremutoTab += new ehPremutoTab(onPremutoTab);
-            oVotoTouch.TouchWatchDog += new ehTouchWatchDog(onTouchWatchDog);
-            oVotoTouch.PremutoMultiAvanti += new ehPremutoMultiAvanti(onPremutoVotoValidoMulti);
-            oVotoTouch.PremutoMulti += new ehPremutoMulti(onPremutoVotoMulti);
-            oVotoTouch.PremutoBottoneUscita += new ehPremutoBottoneUscita(onPremutoBottoneUscita);
-            oVotoTouch.PremutoContrarioTutti += new ehPremutoContrarioTutti(onPremutoContrarioTutti);
-            oVotoTouch.PremutoAstenutoTutti += new ehPremutoAstenutoTutti(onPremutoAstenutoTutti);
+            oVotoTouch.PremutoVotaNormale += onPremutoVotaNormale;
+            oVotoTouch.PremutoVotaDifferenziato += onPremutoVotaDifferenziato;
+            oVotoTouch.PremutoConferma += onPremutoConferma;
+            oVotoTouch.PremutoAnnulla += onPremutoAnnulla;
+            oVotoTouch.PremutoVotoValido += onPremutoVotoValido;
+            oVotoTouch.PremutoSchedaBianca += onPremutoSchedaBianca;
+            oVotoTouch.PremutoNonVoto += onPremutoNonVoto;
+            oVotoTouch.PremutoInvalido += onPremutoInvalido;
+            oVotoTouch.PremutoTab += onPremutoTab;
+            oVotoTouch.TouchWatchDog += onTouchWatchDog;
+            oVotoTouch.PremutoMultiAvanti += onPremutoVotoValidoMulti;
+            oVotoTouch.PremutoMulti += onPremutoVotoMulti;
+            oVotoTouch.PremutoBottoneUscita += onPremutoBottoneUscita;
+            oVotoTouch.PremutoContrarioTutti += onPremutoContrarioTutti;
+            oVotoTouch.PremutoAstenutoTutti += onPremutoAstenutoTutti;
             // se sono in debug evidenzio le zone sensibili
             oVotoTouch.PaintTouchOnScreen = VTConfig.IsPaintTouch;
             // inizializzazione classe del tema
@@ -907,6 +907,13 @@ namespace VotoTouch.WPF
             Point dd = e.GetPosition(this);
             lblMouse.Text = "ScreenActual: " + this.ActualWidth + " / " + (int)this.ActualHeight +
                             "Mouse: " + (int)dd.X + " / " + (int)dd.Y;
+
+            UBadgePanel badgePanel = (UBadgePanel) this.mainGrid.FindName("badgePanel");
+            if (badgePanel != null)
+            {
+                HitTestResult Result = VisualTreeHelper.HitTest( badgePanel, e.GetPosition(badgePanel));
+                badgePanel.Opacity = Result != null ? 1 : 0.70;
+            }
         }
 
         #endregion

@@ -49,7 +49,7 @@ namespace VotoTouch.WPF
                     Name = "badgePanel",
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top,
-                    Margin = new Thickness(40,40,0,0),
+                    Margin = new Thickness(40,10,0,0),
                     Visibility = Visibility.Visible
                 };
                 mainGrid.Children.Add(badgePanel);

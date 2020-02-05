@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using VotoTouch.WPF.Touchscreen;
 
 namespace VotoTouch.WPF.Models
@@ -28,16 +29,19 @@ namespace VotoTouch.WPF.Models
         public bool SelezionaTuttiCDA;
 
         public List<CSubVotazione> SubVotazioni;
-        //public CBaseTipoVoto TouchZoneVoto;
         public List<TTZone> TouchZoneVoto;
         public TAreaVotazione AreaVoto;
         public List<TLista> Liste;     
         public ArrayList Pagine;    
 
+        // user control di voto
+        public CBaseVoto_UserControl UserControlVoto = null;
+
         public int NListe => Liste?.Count ?? 0;
         public int NPresentatoCDA => Liste?.Count(a => a.PresentatodaCDA == true) ?? 0;             
         public int NMultiSelezioni => TouchZoneVoto.Count(item => item.Multi > 0);
         public bool HaSubVotazioni => SubVotazioni.Count > 0;
+        public bool HaUserControl => UserControlVoto != null;
 
         // variabili interne
         protected bool CustomPaint = false;
@@ -59,6 +63,10 @@ namespace VotoTouch.WPF.Models
             TouchZoneVoto.Clear();
             SubVotazioni.Clear();
         }
+
+        //  FUNZIONI VARIE ----------------------------------------------------------------------
+
+        #region Funzioni Varie
 
         public int DammiMaxMultiCandSelezionabili()
         {
@@ -87,6 +95,8 @@ namespace VotoTouch.WPF.Models
             AbilitaBottoneUscita = AVotaz.DB_AbilitaBottoneUscita;
             SelezionaTuttiCDA = AVotaz.DB_SelezionaTuttiCDA;
         }
+
+        #endregion
 
         //  FUNZIONI VIRTUALI TOUCHSCREEN ----------------------------------------------------------------------
 
@@ -157,20 +167,6 @@ namespace VotoTouch.WPF.Models
                 TouchZoneVoto.Add(a);
             }
 
-            // Ok, ora la scheda bianca
-            //if (AVotazione.SkBianca)
-            //{
-            //    a = new TTZone();
-            //    // se c'è anche non voto devo spostarla
-            //    GetZone(ref a, 35, 75, 64, 92); // non la sposto sta in centro
-            //    //if (!AVotazione.SkNonVoto)
-            //    //    GetZone(ref a, 28, 74, 73, 90); // non la sposto sta in centro
-            //    //else
-            //    //    GetZone(ref a, 10, 72, 44, 90); //la sposto a sinistra
-            //    a.expr = VSDecl.VOTO_SCHEDABIANCA;
-            //    a.Text = ""; a.ev = TTEvento.steSkBianca; a.pag = 0; a.Multi = 0;
-            //    Tz.Add(a);
-            //}
             // il non voto, se presente (caso BPM)
             if (SkNonVoto)
             {
@@ -186,7 +182,15 @@ namespace VotoTouch.WPF.Models
                 TouchZoneVoto.Add(a);
             }
         }
+        
         #endregion
+
+        //  USERControl --------------------------------------------------------------
+
+        public virtual void GetVotoUserControl()
+        {
+            UserControlVoto = null;
+        }
 
     }
 

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using VotoTouch.WPF.Models;
 
 namespace VotoTouch.WPF
 {
@@ -112,6 +113,23 @@ namespace VotoTouch.WPF
                     {
                         // calibro il touch sul voto
                         oVotoTouch.CalcolaTouchVote(Votazioni.VotoCorrente);
+                        // qua metto un eventuale usercontrol
+                        if (Votazioni.VotoCorrente.HaUserControl)
+                        {
+                            // lo registra ( se non c'è ancora )
+                            CBaseVoto_UserControl userControlV = 
+                                (CBaseVoto_UserControl) this.mainGrid.FindName(Votazioni.VotoCorrente.UserControlVoto.Name);
+                            // se è null allora non è stato ancora registrato
+                            if (userControlV == null)
+                            {
+                                mainGrid.Children.Add(Votazioni.VotoCorrente.UserControlVoto);
+                                mainGrid.RegisterName(Votazioni.VotoCorrente.UserControlVoto.Name, Votazioni.VotoCorrente.UserControlVoto);
+                                userControlV = Votazioni.VotoCorrente.UserControlVoto;
+                            }
+                            // attivo le procedure di voto e lo rendo visibile
+                            userControlV.StartVote();
+                            userControlV.Visibility = Visibility.Visible;
+                        }
                         // ora devo capire che votazione è e mettere i componenti, attenzione che posso tornare da un'annulla
                         SettaComponenti(false);
                         // cancello i voti temporanei correnti 
@@ -194,8 +212,19 @@ namespace VotoTouch.WPF
 
                 case TAppStato.ssvVotoConferma:
                     oVotoTouch.CalcolaTouchSpecial(TTipoTouchSpecial.ttsVotoConferma);
-                    //oVotoTouch.CalcolaTouchSpecial(Stato, false);
                     SettaComponenti(false);
+                    if (Votazioni.VotoCorrente.HaUserControl)
+                    {
+                        CBaseVoto_UserControl userControlV = 
+                            (CBaseVoto_UserControl) this.mainGrid.FindName(Votazioni.VotoCorrente.UserControlVoto.Name);
+                        // se è null allora non è stato ancora registrato
+                        if (userControlV != null)
+                        {
+                            // attivo le procedure di voto e lo rendo visibile
+                            userControlV.EndVote();
+                            userControlV.Visibility = Visibility.Hidden;
+                        }
+                    }
                     // ora metto in quadro l'immagine, che deve essere presa da un file composto da
                     oVotoImg.LoadImages(VSDecl.IMG_voto + Votazioni.VotoCorrente.NumVotaz.ToString() + VSDecl.IMG_voto_c);
                     // conferma
@@ -205,12 +234,10 @@ namespace VotoTouch.WPF
 
                 case TAppStato.ssvVotoContinua:
                     oVotoTouch.CalcolaTouchSpecial(TTipoTouchSpecial.ttsNone);
-                    //oVotoTouch.CalcolaTouchSpecial(Stato, false);
                     break;
 
                 case TAppStato.ssvVotoFinito:
                     oVotoTouch.CalcolaTouchSpecial(TTipoTouchSpecial.ttsNone);
-                    //oVotoTouch.CalcolaTouchSpecial(Stato, false);
                     TxtDirittiDiVotoVis = false;
                     SettaComponenti(false);
                     // labels
@@ -254,9 +281,6 @@ namespace VotoTouch.WPF
                     if (VTConfig.ModoAssemblea == VSDecl.MODO_AGM_SPA && VTConfig.SalvaVotoInGeas)                    
                         oDBDati.SalvaTuttoInGeas(Badge_Letto, ref Azionisti);
 
-                    // togli lo spinning wheel
-                    //pbSalvaDati.Visible = false;
-                    
                     oSemaforo.SemaforoFineOccupato();
                     Stato = TAppStato.ssvVotoFinito;
                     CambiaStato();
