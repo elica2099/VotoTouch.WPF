@@ -24,7 +24,7 @@
         <TextBlock Grid.Column="1" x:Name="lblMessage" VerticalAlignment="Center" HorizontalAlignment="Center" 
                    TextWrapping="Wrap" TextAlignment="Center" FontSize="21" Margin="0,0,0,10" />
 
-        <Button Grid.Column="2" Name="btnChiudi" Margin="3" 
+        <Button Grid.Column="2" Name="btnChiudi" Margin="3" Focusable="True"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="Chiudi"
                 FontSize="24" FontWeight="DemiBold" Click="ButtonChiudi_OnClick" Style="{StaticResource btn-primary}" />
 

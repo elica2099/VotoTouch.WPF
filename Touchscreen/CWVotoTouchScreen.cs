@@ -24,7 +24,7 @@ namespace VotoTouch.WPF
     public enum TTEvento : int { steVotaNormale, steVotaDiffer, steConferma, 
         steAnnulla, steVotoValido, steInvalido, steTabs, steSkBianca, steSkNonVoto,
         steMultiValido, steMultiAvanti, steMultiSelezTuttiCDA, steSelezTuttiCDAAvanti,
-        steBottoneUscita, steSkContrarioTutti, steSkAstenutoTutti, steGruppoAvanti
+        steBottoneUscita, steSkContrarioTutti, steSkAstenutoTutti, steGruppoAvanti, steUserControl
     };
 
     // struttura zone dello schermo
@@ -63,12 +63,10 @@ namespace VotoTouch.WPF
     public delegate void testEventHandler(object source, string messaggio);
     public delegate void ehShowPopup(object source, string messaggio);
 
-    // delegato un parametro
+    // delegati di voto
     public delegate void ehPremutoVotoSingolo(object source, int VParam);
-    // delegati voto più parametri
     public delegate void ehPremutoVotoValido(object source, int VParam, bool ZParam);
     public delegate void ehPremutoMultiAvanti(object source, int VParam, ref List<int> voti);
-    public delegate void ehPremutoMulti(object source, int VParam);
 
     public delegate void ehTouchWatchDog(object source, int VParam);
 
@@ -91,11 +89,13 @@ namespace VotoTouch.WPF
         public event ehPremutoVotoSingolo PremutoNonVoto;
         // multivotazione (v. 3.2)
         public event ehPremutoMultiAvanti PremutoMultiAvanti;
-        public event ehPremutoMulti PremutoMulti;               // serve per il repaint
+        public event ehPremutoVotoSingolo PremutoMulti;               // serve per il repaint
         // (v. 4.0) btnUscita contraritutti astenutitutti
         public event ehPremutoVotoSingolo PremutoBottoneUscita;
         public event ehPremutoVotoSingolo PremutoContrarioTutti;
         public event ehPremutoVotoSingolo PremutoAstenutoTutti;
+        // (v. 5.0) BtnAvanti gruppo
+        public event ehPremutoVotoSingolo PremutoGruppoAvanti;               
 
         public event ehTouchWatchDog TouchWatchDog;
 
@@ -417,6 +417,10 @@ namespace VotoTouch.WPF
                     case TTEvento.steGruppoAvanti:
                         // qua il gruppo
 
+                        break;
+
+                    case TTEvento.steUserControl:
+                        // non faccio nulla ma evito il beep
                         break;
 
                     case TTEvento.steSkBianca:

@@ -134,7 +134,7 @@ namespace VotoTouch.WPF
         }
 
         // ORA E' MULTICANDIDATO, MA DIVENTERA' STANDARD
-        public void onPremutoVotoValidoMulti(object source, int VParam, ref List<int> voti)
+        public void onPremutoMultiAvanti(object source, int VParam, ref List<int> voti)
         {
             // in realtà corrisponde all'AVANTI
             if (voti == null) return;  // in teoria non serve
@@ -269,8 +269,6 @@ namespace VotoTouch.WPF
             FMsgExit = null;
         }
 
-        //	 CONFERMA - ANNULLA  -----------------------------------------------------------------
-
         public void onPremutoConferma(object source, int VParam)
         {
             // ok, questo evento arriva quando, nella conferma del voto, è stata scelta l'opzione
@@ -294,6 +292,11 @@ namespace VotoTouch.WPF
             // Annulla del voto (torno dove ero prima)
             Stato = TAppStato.ssvVoto;
             CambiaStato();
+        }
+
+        public void onPremutoGruppoAvanti(object source, int VParam)
+        {
+            // prende il voto gruppo
         }
 
         public void CancellaTempVotiCorrenti()

@@ -40,26 +40,14 @@ namespace VotoTouch.WPF
         public event EventDataReceived evtDataReceived;
 
         // timer di disaccoppiamento
-        //private DispatcherTimer timLetturaBadge;
-        //private DispatcherTimer timCambiaStato;
-        //private DispatcherTimer timConfigura;
         private DispatcherTimer timAutoRitorno;
         private DispatcherTimer timPopup;
         private DispatcherTimer timVotoAperto;
-
-        // oggetti demo (li creo dinamicamente)
-        //private Button btnBadgeUnVoto;
-        //private Button btnBadgePiuVoti;
-        //private Button btnFineVotoDemo;
-
-        private static Mutex appMutex;
+        //private static Mutex appMutex;
 
         // finestre e usercontrol
         public FWSMessage frmVSMessage;
         public FWSConfig fConfig;
-        //public SplashScreen splash;
-        //public FWSStart FStart;
-	    //public LabelCandidati lbConferma; ------------------------------ ??????
 
 		// oggetti globali
 		public  CVotoTouchScreen oVotoTouch;    // classe del touch
@@ -143,11 +131,12 @@ namespace VotoTouch.WPF
             oVotoTouch.PremutoInvalido += onPremutoInvalido;
             oVotoTouch.PremutoTab += onPremutoTab;
             oVotoTouch.TouchWatchDog += onTouchWatchDog;
-            oVotoTouch.PremutoMultiAvanti += onPremutoVotoValidoMulti;
+            oVotoTouch.PremutoMultiAvanti += onPremutoMultiAvanti;
             oVotoTouch.PremutoMulti += onPremutoVotoMulti;
             oVotoTouch.PremutoBottoneUscita += onPremutoBottoneUscita;
             oVotoTouch.PremutoContrarioTutti += onPremutoContrarioTutti;
             oVotoTouch.PremutoAstenutoTutti += onPremutoAstenutoTutti;
+            oVotoTouch.PremutoGruppoAvanti += onPremutoGruppoAvanti;
             // se sono in debug evidenzio le zone sensibili
             oVotoTouch.PaintTouchOnScreen = VTConfig.IsPaintTouch;
             // inizializzazione classe del tema
@@ -159,15 +148,6 @@ namespace VotoTouch.WPF
             // timer di lettura badge
             timVotoAperto = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(VSDecl.TIM_CKVOTO_MIN)};
             timVotoAperto.Tick += timVotoAperto_Tick;
-            //// timer di lettura badge
-            //timLetturaBadge = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
-            //timLetturaBadge.Tick += timLetturaBadge_Tick;
-            // timer di cambio stato
-            //timCambiaStato = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
-            //timCambiaStato.Tick += timCambiaStato_Tick;
-            // timer di configurazione
-            //timConfigura = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(30)};
-            //timConfigura.Tick += timConfigura_Tick;
             // timer di autoritorno
             timAutoRitorno = new DispatcherTimer {IsEnabled = false, Interval = TimeSpan.FromMilliseconds(VTConfig.TimeAutoRitornoVoto) };
             timAutoRitorno.Tick += timAutoRitorno_Tick;
@@ -197,16 +177,7 @@ namespace VotoTouch.WPF
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            // Massimizzo la finestra
-//#if DEBUG
-//            this.WindowState = WindowState.Normal;
-//		    this.Left = 0;
-//		    this.Height = 0;
-//            this.Width = 1280;
-//            this.Height = 1024;
-//#else      
             WindowState = WindowState.Maximized;
-//#endif
             ShowNoBarcode = false;
             ShowNoSemaph = false;
             SettaComponenti(false);
@@ -214,10 +185,6 @@ namespace VotoTouch.WPF
             // gestione immagini
             oVotoImg = new CVotoImages {MainForm = this};
             CtrlPrimoAvvio = oVotoImg.CheckImageFolder();
-		    //pnPopupRed.Left = 5;
-            //pnPopupRed.Top = 5;
-
-            //btnCancVoti.Visible = VTConfig.IsAdmin;
 
             // identificazione della versione demo, nella cartella data o nella sua cartella
             if (VTConfig.IsDemoMode)
@@ -256,9 +223,6 @@ namespace VotoTouch.WPF
             }
             // loggo l'inizio dell'applicazione
             Logging.WriteToLog("<start> Inizio Applicazione");
-
-            // classe lbConferma
-		    //lbConferma = new LabelCandidati {Visible = false, Parent = this};
 
 		    // Inizializzo la classe del database
             if (VTConfig.IsDemoMode)
@@ -324,8 +288,6 @@ namespace VotoTouch.WPF
             // Apertura voto lo setto uguale così in stato badge non carica 2 volte le Liste
             AperturaVotoEsterno = VTConfig.VotoAperto;  
 
-            //pnSemaf.BackColor = Color.Transparent;
-
             // scrive la configurazione nel log
             Logging.WriteToLog(VSDecl.VTS_VERSION);
             Logging.WriteToLog("** Configurazione:");
@@ -339,8 +301,6 @@ namespace VotoTouch.WPF
             Logging.WriteToLog("** CodiceUscita: " + VTConfig.CodiceUscita);
             Logging.WriteToLog("");
             
-            // inizializzo i componenti
-			//InizializzaControlli();
             // Se è in demo mode metto i controlli
             if (VTConfig.IsDemoMode)
                 InizializzaControlliDemo();
@@ -393,10 +353,6 @@ namespace VotoTouch.WPF
                 {
                     // ci sono stati errori con la com all'apertura
                     VTConfig.UsaLettore = false;
-                    //MessageBox.Show(
-                    //    App.Instance.getLang("SAPP_START_ERRCOM1") + VTConfig.PortaLettore + 
-                    //    App.Instance.getLang("SAPP_START_ERRCOM2"),"Error",
-                    //    MessageBoxButton.OK, MessageBoxImage.Error);
                     ShowNoBarcode = true;
                 }
                 else

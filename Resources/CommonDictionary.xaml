@@ -29,6 +29,50 @@
     <SolidColorBrush  x:Key="GPReplicheColor" Color="Salmon" />
     <SolidColorBrush  x:Key="GPProposteColor" Color="#f0ad4e" />
 
+    <!-- Toggle button del tab in alto -->
+    <Style x:Key="ToggleButtonTab" TargetType="ToggleButton">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Name="Border" BorderThickness="1" Background="Transparent" 
+                            CornerRadius="2,2,0,0" BorderBrush="DarkGray">
+                        <ContentPresenter Name="ContentHost"  HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="true" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter TargetName="Border" Property="Background" Value="#679DC6" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#679DC6" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource GPTextColor}" />
+                            <Setter TargetName="Border" Property="Background" Value="White" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="White" />
+                            <Setter Property="FontWeight" Value="DemiBold" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="White" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="White" />
+                            <Setter Property="Foreground" Value="DodgerBlue" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="Border" Property="Opacity" Value="0.25" />
+                            <Setter Property="FontWeight" Value="Normal" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--  primary #337AB7/#7AA8D0  (blu)
             verde #5CB85C/#95D195    
             info #5BC0DE/#94D6EA  

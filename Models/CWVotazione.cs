@@ -201,6 +201,7 @@ namespace VotoTouch.WPF.Models
         public int IDGruppoVoto;
         public int TipoSubVoto;                
         public string Argomento;
+        public string Descrizione_aggiuntiva;
 
         public CSubVotazione()
         {
@@ -214,6 +215,7 @@ namespace VotoTouch.WPF.Models
             IDGruppoVoto = AVotaz.DB_IDGruppoVoto;
             TipoSubVoto = AVotaz.DB_TipoVoto;
             Argomento = AVotaz.DB_Argomento;
+            Descrizione_aggiuntiva = AVotaz.DB_Descrizione_aggiuntiva;
         }
     }
 
@@ -245,6 +247,7 @@ namespace VotoTouch.WPF.Models
         public int DB_MozioneRealeGeas;
         public int DB_IDGruppoVoto;
         public string DB_Argomento;
+        public string DB_Descrizione_aggiuntiva;
         public int DB_TipoVoto;
         public int DB_TipoSubVoto;
         public bool DB_SkBianca;

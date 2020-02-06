@@ -10,9 +10,10 @@ namespace VotoTouch.WPF.Models
 {
     public class CVotazione_GruppoVoto: CVotazione
     {
-
         // CLASSE DELLA votazione con usercontrol
-        
+
+        private bool OriginalSkNoVoto;
+
         public CVotazione_GruppoVoto(Rect AFormRect) : base(AFormRect)
         {
             // costruttore
@@ -25,10 +26,18 @@ namespace VotoTouch.WPF.Models
             TouchZoneVoto.Clear();
 
             // non serve i touch screen perchè uso lo UserControl
-            // non metto la scheda di voto non votante perchè è dentro lo user control
+            // non metto la scheda di voto non votante perchè è dentro lo user control, però la salvo;
+            // TODO: Gestione della sk non voto: brutta da rifare
+            OriginalSkNoVoto = SkNonVoto;
             SkNonVoto = false;
-            // devo aggiungere il tasto avanti con evento           
+            // ora devo aggiungere il 
             TTZone a = new TTZone();
+            GetZone(ref a, 0, 110, 1000, 860); // in bass a sx
+            a.expr = 0;
+            a.Text = ""; a.ev = TTEvento.steUserControl; a.pag = 0; a.cda = false; a.Multi = 0;
+            TouchZoneVoto.Add(a);
+            // devo aggiungere il tasto avanti con evento           
+            a = new TTZone();
             GetZone(ref a, 700, 870, 1000, 1000); // in bass a sx
             a.expr = VSDecl.VOTO_GRUPPOAVANTI;
             a.Text = ""; a.ev = TTEvento.steGruppoAvanti; a.pag = 0; a.cda = false; a.Multi = 0;
@@ -57,12 +66,14 @@ namespace VotoTouch.WPF.Models
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     VerticalAlignment = VerticalAlignment.Stretch,
                     Visibility = Visibility.Hidden,
-                    Margin = new Thickness(10,80,10,120)
+                    Margin = new Thickness(10,100,10,120)
                 };
 
-                // resize dell'area
+                // resize dell'area (forse non serve)
 
-                // devo fare il binding delle subvotazioni
+                // carico le subvotazioni e gli eventuali paramtri
+                UserControlVoto.SetVoteParameters(SubVotazioni, OriginalSkNoVoto);
+
 
 
             }

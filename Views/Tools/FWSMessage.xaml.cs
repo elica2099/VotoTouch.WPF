@@ -24,6 +24,7 @@ namespace VotoTouch.WPF.Views.Tools
             InitializeComponent();
 
             lblMessage.Text = AMessage;
+            btnChiudi.Focus();
         }
 
         private void ButtonChiudi_OnClick(object sender, RoutedEventArgs e)

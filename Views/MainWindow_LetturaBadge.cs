@@ -240,7 +240,7 @@ namespace VotoTouch.WPF
                         frmVSMessage = null;
                     }
                     frmVSMessage = new FWSMessage(messaggio) {Owner = this};
-                    frmVSMessage.Show();
+                    frmVSMessage.ShowDialog();
 
                     this.Focus();
                     oSemaforo.SemaforoLibero();

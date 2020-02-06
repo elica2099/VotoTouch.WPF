@@ -619,7 +619,9 @@ namespace VotoTouch.WPF
                             DB_IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
                             DB_MozioneRealeGeas = Convert.ToInt32(a["MozioneRealeGeas"]),
                             DB_TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
-                            DB_Argomento = a["Argomento"].ToString()
+                            DB_Argomento = a["Argomento"].ToString().TrimEnd(),
+                            DB_Descrizione_aggiuntiva =  a.IsDBNull(a.GetOrdinal("Descrizione_aggiuntiva")) ? 
+                                "" : a["Descrizione_aggiuntiva"].ToString().TrimEnd(),
                         };
                         votaz.Add(v);
                     }

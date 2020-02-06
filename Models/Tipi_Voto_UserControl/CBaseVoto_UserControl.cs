@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,15 +8,23 @@ using System.Windows.Controls;
 
 namespace VotoTouch.WPF.Models
 {
-    public class CBaseVoto_UserControl : UserControl
+    public class CBaseVoto_UserControl : UserControl, INotifyPropertyChanged
     {
 
         public CBaseVoto_UserControl()
         {
             //
+            DataContext = this;
         }
 
-        // METODI VIRTUALI ----------------------------------------------------------------------
+        // METODI VIRTUALI configurazione ----------------------------------------------------------------------
+
+        public virtual void SetVoteParameters(List<CSubVotazione> ASubVoti, bool ASkNonVoto)
+        {
+            //
+        }
+
+        // METODI VIRTUALI voto ----------------------------------------------------------------------
 
         public virtual void StartVote()
         {
@@ -32,6 +41,18 @@ namespace VotoTouch.WPF.Models
             // ritorna come ha votato
             return null;
         }
+
+        //  inotify  ---------------------------------------------------------------------------------
+
+        #region INotifyPropertyChanged
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string strPropertyName)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(strPropertyName));
+        }
+        #endregion
 
     }
 }

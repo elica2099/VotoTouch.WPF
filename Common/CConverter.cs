@@ -75,6 +75,20 @@ namespace VotoTouch.WPF.Converters
         }
     }
 
+    [ValueConversion(typeof(string), typeof(Visibility))]
+    public class StringToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return string.IsNullOrEmpty((string)value) ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     [ValueConversion(typeof(Enum), typeof(bool))]
     public class EnumConverter : IValueConverter
     {
