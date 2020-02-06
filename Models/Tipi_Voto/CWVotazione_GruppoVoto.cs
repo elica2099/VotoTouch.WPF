@@ -32,16 +32,16 @@ namespace VotoTouch.WPF.Models
             SkNonVoto = false;
             // ora devo aggiungere il 
             TTZone a = new TTZone();
-            GetZone(ref a, 0, 110, 1000, 860); // in bass a sx
+            GetZone(ref a, 0, 110, 1000, 1000); // in bass a sx
             a.expr = 0;
             a.Text = ""; a.ev = TTEvento.steUserControl; a.pag = 0; a.cda = false; a.Multi = 0;
             TouchZoneVoto.Add(a);
             // devo aggiungere il tasto avanti con evento           
-            a = new TTZone();
-            GetZone(ref a, 700, 870, 1000, 1000); // in bass a sx
-            a.expr = VSDecl.VOTO_GRUPPOAVANTI;
-            a.Text = ""; a.ev = TTEvento.steGruppoAvanti; a.pag = 0; a.cda = false; a.Multi = 0;
-            TouchZoneVoto.Add(a);
+            //a = new TTZone();
+            //GetZone(ref a, 700, 870, 1000, 1000); // in bass a sx
+            //a.expr = VSDecl.VOTO_GRUPPOAVANTI;
+            //a.Text = ""; a.ev = TTEvento.steGruppoAvanti; a.pag = 0; a.cda = false; a.Multi = 0;
+            //TouchZoneVoto.Add(a);
 
             // Le schede Speciali
             MettiSchedeSpecialiDiVoto();
@@ -66,7 +66,7 @@ namespace VotoTouch.WPF.Models
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     VerticalAlignment = VerticalAlignment.Stretch,
                     Visibility = Visibility.Hidden,
-                    Margin = new Thickness(10,100,10,120)
+                    Margin = new Thickness(10,100,10,20)
                 };
 
                 // resize dell'area (forse non serve)
