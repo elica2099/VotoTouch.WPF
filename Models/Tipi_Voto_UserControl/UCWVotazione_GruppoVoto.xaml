@@ -12,6 +12,7 @@
         <ResourceDictionary>
             <converters:StringToVisibilityConverter x:Key="stringToVis"/>
             <converters:EnumBooleanConverter x:Key="enumBooleanConverter"/>
+            <converters:BooleanToHiddenVisibility x:Key="boolToVis"/>
 
             <DataTemplate x:Key="VoteGroupItemStyle" DataType="local:CGroupSubVoto">
                 <Grid Height="90" HorizontalAlignment="Stretch" >
@@ -29,22 +30,23 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" 
                                 HorizontalAlignment="Right" Margin="0,0,20,0" >
-                        <ToggleButton Content="Favorevole" Height="60"
+                        <ToggleButton Content="Favorevole" Height="60" Margin="0,0,4,0"
                             IsChecked="{Binding Path=VotoExprEnum, Converter={StaticResource enumBooleanConverter}, ConverterParameter=favorevole}"                              
-							Width="140" Style="{StaticResource ToggleButtonTab}" VerticalAlignment="Center"
+							Width="140" Style="{StaticResource ToggleBtnVoto-fav}" VerticalAlignment="Center"
 							Command="{Binding CambiaVisualizzazione}" CommandParameter="0" />
-                        <ToggleButton Content="Astenuto" Height="60" 
+                        <ToggleButton Content="Contrario" Height="60" Margin="0,0,4,0"
                             IsChecked="{Binding Path=VotoExprEnum, Converter={StaticResource enumBooleanConverter}, ConverterParameter=contrario}"                              
-							Width="140" Style="{StaticResource ToggleButtonTab}" VerticalAlignment="Center" 
+							Width="140" Style="{StaticResource ToggleBtnVoto-con}" VerticalAlignment="Center" 
 							Command="{Binding CambiaVisualizzazione}" CommandParameter="1" />
-                        <ToggleButton Name="tbtnPRiepilogo" Content="Contrario" Height="60" 
+                        <ToggleButton Content="Astenuto" Height="60" Margin="0,0,20,0"
                             IsChecked="{Binding Path=VotoExprEnum, Converter={StaticResource enumBooleanConverter}, ConverterParameter=astenuto}"                              
-							Width="140" Style="{StaticResource ToggleButtonTab}" VerticalAlignment="Center" 
+							Width="140" Style="{StaticResource ToggleBtnVoto-abs}" VerticalAlignment="Center" 
 							Command="{Binding CambiaVisualizzazione}" CommandParameter="2" />
-                        <ToggleButton Name="tbtnDisplay" Content="NonVotante" Height="60" Margin="20,0,0,0"
+                        <ToggleButton Content="NonVotante" Height="60"
                             IsChecked="{Binding Path=VotoExprEnum, Converter={StaticResource enumBooleanConverter}, ConverterParameter=non_votante}"                              
-							Width="140" Style="{StaticResource ToggleButtonTab}" VerticalAlignment="Center" 
-							Command="{Binding CambiaVisualizzazione}" CommandParameter="3" />
+							Width="140" Style="{StaticResource ToggleBtnVoto-nv}" VerticalAlignment="Center" 
+							Command="{Binding CambiaVisualizzazione}" CommandParameter="3" 
+                            Visibility="{Binding Path=SkNonVoto, Converter={StaticResource boolToVis}}" />
                     </StackPanel>
 
                 </Grid>
@@ -74,21 +76,41 @@
 
     <Grid Background="Transparent" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
+            <RowDefinition Height="130" />
             <RowDefinition Height="0.90*" />
         </Grid.RowDefinitions>
-
-        <ListBox x:Name="lbxRvts" 
-                 ItemsSource="{Binding CVListSubVoto}" 
-                 IsSynchronizedWithCurrentItem="True"
-                 ItemContainerStyle="{StaticResource VoteGroupStyle}" 
-                 Grid.Row="1" 
-                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
-                 BorderBrush="DimGray" 
-                 Background="Transparent"
-                 HorizontalContentAlignment="Stretch"
-                 AlternationCount="2" 
-        >
+        <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" >
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="Vota per tutti i punti:" 
+                       FontSize="18" FontWeight="DemiBold" Margin="0,0,0,6"/>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                <Button Content="Tutto&#x0a;Favorevole" Height="80" Margin="0,0,15,0" Width="150" 
+                        Style="{StaticResource btn-success}" VerticalAlignment="Center" FontWeight="DemiBold" FontSize="20"
+                        Command="{Binding CambiaVisualizzazione}" CommandParameter="0" />
+                <Button Content="Tutto&#x0a;Contrario" Height="80" Margin="0,0,15,0" Width="150" 
+                        Style="{StaticResource btn-danger}" VerticalAlignment="Center" FontWeight="DemiBold" FontSize="20"
+                        Command="{Binding CambiaVisualizzazione}" CommandParameter="1" />
+                <Button Content="Tutto&#x0a;Astenuto" Height="80" Margin="0,0,30,0" Width="150" 
+                        Style="{StaticResource btn-warning}" VerticalAlignment="Center" FontWeight="DemiBold" FontSize="20"
+                        Command="{Binding CambiaVisualizzazione}" CommandParameter="2" />
+                <Button Content="Tutto&#x0a;NonVotante" Height="80" Width="150" 
+                        Style="{StaticResource btn-primary}" VerticalAlignment="Center" FontWeight="DemiBold" FontSize="20"
+                        Command="{Binding CambiaVisualizzazione}" CommandParameter="3" 
+                        Visibility="{Binding Path=ShowNoVote, Converter={StaticResource boolToVis}}"/>
+            </StackPanel>
+        </StackPanel>
+        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Text="Vota per i singoli punti:" 
+                   FontSize="18" Grid.Row="1" FontWeight="DemiBold" Margin="10,-10,0,0" />
+        <ListBox x:Name="lbxRvts" Margin="0,16,0,0"
+                     ItemsSource="{Binding CVListSubVoto}" 
+                     IsSynchronizedWithCurrentItem="True"
+                     ItemContainerStyle="{StaticResource VoteGroupStyle}" 
+                     Grid.Row="1" 
+                     VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
+                     BorderBrush="DimGray" 
+                     Background="Transparent"
+                     HorizontalContentAlignment="Stretch"
+                     AlternationCount="2" 
+            >
         </ListBox>
     </Grid>
 

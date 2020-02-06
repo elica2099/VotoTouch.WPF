@@ -605,7 +605,8 @@ namespace VotoTouch.WPF
                 // ok ora carico le votazioni
                 qryStd.Parameters.Clear();
                 qryStd.CommandText = qry_DammiVotazioniTotem;
-                qryStd.CommandText = @"select * from VS_MatchVot_Gruppo_Totem 
+                qryStd.CommandText = @"select *, (select VotoNonVotante from CONFIG_CfgVotoSegreto) as VotoNonVotante
+                                        from VS_MatchVot_Gruppo_Totem 
                                         where attivo = 1 order by gruppovotaz, numsubvotaz";
                 SqlDataReader a = qryStd.ExecuteReader();
                 if (a.HasRows)
@@ -622,6 +623,7 @@ namespace VotoTouch.WPF
                             DB_Argomento = a["Argomento"].ToString().TrimEnd(),
                             DB_Descrizione_aggiuntiva =  a.IsDBNull(a.GetOrdinal("Descrizione_aggiuntiva")) ? 
                                 "" : a["Descrizione_aggiuntiva"].ToString().TrimEnd(),
+                            DB_SkNonVoto = Convert.ToBoolean(a["VotoNonVotante"])
                         };
                         votaz.Add(v);
                     }

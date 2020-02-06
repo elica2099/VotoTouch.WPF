@@ -66,7 +66,7 @@ namespace VotoTouch.WPF
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Background = VTConfig.IsPaintTouch ? Brushes.DarkSeaGreen : Brushes.Transparent,
+                Background = VTConfig.IsPaintTouch ? Brushes.DarkSalmon : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
             lblNomeDisgiunto.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
@@ -86,7 +86,7 @@ namespace VotoTouch.WPF
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Background = VTConfig.IsPaintTouch ? Brushes.OldLace : Brushes.Transparent,
+                Background = VTConfig.IsPaintTouch ? Brushes.Khaki : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
             lblDisgiuntoRimangono.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
@@ -106,7 +106,7 @@ namespace VotoTouch.WPF
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Background = VTConfig.IsPaintTouch ? Brushes.Tan : Brushes.Transparent,
+                Background = VTConfig.IsPaintTouch ? Brushes.LemonChiffon : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
             lblDirittiStart.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
@@ -126,7 +126,7 @@ namespace VotoTouch.WPF
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Background = VTConfig.IsPaintTouch ? Brushes.Tan : Brushes.Transparent,
+                Background = VTConfig.IsPaintTouch ? Brushes.LightSteelBlue : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
             lblDirittiStartMin.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
@@ -146,7 +146,7 @@ namespace VotoTouch.WPF
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Background = VTConfig.IsPaintTouch ? Brushes.Coral : Brushes.Transparent,
+                Background = VTConfig.IsPaintTouch ? Brushes.LightCoral : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
             lblDirittiDiVoto.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
@@ -165,7 +165,7 @@ namespace VotoTouch.WPF
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Background = VTConfig.IsPaintTouch ? Brushes.Red : Brushes.Transparent,
+                Background = VTConfig.IsPaintTouch ? Brushes.MistyRose : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
             lblConferma.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;
@@ -185,7 +185,7 @@ namespace VotoTouch.WPF
                 Visibility = Visibility.Hidden,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Background = VTConfig.IsPaintTouch ? Brushes.Turquoise : Brushes.Transparent,
+                Background = VTConfig.IsPaintTouch ? Brushes.Aquamarine : Brushes.Transparent,
                 Margin = new Thickness(20,20,0,0)
             };
             lblConfermaUp.PreviewMouseRightButtonUp += AllLabelStartOnPreviewMouseRightButtonDown;

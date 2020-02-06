@@ -19,7 +19,7 @@ namespace VotoTouch.WPF.Models
 
         // METODI VIRTUALI configurazione ----------------------------------------------------------------------
 
-        public virtual void SetVoteParameters(List<CSubVotazione> ASubVoti, bool ASkNonVoto)
+        public virtual void SetVoteParameters(List<CSubVotazione> ASubVoti)
         {
             //
         }

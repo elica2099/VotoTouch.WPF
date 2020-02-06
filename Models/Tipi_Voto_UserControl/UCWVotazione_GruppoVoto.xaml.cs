@@ -27,6 +27,7 @@ namespace VotoTouch.WPF.Models
         public string Descrizione_aggiuntiva { get; set; }
         public int VotoExpr { get; set; }
         public TGroupSubVotoExpr VotoExprEnum { get; set; }
+        public bool SkNonVoto { get; set; }
 
         public CGroupSubVoto(CSubVotazione s)
         {
@@ -36,6 +37,7 @@ namespace VotoTouch.WPF.Models
             Descrizione_aggiuntiva = s.Descrizione_aggiuntiva;
             VotoExpr = -1;
             VotoExprEnum = TGroupSubVotoExpr.nessuno;
+            SkNonVoto = s.SKNonVoto;
         }
     }
 
@@ -55,7 +57,6 @@ namespace VotoTouch.WPF.Models
         }
         private ObservableCollection<CGroupSubVoto> ListSubVoto;
         #endregion
-        private bool SkNonVoto = false;
 
         public UCWVotazione_GruppoVoto() : base()
         {
@@ -67,16 +68,25 @@ namespace VotoTouch.WPF.Models
             DataContext = this;
         }
 
-        public override void SetVoteParameters(List<CSubVotazione> ASubVoti, bool ASkNonVoto)
+        public override void SetVoteParameters(List<CSubVotazione> ASubVoti)
         {
             ListSubVoto.Clear();
             foreach (CSubVotazione subVotazione in ASubVoti)
             {
                 ListSubVoto.Add(new CGroupSubVoto(subVotazione));
             }
+            ShowNoVote = ListSubVoto.Count > 0 && ListSubVoto[0].SkNonVoto;
+        }
 
-            // sk non voto
-            SkNonVoto = ASkNonVoto;
+        private bool _ShowNoVote;  
+        public bool ShowNoVote
+        {
+            get => _ShowNoVote;
+            set
+            {
+                _ShowNoVote = value;
+                OnPropertyChanged("ShowNoVote");
+            }
         }
 
         // selezione ---------------------------------------------------------------------------------

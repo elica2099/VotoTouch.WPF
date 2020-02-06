@@ -30,18 +30,24 @@
     <SolidColorBrush  x:Key="GPProposteColor" Color="#f0ad4e" />
 
     <!-- Toggle button del tab in alto -->
-    <Style x:Key="ToggleButtonTab" TargetType="ToggleButton">
-        <Setter Property="Foreground" Value="White" />
+    <Style x:Key="ToggleBtnVoto" TargetType="ToggleButton">
+        <Setter Property="Background" Value="White" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <Border Name="Border" BorderThickness="1" Background="Transparent" 
-                            CornerRadius="2,2,0,0" BorderBrush="DarkGray">
+                    <Border Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" 
+                            CornerRadius="2,2,0,0" Background="{TemplateBinding Background}" >
                         <ContentPresenter Name="ContentHost"  HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="true" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="true">
+                        <!--<Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Foreground" Value="White" />
                             <Setter TargetName="Border" Property="Background" Value="#679DC6" />
                             <Setter TargetName="Border" Property="BorderBrush" Value="#679DC6" />
@@ -56,7 +62,7 @@
                             <Setter TargetName="Border" Property="Background" Value="White" />
                             <Setter TargetName="Border" Property="BorderBrush" Value="White" />
                             <Setter Property="Foreground" Value="DodgerBlue" />
-                        </Trigger>
+                        </Trigger>-->
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter TargetName="Border" Property="Opacity" Value="0.25" />
                             <Setter Property="FontWeight" Value="Normal" />
@@ -71,6 +77,63 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="ToggleBtnVoto-fav" TargetType="ToggleButton"  BasedOn="{StaticResource ToggleBtnVoto}">
+        <Style.Triggers>
+            <Trigger Property="ToggleButton.IsChecked" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="#5CB85C"/>
+                <Setter Property="BorderBrush" Value="#5CB85C"/>
+            </Trigger>
+            <Trigger Property="ToggleButton.IsChecked" Value="False">
+                <Setter Property="Foreground" Value="#5CB85C"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="#5CB85C"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="ToggleBtnVoto-con" TargetType="ToggleButton"  BasedOn="{StaticResource ToggleBtnVoto}">
+        <Style.Triggers>
+            <Trigger Property="ToggleButton.IsChecked" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="#D9534F"/>
+                <Setter Property="BorderBrush" Value="#D9534F"/>
+            </Trigger>
+            <Trigger Property="ToggleButton.IsChecked" Value="False">
+                <Setter Property="Foreground" Value="#D9534F"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="#D9534F"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="ToggleBtnVoto-abs" TargetType="ToggleButton"  BasedOn="{StaticResource ToggleBtnVoto}">
+        <Style.Triggers>
+            <Trigger Property="ToggleButton.IsChecked" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="#F0AD4E"/>
+                <Setter Property="BorderBrush" Value="#F0AD4E"/>
+            </Trigger>
+            <Trigger Property="ToggleButton.IsChecked" Value="False">
+                <Setter Property="Foreground" Value="#F0AD4E"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="#F0AD4E"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="ToggleBtnVoto-nv" TargetType="ToggleButton"  BasedOn="{StaticResource ToggleBtnVoto}">
+        <Style.Triggers>
+            <Trigger Property="ToggleButton.IsChecked" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="#337AB7"/>
+                <Setter Property="BorderBrush" Value="#337AB7"/>
+            </Trigger>
+            <Trigger Property="ToggleButton.IsChecked" Value="False">
+                <Setter Property="Foreground" Value="#337AB7"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="#337AB7"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!--  primary #337AB7/#7AA8D0  (blu)

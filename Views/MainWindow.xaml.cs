@@ -777,6 +777,8 @@ namespace VotoTouch.WPF
                 case Key.F8 when Keyboard.Modifiers == ModifierKeys.Control:
                     e.Handled = true;
                     this.WindowState = WindowState.Normal;
+                    Left = 0;
+                    Top = 0;
                     this.Width = 1280;
                     this.Height = 1024;
                     break;

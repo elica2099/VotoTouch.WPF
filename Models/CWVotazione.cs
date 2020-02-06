@@ -107,7 +107,7 @@ namespace VotoTouch.WPF.Models
             //c 'è una parte comune: il Bottone Uscita
             if (CustomPaint || !AbilitaBottoneUscita) return;
             TTZone a = new TTZone();
-            GetZone(ref a, 760, 0, 980, 120); // in alto a dx
+            GetZone(ref a, 790, 0, 999, 110); // in alto a dx
             a.expr = VSDecl.VOTO_BTN_USCITA;
             a.Text = ""; a.ev = TTEvento.steBottoneUscita; a.pag = 0; a.Multi = 0; a.MultiNoPrint = true;
             TouchZoneVoto.Add(a);
@@ -202,6 +202,7 @@ namespace VotoTouch.WPF.Models
         public int TipoSubVoto;                
         public string Argomento;
         public string Descrizione_aggiuntiva;
+        public bool SKNonVoto;
 
         public CSubVotazione()
         {
@@ -216,6 +217,7 @@ namespace VotoTouch.WPF.Models
             TipoSubVoto = AVotaz.DB_TipoVoto;
             Argomento = AVotaz.DB_Argomento;
             Descrizione_aggiuntiva = AVotaz.DB_Descrizione_aggiuntiva;
+            SKNonVoto = AVotaz.DB_SkNonVoto;
         }
     }
 
