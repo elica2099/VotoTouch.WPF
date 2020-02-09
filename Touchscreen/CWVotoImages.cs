@@ -5,7 +5,9 @@ using System.Text;
 using System.Drawing;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace VotoTouch.WPF
@@ -13,11 +15,16 @@ namespace VotoTouch.WPF
     public class CVotoImages
     {
         private const string IMG_EXT = ".png";
-        public Window MainForm;
+        private Window MainForm;
+        private Image MainImage;
+        private Grid MainGrid;
 
-        public CVotoImages()
+        public CVotoImages(Window AMainForm, Image AMainImage, Grid AMainGrid)
         {
             // costruttore
+            MainForm = AMainForm;
+            MainImage = AMainImage;
+            MainGrid = AMainGrid;
         }
 
         // carico delle immagini nella finestra -----------------------------------------------------------------
@@ -30,12 +37,30 @@ namespace VotoTouch.WPF
             //    MainForm.BackgroundImage.Dispose();
 
             // prima la cerco nella cartella data
-            if (System.IO.File.Exists(VTConfig.Img_Path + AImage + IMG_EXT))
+            if (!System.IO.File.Exists(VTConfig.Img_Path + AImage + IMG_EXT)) return;
+            //MainForm.Background = new ImageBrush(new BitmapImage(new Uri(VTConfig.Img_Path + AImage + IMG_EXT)));
+
+            var animation = new DoubleAnimation
             {
-                MainForm.Background = new ImageBrush(new BitmapImage(new Uri(VTConfig.Img_Path + AImage + IMG_EXT)));
-                //mainForm.BackgroundImage = Image.FromFile(VTConfig.Img_Path + AImage + IMG_EXT);
-                return;
-            }
+                From = 1, 
+                To = 0.3,
+                Duration = TimeSpan.FromMilliseconds(700),
+                FillBehavior = FillBehavior.HoldEnd
+            };
+            //animation.Completed += (s, a) => MainImage.Opacity = 0;
+            MainGrid.BeginAnimation(UIElement.OpacityProperty, animation);
+
+            MainImage.Source = new BitmapImage(new Uri(VTConfig.Img_Path + AImage + IMG_EXT));
+            var animation2 = new DoubleAnimation
+            {
+                From = 0.3, 
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(700),
+                FillBehavior = FillBehavior.HoldEnd
+            };
+            MainGrid.BeginAnimation(UIElement.OpacityProperty, animation2);
+
+            return;
         }
 
         // Check delle immagini nella finestra -----------------------------------------------------------------

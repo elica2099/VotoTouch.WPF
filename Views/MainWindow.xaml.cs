@@ -183,7 +183,7 @@ namespace VotoTouch.WPF
             SettaComponenti(false);
 
             // gestione immagini
-            oVotoImg = new CVotoImages {MainForm = this};
+            oVotoImg = new CVotoImages(this, ImageBk, mainGrid);
             CtrlPrimoAvvio = oVotoImg.CheckImageFolder();
 
             // identificazione della versione demo, nella cartella data o nella sua cartella

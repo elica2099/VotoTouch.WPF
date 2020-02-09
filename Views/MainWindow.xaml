@@ -28,6 +28,7 @@
     </Window.Resources>
 
     <Grid x:Name="mainGrid" >
+        <Image VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="ImageBk" Stretch="Fill" />
         <!-- semaforo e com -->
         <TextBlock Margin="8,8,0,0" Text="&#xf488;" FontSize="20" Style="{StaticResource FontAwesome}" Foreground="White" 
                    Background="Red" Visibility="{Binding Path=ShowNoBarcode, Converter={StaticResource boolToVis}}"
