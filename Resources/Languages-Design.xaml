@@ -79,10 +79,10 @@
 	<sys:String x:Key="SAPP_START_INITTOUCH">Inizializzo Touch...</sys:String>
 	<sys:String x:Key="SAPP_START_INITVAR">Inizializzo variabili...</sys:String>
 	<sys:String x:Key="SAPP_START_INITVOT">	Carico liste e votazioni...</sys:String>
-	<sys:String x:Key="SAPP_VOTE_1DIRITTOPER">1 diritto di voto per</sys:String>
+	<sys:String x:Key="SAPP_VOTE_1DIRITTOPER">1 diritto di voto</sys:String>
 	<sys:String x:Key="SAPP_VOTE_D_DIRITTI"> Diritti di voto</sys:String>
 	<sys:String x:Key="SAPP_VOTE_D_RASO">In voto:</sys:String>
-	<sys:String x:Key="SAPP_VOTE_DIRITTIPER"> diritti di voto per</sys:String>
+	<sys:String x:Key="SAPP_VOTE_DIRITTIPER"> diritti di voto</sys:String>
 
 
 </ResourceDictionary>

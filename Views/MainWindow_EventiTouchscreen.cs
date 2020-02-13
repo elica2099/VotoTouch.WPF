@@ -140,6 +140,7 @@ namespace VotoTouch.WPF
             // devo prendere i voti dall'usercontrol
             List<CVotoEspresso> votiE = Votazioni.VotoCorrente.UserControlVoto.GetVotes();
             // li copio
+            VotoEspresso = VSDecl.VOTO_GRUPPOAVANTI;
             VotoEspressoStr = "";
             VotoEspressoStrUp = "";     
             foreach (CVotoEspresso espresso in votiE)

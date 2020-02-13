@@ -197,7 +197,6 @@ namespace VotoTouch.WPF
                                 TxtCandidati_PresCDAVis = true;
                             }
                         }
-
                     }
                     else
                     {
@@ -262,7 +261,6 @@ namespace VotoTouch.WPF
                             timAutoRitorno.Start();
                         }
                     }
-
                     break;
 
                 case TAppStato.ssvSalvaVoto:

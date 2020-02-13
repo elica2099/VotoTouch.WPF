@@ -18,12 +18,13 @@ using System.Windows.Shapes;
 
 namespace VotoTouch.WPF.Models
 {
-
     public partial class UCWVotazione_GruppoVoto : CBaseVoto_UserControl
     {
 
         #region Model
+
         private ICollectionView cvListSubVoto;
+
         public ICollectionView CVListSubVoto
         {
             get => cvListSubVoto;
@@ -33,15 +34,17 @@ namespace VotoTouch.WPF.Models
                 OnPropertyChanged("CVListSubVoto");
             }
         }
+
         private ObservableCollection<CGroupSubVoto> ListSubVoto;
         private CGroupSubVoto Selected;
+
         #endregion
 
         public UCWVotazione_GruppoVoto() : base()
         {
             InitializeComponent();
-            ListSubVoto =  new ObservableCollection<CGroupSubVoto>();
-            CVListSubVoto = new CollectionViewSource { Source = ListSubVoto }.View;
+            ListSubVoto = new ObservableCollection<CGroupSubVoto>();
+            CVListSubVoto = new CollectionViewSource {Source = ListSubVoto}.View;
             CVListSubVoto.CurrentChanged += new EventHandler(CVListSubVotoCurrentChanged);
 
             DataContext = this;
@@ -57,7 +60,7 @@ namespace VotoTouch.WPF.Models
                 NumVotaz = UNumVotaz, NumSubVotaz = subVoto.NumSubVotaz, VotoExp_IDScheda = subVoto.VotoExpr
             }).ToList();
         }
-        
+
         public override List<string> GetVotesDescr()
         {
             // ritorna come ha votato
@@ -72,14 +75,13 @@ namespace VotoTouch.WPF.Models
             {
                 subVoto.VotoExprEnum = TSubVotoExpr.nessuno;
             }
+            PleaseContinue(false);
             TxtHaiVotato = false;
         }
 
         public override void EndVote()
         {
-            string Storyboard = "PleaseContinue";
-            Storyboard sb = Resources[Storyboard] as Storyboard;
-            sb?.Stop();
+            PleaseContinue(false);
         }
 
         public override void SetVoteParameters(int ANumVotaz, List<CSubVotazione> ASubVoti)
@@ -90,27 +92,42 @@ namespace VotoTouch.WPF.Models
             {
                 ListSubVoto.Add(new CGroupSubVoto(subVotazione));
             }
+
             ShowNoVote = ListSubVoto.Count > 0 && ListSubVoto[0].SkNonVoto;
+        }
+
+        private void PleaseContinue(bool iswork)
+        {
+            string Storyboard = "PleaseContinue";
+            Storyboard sb = Resources[Storyboard] as Storyboard;
+            if (iswork)
+            {
+                sb?.Begin(btnContinua, true);
+                sb?.Begin(txtHaiVotato, true);
+            }
+            else
+            {
+                sb?.Stop(btnContinua);
+                sb?.Stop(txtHaiVotato);
+               
+            }
         }
 
         // selezione ---------------------------------------------------------------------------------
 
         private void CVListSubVotoCurrentChanged(object sender, EventArgs e)
         {
-            CGroupSubVoto currentItem = (CGroupSubVoto)(CVListSubVoto.CurrentItem);
+            CGroupSubVoto currentItem = (CGroupSubVoto) (CVListSubVoto.CurrentItem);
             Selected = currentItem ?? null;
         }
 
         private void CheckAndAnimatePleaseContinue()
         {
-            string Storyboard = "PleaseContinue";
-            Storyboard sb = Resources[Storyboard] as Storyboard;
             int tot = ListSubVoto.Count(x => x.VotoExprEnum != TSubVotoExpr.nessuno);
             if (tot == ListSubVoto.Count)
             {
                 TxtHaiVotato = true;
-                sb?.Begin(btnContinua);
-                sb?.Begin(txtHaiVotato);
+                PleaseContinue(true);
             }
         }
 
@@ -118,7 +135,8 @@ namespace VotoTouch.WPF.Models
 
         #region property ui
 
-        private bool _ShowNoVote;  
+        private bool _ShowNoVote;
+
         public bool ShowNoVote
         {
             get => _ShowNoVote;
@@ -129,7 +147,8 @@ namespace VotoTouch.WPF.Models
             }
         }
 
-        private bool _TxtHaiVotato;  
+        private bool _TxtHaiVotato;
+
         public bool TxtHaiVotato
         {
             get => _TxtHaiVotato;
@@ -145,11 +164,13 @@ namespace VotoTouch.WPF.Models
         // COMMANDS OF UI -------------------------------------------------------------------------
 
         #region Commands
+
         private ICommand _cmdVotatutto;
         private ICommand _cmdVotaSingolo;
         private ICommand _cmdGruppoContinua;
-        
+
         #region _cmdVotatutto
+
         // _cmdCambiaVisualizzazione
         public ICommand Votatutto =>
             _cmdVotatutto ??
@@ -162,13 +183,16 @@ namespace VotoTouch.WPF.Models
             int Tipovoto = Convert.ToInt32(param);
             foreach (CGroupSubVoto subVoto in ListSubVoto)
             {
-                subVoto.VotoExprEnum = (TSubVotoExpr)Tipovoto;
+                subVoto.VotoExprEnum = (TSubVotoExpr) Tipovoto;
             }
+
             CheckAndAnimatePleaseContinue();
         }
-        #endregion  
+
+        #endregion
 
         #region _cmdVotaSingolo
+
         // _cmdCambiaVisualizzazione
         public ICommand VotaSingolo =>
             _cmdVotaSingolo ??
@@ -181,9 +205,11 @@ namespace VotoTouch.WPF.Models
             int Tipovoto = Convert.ToInt32(param);
             CheckAndAnimatePleaseContinue();
         }
-        #endregion  
+
+        #endregion
 
         #region _cmdGruppoContinua
+
         // _cmdCambiaVisualizzazione
         public ICommand GruppoContinua =>
             _cmdGruppoContinua ??
@@ -195,10 +221,9 @@ namespace VotoTouch.WPF.Models
         {
             App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_TOUCH_GROUPCONTINUE, null);
         }
-        #endregion
 
         #endregion
 
-
+        #endregion
     }
 }
