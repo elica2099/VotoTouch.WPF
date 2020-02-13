@@ -542,7 +542,7 @@ namespace VotoTouch.WPF
 
             if (!VTConfig.AbilitaDirittiNonVoglioVotare)
             {
-                TVotoEspresso vz = new TVotoEspresso
+                CVotoEspresso vz = new CVotoEspresso
                     {
                         NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                         VotoExp_IDScheda = VTConfig.IDSchedaUscitaForzata,

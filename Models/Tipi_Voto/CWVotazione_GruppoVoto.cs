@@ -72,7 +72,7 @@ namespace VotoTouch.WPF.Models
                 // resize dell'area (forse non serve)
 
                 // carico le subvotazioni e gli eventuali paramtri
-                UserControlVoto.SetVoteParameters(SubVotazioni);
+                UserControlVoto.SetVoteParameters(NumVotaz, SubVotazioni);
 
 
 

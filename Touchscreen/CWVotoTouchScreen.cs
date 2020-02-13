@@ -70,7 +70,7 @@ namespace VotoTouch.WPF
 
     public delegate void ehTouchWatchDog(object source, int VParam);
 
- 	public class CVotoTouchScreen
+ 	public class CVotoTouchScreen : IInterClassMessenger
 	{
         public const int TIMER_TOUCH_INTERVAL = 250;
         public const int TIMER_TOUCHWATCH_INTERVAL = 1000;
@@ -143,6 +143,10 @@ namespace VotoTouch.WPF
             //TotCfg = ATotCfg;
 
             PaintTouchOnScreen = false;
+            // registrazione dei metodi interclasse (IInterClassMessenger)
+            #region InterClassMessages
+            App.ICMsn.RegisterMessage(this, VSDecl.ICM_TOUCH_GROUPCONTINUE);
+            #endregion
 
             /*
             // ora mi creo il bottone in bmp
@@ -193,7 +197,35 @@ namespace VotoTouch.WPF
             timTouchWatchDog.Tick += timTouchWatchDog_Tick;
 		}
 
+        // IInterClassMessenger ---------------------------------------------------------------------------------
+
+        public void InterClassCommand(string ACommand, object AParam, object WParam, object YParam, object ZParam)
+        {
+            //here it comes the commands from IInterClassMessenger interface and from other classes
+            switch (ACommand)
+            {
+                case VSDecl.ICM_TOUCH_GROUPCONTINUE:
+                    timTouchWatchDog.Stop();
+                    timTouchWatchDog.Start();
+                    if (!TouchEnabled)
+                    {
+                        // lancia evento watchdog
+                        TouchWatchDog?.Invoke(this, 0);
+                    }
+                    else
+                    {
+                        PremutoGruppoAvanti?.Invoke(this, 0);
+                        // qua parte il ritardo del timer
+                        TouchEnabled = false;
+                        timTouch.Start();
+                    }
+                    break;
+            }
+        }
+
         //  CALCOLO DELLE ZONE DI TOCCO --------------------------------------------------------------
+
+        #region CALCOLO DELLE ZONE DI TOCCO
 
         public void CalcolaTouchSpecial(TTipoTouchSpecial ATipoTouch)
         {
@@ -251,17 +283,15 @@ namespace VotoTouch.WPF
             ClasseTipoVotoConferma.GetTouchSpecialZone(TAppStato.ssvVotoConferma, false, VTConfig.AbilitaBottoneUscita);
         }
 
-        // --------------------------------------------------------------
-        //  Touch
-        // --------------------------------------------------------------
+        #endregion
+
+        //  Touch   --------------------------------------------------------------
 
         #region Touch Eventi
 
         // metodo chiamato al tocco dello schermo
-        //public int TastoPremuto(object sender, MouseEventArgs e, TAppStato Stato)
         public int TastoPremuto(Point point)
         {
-            // DR12 OK
             // prima di tutto testo se TouchEnabled è false, se lo è, vuol dire che non è ancora
             // passato l'intervallo di sicurezza per evitare doppi click
             timTouchWatchDog.Stop();
@@ -416,7 +446,7 @@ namespace VotoTouch.WPF
 
                     case TTEvento.steGruppoAvanti:
                         // qua il gruppo
-
+                        if (PremutoGruppoAvanti != null) { PremutoGruppoAvanti(this, a.expr); }
                         break;
 
                     case TTEvento.steUserControl:
@@ -537,9 +567,11 @@ namespace VotoTouch.WPF
             }
         }
 
-        // --------------------------------------------------------------
-        //  timer del touch
-        // --------------------------------------------------------------
+        #endregion
+
+        //  timer del touch --------------------------------------------------------------
+
+        #region  timer del touch
 
         private void timTouch_Tick(object sender, EventArgs e)
         {

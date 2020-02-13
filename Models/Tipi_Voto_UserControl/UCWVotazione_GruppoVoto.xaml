@@ -156,7 +156,7 @@
                    x:Name="txtHaiVotato"/>
         <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,18,8" Width="360" Height="94"
                 Grid.Row="2" Content="Continua >" Style="{StaticResource btn-primary}" FontWeight="DemiBold"
-                FontSize="26" x:Name="btnContinua"/>
+                FontSize="26" x:Name="btnContinua" Command="{Binding GruppoContinua}"  />
     </Grid>
 
 </local:CBaseVoto_UserControl>

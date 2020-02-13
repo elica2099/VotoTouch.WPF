@@ -19,6 +19,7 @@ namespace VotoTouch.WPF
 	
 	public enum TTipoVoto:  int  {Normale, Lista, Candidato, MultiCandidato};
     public enum TTipoSubVoto:  int  {Normale, Nuovo, Manutencoop};
+    public enum TSubVotoExpr {nessuno, favorevole, contrario, astenuto, non_votante}
 
     public enum TTipoTouchSpecial:  int  {ttsNone, ttsVotoStartNorm, ttsVotoStartDiff, ttsVotoConferma};
 
@@ -78,11 +79,17 @@ namespace VotoTouch.WPF
         public int idx_end;
     }
 
-    public struct TVotoEspresso
+    public class CVotoEspresso
     {
         public int NumVotaz;
+        public int NumSubVotaz;
         public int TipoCarica;
         public int VotoExp_IDScheda;
+
+        public CVotoEspresso()
+        {
+            NumSubVotaz = 0;
+        }
     }
 
     public class VSDecl
@@ -94,6 +101,8 @@ namespace VotoTouch.WPF
         internal const string ICM_MAIN_BADGEREAD = "ICM_MainBadgeRead";
         internal const string ICM_MAIN_CLOSESTATUSPANEL = "ICM_MainCloseStatusPanel";
         internal const string ICM_MAIN_SHOWCONFIG = "ICM_MainShowConfig";
+        
+        internal const string ICM_TOUCH_GROUPCONTINUE = "ICM_TouchGroupContinue";
         #endregion
 
         // Mode of the database
@@ -192,6 +201,11 @@ namespace VotoTouch.WPF
         public const int VOTO_ASTENUTO_TUTTI = 226;
         public const int VOTO_CONTRARIO_TUTTI = 227;
         public const int VOTO_BTN_USCITA = -3;
+
+        public const int GEAS_VOTO_NV = 0;
+        public const int GEAS_VOTO_FAV = 1;
+        public const int GEAS_VOTO_CON = 2;
+        public const int GEAS_VOTO_ABS = 3;
 
         // n. di selezioni per pagina in caso di VOTO_CANDIDATO / alfabeto
         public const int CANDIDATI_PER_PAGINA = 10;

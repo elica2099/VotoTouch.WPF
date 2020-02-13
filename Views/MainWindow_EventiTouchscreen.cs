@@ -89,7 +89,7 @@ namespace VotoTouch.WPF
             // ok, questo evento arriva quando, nella selezione del voto, è stata
             // premuta una zona valida devo veder in funzione della lista selezionata
             TLista a;
-            TVotoEspresso VExp;
+            CVotoEspresso VExp;
             // verifico se è null
             if (Votazioni.VotoCorrente.Liste == null) return;
 
@@ -104,7 +104,7 @@ namespace VotoTouch.WPF
                 VotoEspressoStrUp = a.DescrLista;
                 VotoEspressoStrNote = a.Presentatore;
                 // da aggiungere successivamente:
-                VExp = new TVotoEspresso
+                VExp = new CVotoEspresso
                     {
                         NumVotaz = a.NumVotaz,
                         VotoExp_IDScheda = a.IDScheda,
@@ -120,13 +120,37 @@ namespace VotoTouch.WPF
                 VotoEspressoStr = "";
                 VotoEspressoStrUp = App.Instance.getLang("SAPP_SKBIANCA");      // "Scheda Bianca";
                 VotoEspressoStrNote = "";
-                VExp = new TVotoEspresso
+                VExp = new CVotoEspresso
                 {
                     NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                     VotoExp_IDScheda = VSDecl.VOTO_SCHEDABIANCA,
                     TipoCarica = 0,
                 };
                 FVotiExpr.Add(VExp);
+            }
+            // a questo punto vado in conferma con la stessa CurrVote
+            Stato = TAppStato.ssvVotoConferma;
+            CambiaStato();
+        }
+
+        public void onPremutoGruppoAvanti(object source, int VParam)
+        {
+            // prende il voto gruppo
+            if (!Votazioni.VotoCorrente.HaUserControl) return;
+            // devo prendere i voti dall'usercontrol
+            List<CVotoEspresso> votiE = Votazioni.VotoCorrente.UserControlVoto.GetVotes();
+            // li copio
+            VotoEspressoStr = "";
+            VotoEspressoStrUp = "";     
+            foreach (CVotoEspresso espresso in votiE)
+            {
+                FVotiExpr.Add(espresso);
+            }
+            // la descrizione
+            List<string> votiS = Votazioni.VotoCorrente.UserControlVoto.GetVotesDescr();
+            foreach (string s in votiS)
+            {
+                VotoEspressoStr += s + ";";
             }
             // a questo punto vado in conferma con la stessa CurrVote
             Stato = TAppStato.ssvVotoConferma;
@@ -147,7 +171,7 @@ namespace VotoTouch.WPF
                 if (voti[i] >= 0 && voti[i] < ct)
                 {
                     TLista a = Votazioni.VotoCorrente.Liste[voti[i]];
-                    TVotoEspresso vt = new TVotoEspresso
+                    CVotoEspresso vt = new CVotoEspresso
                     {
                         NumVotaz = a.NumVotaz,
                         TipoCarica = a.TipoCarica,
@@ -179,7 +203,7 @@ namespace VotoTouch.WPF
             VotoEspressoStrUp = App.Instance.getLang("SAPP_SKBIANCA");      // "Scheda Bianca";
             VotoEspressoStrNote = "";
             // nuova versione array
-            TVotoEspresso VExp = new TVotoEspresso
+            CVotoEspresso VExp = new CVotoEspresso
                 {
                     NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                     VotoExp_IDScheda = VSDecl.VOTO_SCHEDABIANCA,
@@ -199,7 +223,7 @@ namespace VotoTouch.WPF
             VotoEspressoStrUp = VTConfig.ContrarioATutti; // rm.GetString("SAPP_SKCONTRARIOTUTTI");
             VotoEspressoStrNote = "";
             // nuova versione array
-            TVotoEspresso VExp = new TVotoEspresso
+            CVotoEspresso VExp = new CVotoEspresso
             {
                 NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                 VotoExp_IDScheda = VSDecl.VOTO_CONTRARIO_TUTTI,
@@ -219,7 +243,7 @@ namespace VotoTouch.WPF
             VotoEspressoStrUp = VTConfig.AstenutoATutti; // rm.GetString("SAPP_SKASTENUTOTUTTI");
             VotoEspressoStrNote = "";
             // nuova versione array
-            TVotoEspresso VExp = new TVotoEspresso
+            CVotoEspresso VExp = new CVotoEspresso
             {
                 NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                 VotoExp_IDScheda = VSDecl.VOTO_ASTENUTO_TUTTI,
@@ -239,7 +263,7 @@ namespace VotoTouch.WPF
             VotoEspressoStrUp = App.Instance.getLang("SAPP_NOVOTO");      // "Non Voglio Votare";
             VotoEspressoStrNote = "";
             // nuova versione array
-            TVotoEspresso VExp = new TVotoEspresso
+            CVotoEspresso VExp = new CVotoEspresso
                 {
                     NumVotaz = Votazioni.VotoCorrente.NumVotaz,
                     VotoExp_IDScheda = VSDecl.VOTO_NONVOTO,
@@ -292,11 +316,6 @@ namespace VotoTouch.WPF
             // Annulla del voto (torno dove ero prima)
             Stato = TAppStato.ssvVoto;
             CambiaStato();
-        }
-
-        public void onPremutoGruppoAvanti(object source, int VParam)
-        {
-            // prende il voto gruppo
         }
 
         public void CancellaTempVotiCorrenti()

@@ -40,7 +40,7 @@ namespace VotoTouch.WPF
             if (!System.IO.File.Exists(VTConfig.Img_Path + AImage + IMG_EXT)) return;
             //MainForm.Background = new ImageBrush(new BitmapImage(new Uri(VTConfig.Img_Path + AImage + IMG_EXT)));
 
-            var animation = new DoubleAnimation
+            DoubleAnimation animation = new DoubleAnimation
             {
                 From = 1, 
                 To = 0.3,
@@ -51,7 +51,7 @@ namespace VotoTouch.WPF
             MainGrid.BeginAnimation(UIElement.OpacityProperty, animation);
 
             MainImage.Source = new BitmapImage(new Uri(VTConfig.Img_Path + AImage + IMG_EXT));
-            var animation2 = new DoubleAnimation
+            DoubleAnimation animation2 = new DoubleAnimation
             {
                 From = 0.3, 
                 To = 1,

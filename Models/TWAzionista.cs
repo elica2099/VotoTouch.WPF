@@ -22,7 +22,7 @@ namespace VotoTouch.WPF.Models
         // dati del voto 
         public int IDVotaz;
         // voti
-        public List<TVotoEspresso> VotiEspressi;
+        public List<CVotoEspresso> VotiEspressi;
 
         // test se sk nonvoto
         public bool HaNonVotato => VTConfig.AbilitaDirittiNonVoglioVotare && 
@@ -32,7 +32,7 @@ namespace VotoTouch.WPF.Models
         public TAzionista()
         {
             HaVotato = TListaAzionisti.VOTATO_NO;
-            VotiEspressi = new List<TVotoEspresso>();
+            VotiEspressi = new List<CVotoEspresso>();
         }
 
         public void CopyFrom(ref TAzionista cp)

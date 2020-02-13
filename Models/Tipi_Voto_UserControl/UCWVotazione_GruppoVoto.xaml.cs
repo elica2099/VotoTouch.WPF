@@ -18,67 +18,6 @@ using System.Windows.Shapes;
 
 namespace VotoTouch.WPF.Models
 {
-    public enum TGroupSubVotoExpr {nessuno, favorevole, contrario, astenuto, non_votante}
-
-    public class CGroupSubVoto: INotifyPropertyChanged
-    {
-        public int NumSubVotaz { get; set; }
-        public int TipoSubVoto { get; set; }
-        private string _Argomento;
-        public string Argomento
-        {
-            get => _Argomento;
-            set
-            {
-                _Argomento = value;
-                OnPropertyChanged("Argomento");
-            }
-        }
-        private string _Descrizione_aggiuntiva;
-        public string Descrizione_aggiuntiva
-        {
-            get => _Descrizione_aggiuntiva;
-            set
-            {
-                _Descrizione_aggiuntiva = value;
-                OnPropertyChanged("Descrizione_aggiuntiva");
-            }
-        }
-        public int VotoExpr { get; set; }
-        private TGroupSubVotoExpr _VotoExprEnum;
-        public TGroupSubVotoExpr VotoExprEnum
-        {
-            get => _VotoExprEnum;
-            set
-            {
-                _VotoExprEnum = value;
-                OnPropertyChanged("VotoExprEnum");
-            }
-        }
-
-        public bool SkNonVoto { get; set; }
-
-        public CGroupSubVoto(CSubVotazione s)
-        {
-            NumSubVotaz = s.NumSubVotaz;
-            TipoSubVoto = s.TipoSubVoto;
-            Argomento = s.Argomento;
-            Descrizione_aggiuntiva = s.Descrizione_aggiuntiva;
-            VotoExpr = -1;
-            VotoExprEnum = TGroupSubVotoExpr.nessuno;
-            SkNonVoto = s.SKNonVoto;
-        }
-
-        #region INotifyPropertyChanged
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string strPropertyName)
-        {
-            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(strPropertyName));
-        }
-        #endregion
-
-    }
 
     public partial class UCWVotazione_GruppoVoto : CBaseVoto_UserControl
     {
@@ -108,13 +47,30 @@ namespace VotoTouch.WPF.Models
             DataContext = this;
         }
 
+        // get dei voti
+
+        public override List<CVotoEspresso> GetVotes()
+        {
+            // ritorna i voti espressi
+            return ListSubVoto.Select(subVoto => new CVotoEspresso()
+            {
+                NumVotaz = UNumVotaz, NumSubVotaz = subVoto.NumSubVotaz, VotoExp_IDScheda = subVoto.VotoExpr
+            }).ToList();
+        }
+        
+        public override List<string> GetVotesDescr()
+        {
+            // ritorna come ha votato
+            return ListSubVoto.Select(subVoto => subVoto.Argomento + ": " + subVoto.VotoExprDescr).ToList();
+        }
+
         // selezione ---------------------------------------------------------------------------------
 
         public override void StartVote()
         {
             foreach (CGroupSubVoto subVoto in ListSubVoto)
             {
-                subVoto.VotoExprEnum = TGroupSubVotoExpr.nessuno;
+                subVoto.VotoExprEnum = TSubVotoExpr.nessuno;
             }
             TxtHaiVotato = false;
         }
@@ -126,8 +82,9 @@ namespace VotoTouch.WPF.Models
             sb?.Stop();
         }
 
-        public override void SetVoteParameters(List<CSubVotazione> ASubVoti)
+        public override void SetVoteParameters(int ANumVotaz, List<CSubVotazione> ASubVoti)
         {
+            UNumVotaz = ANumVotaz;
             ListSubVoto.Clear();
             foreach (CSubVotazione subVotazione in ASubVoti)
             {
@@ -148,7 +105,7 @@ namespace VotoTouch.WPF.Models
         {
             string Storyboard = "PleaseContinue";
             Storyboard sb = Resources[Storyboard] as Storyboard;
-            int tot = ListSubVoto.Count(x => x.VotoExprEnum != TGroupSubVotoExpr.nessuno);
+            int tot = ListSubVoto.Count(x => x.VotoExprEnum != TSubVotoExpr.nessuno);
             if (tot == ListSubVoto.Count)
             {
                 TxtHaiVotato = true;
@@ -190,6 +147,7 @@ namespace VotoTouch.WPF.Models
         #region Commands
         private ICommand _cmdVotatutto;
         private ICommand _cmdVotaSingolo;
+        private ICommand _cmdGruppoContinua;
         
         #region _cmdVotatutto
         // _cmdCambiaVisualizzazione
@@ -204,7 +162,7 @@ namespace VotoTouch.WPF.Models
             int Tipovoto = Convert.ToInt32(param);
             foreach (CGroupSubVoto subVoto in ListSubVoto)
             {
-                subVoto.VotoExprEnum = (TGroupSubVotoExpr)Tipovoto;
+                subVoto.VotoExprEnum = (TSubVotoExpr)Tipovoto;
             }
             CheckAndAnimatePleaseContinue();
         }
@@ -225,7 +183,20 @@ namespace VotoTouch.WPF.Models
         }
         #endregion  
 
-        
+        #region _cmdGruppoContinua
+        // _cmdCambiaVisualizzazione
+        public ICommand GruppoContinua =>
+            _cmdGruppoContinua ??
+            (_cmdGruppoContinua = new RelayCommand(this.GruppoContinua_Execute, this.GruppoContinua_CanExecute));
+
+        private bool GruppoContinua_CanExecute(object param) => true;
+
+        private void GruppoContinua_Execute(object param)
+        {
+            App.ICMsn.NotifyColleaguesAsync(VSDecl.ICM_TOUCH_GROUPCONTINUE, null);
+        }
+        #endregion
+
         #endregion
 
 

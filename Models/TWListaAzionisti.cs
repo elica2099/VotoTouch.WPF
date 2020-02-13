@@ -357,7 +357,7 @@ namespace VotoTouch.WPF.Models
                 // resetto i voti, non si sa mai che possano essere doppi
                 a.VotiEspressi.Clear();
                 // carico i voti sull'array
-                foreach (TVotoEspresso v in AVotiDaSalvare)
+                foreach (CVotoEspresso v in AVotiDaSalvare)
                 {
                     a.VotiEspressi.Add(v);
                 }
@@ -367,7 +367,7 @@ namespace VotoTouch.WPF.Models
             return true;
         }
 
-        public bool ConfermaVotiDaInterruzione(TVotoEspresso vz)
+        public bool ConfermaVotiDaInterruzione(CVotoEspresso vz)
         {
             foreach (TAzionista a in _Azionisti)
             {

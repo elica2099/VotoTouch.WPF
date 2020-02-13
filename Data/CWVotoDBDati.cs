@@ -1248,7 +1248,6 @@ namespace VotoTouch.WPF
             //  2. tanti record quanti sono gli azionisti con azioni > 0 in VS_ConSchede
             //  3. l'arraylist FVotiDaSalvare in VS_Intonse_Totem, i voti veri e propri
 
-            SqlCommand qryStd = null, qryVoti = null;
             SqlTransaction traStd = null;
             int result = 0; const int TopRand = VSDecl.MAX_ID_RANDOM;
             //double PNAzioni1 = 0, PNAzioni2 = 0;
@@ -1256,8 +1255,8 @@ namespace VotoTouch.WPF
             // testo la connessione
             if (!OpenConnection("SalvaTutto")) return 0;
 
-            qryStd = new SqlCommand {Connection = STDBConn};
-            qryVoti = new SqlCommand { Connection = STDBConn };
+            SqlCommand qryStd = new SqlCommand {Connection = STDBConn};
+            SqlCommand qryVoti = new SqlCommand { Connection = STDBConn };
             try
             {
                 // abilito la transazione
@@ -1303,7 +1302,7 @@ namespace VotoTouch.WPF
                         qryStd.Parameters.Add("@voti2", System.Data.SqlDbType.Int).Value = az.Voti2;
                         qryStd.ExecuteNonQuery();
                         // 
-                        foreach (TVotoEspresso vt in az.VotiEspressi)
+                        foreach (CVotoEspresso vt in az.VotiEspressi)
                         {
                             // intonse_totem, salvo il voto, ma prima devo fare qualche elaborazione
                             // 1. testo se devo togliere il link voto-azionista
@@ -1314,10 +1313,11 @@ namespace VotoTouch.WPF
                             // salvo nel db
                             qryVoti.Parameters.Clear();
                             qryVoti.CommandText = @"insert into VS_Intonse_Totem  with (rowlock) 
-                                                   (NumVotaz, idTipoScheda, idSeggio, voti, voti2, Badge, ProgDeleg, IdCarica) 
+                                                   (NumVotaz, NumSubVotaz, idTipoScheda, idSeggio, voti, voti2, Badge, ProgDeleg, IdCarica) 
                                                    VALUES 
-                                                   (@NumVotaz, @idTipoScheda, @idSeggio, @voti, @voti2, @Badge, @ProgDeleg, @IdCarica) ";
+                                                   (@NumVotaz, @NumSubVotaz, @idTipoScheda, @idSeggio, @voti, @voti2, @Badge, @ProgDeleg, @IdCarica) ";
                             qryVoti.Parameters.Add("@NumVotaz", System.Data.SqlDbType.Int).Value = az.IDVotaz;
+                            qryVoti.Parameters.Add("@NumSubVotaz", System.Data.SqlDbType.Int).Value = vt.NumSubVotaz;
                             qryVoti.Parameters.Add("@idTipoScheda", System.Data.SqlDbType.Int).Value = vt.VotoExp_IDScheda;
                             qryVoti.Parameters.Add("@idSeggio", System.Data.SqlDbType.Int).Value = FIDSeggio;
                             qryVoti.Parameters.Add("@voti", System.Data.SqlDbType.Float).Value = az.Voti1;
@@ -1352,6 +1352,7 @@ namespace VotoTouch.WPF
 
         public override int SalvaTuttoInGeas(int AIDBadge, ref TListaAzionisti AAzionisti)
         {
+            return 1;
             SqlCommand qryStd = null, qryVoti = null;
             SqlTransaction traStd = null;
             int result = 0;
@@ -1423,7 +1424,7 @@ namespace VotoTouch.WPF
                     foreach (TAzionista az in AAzionisti.Azionisti)
                     {
                                                
-                        foreach (TVotoEspresso vt in az.VotiEspressi)
+                        foreach (CVotoEspresso vt in az.VotiEspressi)
                         {
                             double ASi = 0, VSi = 0, PSi = 0, ANo = 0, VNo = 0, PNo = 0, AAst = 0, VAst = 0,
                                    PAst = 0, ANv = 0, VNv = 0, PNv = 0;
