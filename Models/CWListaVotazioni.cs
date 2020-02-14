@@ -128,7 +128,19 @@ namespace VotoTouch.WPF.Models
                             }
                             break;
                         case VSDecl.VOTO_GRUPPO_VOTO:
-                            votaz =  new CVotazione_GruppoVoto(AFormRect);
+                            switch (dbvotaz.DB_TipoSubVoto)
+                            {
+                                case VSDecl.SUBVOTO_GRUPPO_NORMAL:
+                                    votaz =  new CVotazione_GruppoVoto(AFormRect);
+                                    break;
+                                case VSDecl.SUBVOTO_GRUPPO_2PAGE:
+                                    votaz =  new CVotazione_GruppoVoto_2Pag(AFormRect);
+                                    break;
+
+                                default:
+                                    votaz =  new CVotazione_GruppoVoto(AFormRect);
+                                    break;
+                            }
                             break;
                         default:
                             votaz = new CVotazione_Lista(AFormRect);

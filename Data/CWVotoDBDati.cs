@@ -344,13 +344,6 @@ namespace VotoTouch.WPF
                     qryStd.Parameters.Clear();
                     qryStd.Parameters.Add("@NomeTotem", System.Data.SqlDbType.VarChar).Value = VTConfig.NomeTotem;
                     qryStd.Parameters.Add("@NomeTotem2", System.Data.SqlDbType.VarChar).Value = "Desc_" + VTConfig.NomeTotem;
-
-                    //qryStd.CommandText = "INSERT into CONFIG_POSTAZIONI_TOTEM " +
-                    //    "(Postazione, Descrizione, IdSeggio, Attivo, VotoAperto, UsaSemaforo, "+
-                    //    " IPCOMSemaforo, TipoSemaforo, UsaLettore, PortaLettore, CodiceUscita, " +
-                    //    " UsaController, IPController, Sala) " +
-                    //    " VALUES ('" + VTConfig.NomeTotem + "', 'Desc_" + VTConfig.NomeTotem + "', 999, 1, 0, 0, " +
-                    //    "'127.0.0.1', 2, 0, 1, '999999', 0, '127.0.0.1', 1)";
                     // metto in quadro i valori
                     VTConfig.Postazione = VTConfig.NomeTotem;
                     VTConfig.Descrizione = VTConfig.NomeTotem;
@@ -452,7 +445,6 @@ namespace VotoTouch.WPF
                 qryStd.Dispose();
                 CloseConnection("");
             }
-
             return result;
         }
         
@@ -491,7 +483,6 @@ namespace VotoTouch.WPF
                 traStd.Dispose();
                 CloseConnection("");
             }
-
             return result;
         }
 
@@ -528,7 +519,6 @@ namespace VotoTouch.WPF
                 traStd.Dispose();
                 CloseConnection("");
             }
-
             return result;
         }
 
@@ -729,7 +719,6 @@ namespace VotoTouch.WPF
         }
         */
 
-
         public override bool CaricaListeDaDatabase(ref List<CVotazione> AVotazioni)
         {
             bool result = false; //, naz;
@@ -835,7 +824,6 @@ namespace VotoTouch.WPF
 
         #region Metodi sui Badge (Presenza, ha già votato...)
 
-        //override public bool ControllaBadge(int AIDBadge, TTotemConfig ATotCfg, ref int AReturnFlags)
         public override bool ControllaBadge(int AIDBadge, ref int AReturnFlags)
         {
             // questa procedura effettua in un colpo solo tutti i controlli relativi al badge
@@ -854,13 +842,11 @@ namespace VotoTouch.WPF
             bool result = true;
             SqlCommand qryStd = new SqlCommand {Connection = STDBConn};
             // apro una transazione atomica
-            // metto sotto try
             try
             {
                 traStd = STDBConn.BeginTransaction();
                 qryStd.Transaction = traStd;
                 
-                // -------------------------------------------------
                 // ok, ora testo se è annullato
                 BAnnull = false;
                 qryStd.Parameters.Clear();
@@ -887,7 +873,6 @@ namespace VotoTouch.WPF
                 if (!BAnnull)
                 {
 
-                    // -------------------------------------------------
                     // se sono in geas mode devo controllare se il badge è abilitato a inizio votazione corrente
                     // se non lo è devo mettere il movimento di ingresso uscita all'ora della votazione
                     if (VTConfig.ControllaPresenze == VSDecl.PRES_MODO_GEAS)
@@ -918,7 +903,6 @@ namespace VotoTouch.WPF
                     else
                         BAbilitato = true;
 
-                    // -------------------------------------------------
                     // ok ora testo se è presente a questo momento
                     Presente = false;
                     qryStd.CommandText = @"SELECT TipoMov FROM GEAS_TimbInOut with (NOLOCK) 
@@ -963,9 +947,7 @@ namespace VotoTouch.WPF
                 if (!Presente && VTConfig.ControllaPresenze == VSDecl.PRES_NON_CONTROLLARE)
                     Presente = true;
 
-                // -------------------------------------------------
                 // ok, ora testo se ha votato
-
                 // modifiche AbilitaDirittiNonVoglioVotare.
                 if (VTConfig.AbilitaDirittiNonVoglioVotare)
                 {
@@ -1031,58 +1013,6 @@ namespace VotoTouch.WPF
             return result;
         }
 
-        //override public string DammiNomeAzionista(int AIDBadge)
-        //{
-        //    // mi dice la lunghezza del badge e il codice impianto per il lettore
-        //    SqlDataReader a;
-        //    SqlCommand qryStd;
-        //    string NomeAz = "", Sesso = "";
-
-        //    // testo la connessione
-        //    if (!OpenConnection("DammiNomeAzionista")) return "";
-
-        //    qryStd = new SqlCommand();
-        //    try
-        //    {
-        //        qryStd.Connection = STDBConn;
-        //        // Leggo ora da GEAS_Titolari	
-        //        qryStd.CommandText = "select T.badge, T.idazion, A.Sesso, " + 
-        //                             " CASE WHEN A.FisGiu ='F' THEN A.Cognome+ ' ' + A.Nome ELSE A.Raso END as Raso1 " +
-        //                             " from geas_titolari T " + 
-        //                             " INNER JOIN GEAS_Anagrafe As A  with (NOLOCK) ON T.IdAzion = A.IdAzion " + 
-        //                             " WHERE T.Badge = @Badge AND T.Reale=1";
-        //        qryStd.Parameters.Add("@Badge", System.Data.SqlDbType.VarChar).Value = AIDBadge.ToString();
-        //        a = qryStd.ExecuteReader();
-        //        if (a.HasRows)
-        //        {
-        //            // devo verificare 
-        //            a.Read();
-        //            NomeAz = a.IsDBNull(a.GetOrdinal("Raso1")) ? "" : (a["Raso1"]).ToString();
-        //            Sesso = a.IsDBNull(a.GetOrdinal("Sesso")) ? "" : (a["Sesso"]).ToString();
-        //        }
-        //        a.Close();
-
-        //        if (Sesso == "M")
-        //            NomeAz = "Sig. " + NomeAz;
-        //        if (Sesso == "F")
-        //            NomeAz = "Sig.ra " + NomeAz;
-
-        //    }
-        //    catch (Exception objExc)
-        //    {
-        //        Logging.WriteToLog("<dberror> Errore nella funzione DammiNomeAzionista: " + objExc.Message);
-        //        MessageBox.Show("Errore nella funzione DammiNomeAzionista" + "\n" +
-        //            "Eccezione : \n" + objExc.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        //    }
-        //    finally
-        //    {
-        //        qryStd.Dispose();
-        //        CloseConnection("");
-        //    }
-
-        //    return NomeAz;
-        //}
-
         #endregion
 
 		//  LETTURA DATI AZIONISTA  --------------------------------------------------------------------------
@@ -1095,12 +1025,6 @@ namespace VotoTouch.WPF
             // ok, questa funziomne carica i diritti di voto in funzione
             // del idbadge, in pratica alla fine avrò una lista di diritti *per ogni votazione*
             // con l'indicazione se sono stati già espressi o no
-
-            // ok, questa procedura mi carica tutti i dati
-            //SqlConnection STDBConn = null;
-            SqlDataReader a = null;
-            SqlCommand qryStd = null;
-            TAzionista c;
             int IDVotazione = -1;
             bool result = false; //, naz;
 
@@ -1109,7 +1033,7 @@ namespace VotoTouch.WPF
 
             AAzionisti.Clear();
 
-            qryStd = new SqlCommand { Connection = STDBConn };
+            SqlCommand qryStd = new SqlCommand { Connection = STDBConn };
             try
             {
                 // ciclo sul voto per crearmi l'array dei diritti di voto per ogni singola votazione
@@ -1126,11 +1050,11 @@ namespace VotoTouch.WPF
                     qryStd.CommandText = qry_DammiDirittiDiVoto_Titolare;
                     qryStd.Parameters.Add("@IDVotaz", System.Data.SqlDbType.Int).Value = IDVotazione;
                     qryStd.Parameters.Add("@Badge", System.Data.SqlDbType.VarChar).Value = AIDBadge.ToString();
-                    a = qryStd.ExecuteReader();
+                    SqlDataReader a = qryStd.ExecuteReader();
                     // in teoria non può non avere righe, testa anche se ha azioni, se no è un rappr
                     if (a.HasRows && a.Read())
                     {
-                        c = new TAzionista();
+                        TAzionista c = new TAzionista();
                         c.CoAz = a.IsDBNull(a.GetOrdinal("CoAz")) ? "0000000" : a["CoAz"].ToString();
                         c.IDAzion = Convert.ToInt32(a["IdAzion"]);
                         c.IDBadge = AIDBadge;
@@ -1184,7 +1108,7 @@ namespace VotoTouch.WPF
                             if ((Convert.ToInt32(a["VtOrd1"]) + Convert.ToInt32(a["VtStr1"]) +
                                 Convert.ToInt32(a["VtOrd2"]) + Convert.ToInt32(a["VtStr2"])) > 0)
                             {
-                                c = new TAzionista();
+                                TAzionista c = new TAzionista();
                                 c.CoAz = a.IsDBNull(a.GetOrdinal("CoAz")) ? "0000000" : a["CoAz"].ToString();
                                 c.IDAzion = Convert.ToInt32(a["IdAzion"]);
                                 c.IDBadge = AIDBadge;
@@ -1250,7 +1174,6 @@ namespace VotoTouch.WPF
 
             SqlTransaction traStd = null;
             int result = 0; const int TopRand = VSDecl.MAX_ID_RANDOM;
-            //double PNAzioni1 = 0, PNAzioni2 = 0;
 
             // testo la connessione
             if (!OpenConnection("SalvaTutto")) return 0;
@@ -1329,7 +1252,6 @@ namespace VotoTouch.WPF
                         }
                     }
                 }
-
                 // chiudo la transazione
                 traStd.Commit();
                 result = 1;
@@ -1352,11 +1274,8 @@ namespace VotoTouch.WPF
 
         public override int SalvaTuttoInGeas(int AIDBadge, ref TListaAzionisti AAzionisti)
         {
-            return 1;
-            SqlCommand qryStd = null, qryVoti = null;
             SqlTransaction traStd = null;
             int result = 0;
-            //double PNAzioni = 0;
             string TipoAsse = "";
 
             // TODO: GEAS VERSIONE (Salvataggio voti Geas NOTA: FUNZIONA SOLO CON UN VOTO)
@@ -1364,8 +1283,8 @@ namespace VotoTouch.WPF
             // testo la connessione
             if (!OpenConnection("SalvaTuttoInGeas")) return 0;
 
-            qryStd = new SqlCommand {Connection = STDBConn};
-            qryVoti = new SqlCommand { Connection = STDBConn };
+            SqlCommand qryStd = new SqlCommand { Connection = STDBConn };
+            SqlCommand qryVoti = new SqlCommand { Connection = STDBConn };
             try
             {
                 //  1. Mi calcolo il progmozione

@@ -8,13 +8,13 @@ using System.Windows;
 
 namespace VotoTouch.WPF.Models
 {
-    public class CVotazione_GruppoVoto: CVotazione
+    public class CVotazione_GruppoVoto_2Pag: CVotazione
     {
-        // CLASSE DELLA votazione con usercontrol
+        // CLASSE DELLA votazione con usercontrol del gruppo voto ma con 2 pagine
 
         private bool OriginalSkNoVoto;
 
-        public CVotazione_GruppoVoto(Rect AFormRect) : base(AFormRect)
+        public CVotazione_GruppoVoto_2Pag(Rect AFormRect) : base(AFormRect)
         {
             // costruttore
         }
@@ -53,16 +53,16 @@ namespace VotoTouch.WPF.Models
 
             // mi costruisco l'usercontrol se è diverso da null
             if (UserControlVoto != null) return;
-            UserControlVoto = new UCWVotazione_GruppoVoto()
+            UserControlVoto = new UCWVotazione_GruppoVoto_2Pag()
             {
-                Name = "UVotazione_GruppoVoto" + "_" + NumVotaz.ToString(),
+                Name = "UVotazione_GruppoVoto_2Pag"+ "_" + NumVotaz.ToString(),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch,
                 Visibility = Visibility.Hidden,
                 Margin = new Thickness(10,100,10,20)
             };
 
-            // carico le subvotazioni e gli eventuali paramtri
+            // carico le subvotazioni e gli eventuali parametri
             UserControlVoto.SetVoteParameters(NumVotaz, SubVotazioni);
         }
 

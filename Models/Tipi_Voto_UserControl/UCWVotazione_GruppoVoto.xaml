@@ -111,13 +111,13 @@
 
     <Grid Background="Transparent" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="180" />
+            <RowDefinition Height="200" />
             <RowDefinition Height="0.90*" />
-            <RowDefinition Height="120" />
+            <RowDefinition Height="110" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0, -20,0,0" >
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Vota per tutti i punti:" 
-                       FontSize="26" FontWeight="DemiBold" Margin="0,0,0,6" Foreground="DimGray"   />
+        <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" >
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Vota per tutti gli articoli:" 
+                       FontSize="26" FontWeight="DemiBold" Margin="0,0,0,16" Foreground="DimGray"   />
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
                 <Button Content="Favorevole" Height="80" Margin="0,0,30,0" Width="200" 
                         Style="{StaticResource btn-success}" VerticalAlignment="Center" FontWeight="DemiBold" FontSize="24"
@@ -125,17 +125,17 @@
                 <Button Content="Contrario" Height="80" Margin="0,0,30,0" Width="200" 
                         Style="{StaticResource btn-danger}" VerticalAlignment="Center" FontWeight="DemiBold" FontSize="24"
                         Command="{Binding Votatutto}" CommandParameter="2" />
-                <Button Content="Astenuto" Height="80" Margin="0,0,30,0" Width="200" 
+                <Button Content="Astenuto" Height="80"  Width="200" 
                         Style="{StaticResource btn-warning}" VerticalAlignment="Center" FontWeight="DemiBold" FontSize="24"
                         Command="{Binding Votatutto}" CommandParameter="3" />
-                <Button Content="NonVotante" Height="80" Width="200" 
+                <Button Content="NonVotante" Height="80" Width="200" Margin="30,0,0,0"
                         Style="{StaticResource btn-primary}" VerticalAlignment="Center" FontWeight="DemiBold" FontSize="24"
                         Command="{Binding Votatutto}" CommandParameter="4" 
                         Visibility="{Binding Path=ShowNoVote, Converter={StaticResource boolToVis}}"/>
             </StackPanel>
+            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="in alternativa, vota per i singoli articoli:" 
+                       FontSize="24" FontWeight="DemiBold" Margin="0,16,0,0" Foreground="DimGray"  />
         </StackPanel>
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center" Text="in alternativa, vota per i singoli punti:" 
-                   FontSize="24" Grid.Row="1" FontWeight="DemiBold" Margin="10,-40,0,0" Foreground="DimGray"  />
         <ListBox x:Name="lbxRvts" Margin="0,0,0,0"
                      ItemsSource="{Binding CVListSubVoto}" 
                      IsSynchronizedWithCurrentItem="True"
@@ -149,12 +149,11 @@
                      AlternationCount="2" 
             >
         </ListBox>
-        <!--Template="{StaticResource ListBoxTemplate}"-->
         <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Right" Text="Hai votato tutti i punti, per continuare premi > " 
                    FontSize="24" Grid.Row="2" FontWeight="DemiBold" Margin="0,0,400,70" Foreground="#337AB7" 
                    Visibility="{Binding Path=TxtHaiVotato, Converter={StaticResource boolToVis}}"
                    x:Name="txtHaiVotato"/>
-        <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,18,8" Width="360" Height="94"
+        <Button VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,18,0" Width="360" Height="94"
                 Grid.Row="2" Content="Continua >" Style="{StaticResource btn-primary}" FontWeight="DemiBold"
                 FontSize="26" x:Name="btnContinua" Command="{Binding GruppoContinua}"  />
     </Grid>

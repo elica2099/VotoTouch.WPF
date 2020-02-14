@@ -136,6 +136,10 @@ namespace VotoTouch.WPF
         public const int SUBVOTO_NORMAL = 0;
         public const int SUBVOTO_NEW = 1;
         public const int SUBVOTO_CUSTOM_MANUTENCOOP = 40;
+        // tipi di subvoto gruppo
+        public const int SUBVOTO_GRUPPO_NORMAL = 0;
+        public const int SUBVOTO_GRUPPO_2PAGE = 1;
+
 
         // costanti del touchscreen
         //public const float Nqx = VSDecl.VOTESCREEN_DIVIDE_WIDTH;

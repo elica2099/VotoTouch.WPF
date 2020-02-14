@@ -276,7 +276,8 @@ namespace VotoTouch.WPF
 
                     // TODO: GEAS VERSIONE (salvataggio voti)
                     // Salva i voti in GEAS
-                    if (VTConfig.ModoAssemblea == VSDecl.MODO_AGM_SPA && VTConfig.SalvaVotoInGeas)                    
+                    //if (VTConfig.ModoAssemblea == VSDecl.MODO_AGM_SPA && VTConfig.SalvaVotoInGeas)                    
+                    if (VTConfig.SalvaVotoInGeas)                    
                         oDBDati.SalvaTuttoInGeas(Badge_Letto, ref Azionisti);
 
                     oSemaforo.SemaforoFineOccupato();
