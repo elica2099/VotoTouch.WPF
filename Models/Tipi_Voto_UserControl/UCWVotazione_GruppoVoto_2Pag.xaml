@@ -92,27 +92,50 @@
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
                 </Style.Resources>
             </Style>
+
+            <Style TargetType="ScrollBar">
+                <Setter Property="Width" Value="60"/>
+            </Style>
+
         </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid Background="Transparent">
         <TabControl x:Name="tabMain" Opacity="1" Background="Transparent" Margin="0,-2,0,0"
-                    BorderBrush="Transparent" Focusable="False" BorderThickness="0">
+                    BorderBrush="Transparent" Focusable="False" BorderThickness="0"  >
             <TabItem Header="tabHome" x:Name="tabBlank" IsTabStop="False" Focusable="True" >
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button Content="Favorevole" Height="210" Margin="0,0,50,0" Width="330"
+                        <Button Height="210" Margin="0,0,50,0" Width="330"
                                 Style="{StaticResource btn-success}" VerticalAlignment="Center"
                                 FontWeight="DemiBold" FontSize="24"
-                                Command="{Binding VotatuttoEVai}" CommandParameter="1" />
-                        <Button Content="Contrario" Height="210" Margin="0,0,50,0" Width="330"
+                                Command="{Binding VotatuttoEVai}" CommandParameter="1" >
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                <TextBlock Text="Favorevole" HorizontalAlignment="Center" FontSize="40" />
+                                <TextBlock Text="per tutti" HorizontalAlignment="Center" Margin="0,6,0,0" />
+                                <TextBlock Text="gli articoli" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <Button Height="210" Margin="0,0,50,0" Width="330"
                                 Style="{StaticResource btn-danger}" VerticalAlignment="Center"
                                 FontWeight="DemiBold" FontSize="24"
-                                Command="{Binding VotatuttoEVai}" CommandParameter="2" />
-                        <Button Content="Astenuto" Height="210" Width="330"
+                                Command="{Binding VotatuttoEVai}" CommandParameter="2" >
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                <TextBlock Text="Contrario" HorizontalAlignment="Center" FontSize="40" />
+                                <TextBlock Text="per tutti" HorizontalAlignment="Center" Margin="0,6,0,0" />
+                                <TextBlock Text="gli articoli" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <Button  Height="210" Width="330"
                                 Style="{StaticResource btn-warning}" VerticalAlignment="Center"
                                 FontWeight="DemiBold" FontSize="24"
-                                Command="{Binding VotatuttoEVai}" CommandParameter="3" />
+                                Command="{Binding VotatuttoEVai}" CommandParameter="3" >
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                <TextBlock Text="Astenuto" HorizontalAlignment="Center" FontSize="40" />
+                                <TextBlock Text="per tutti" HorizontalAlignment="Center" Margin="0,6,0,0" />
+                                <TextBlock Text="gli articoli" HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
                         <Button Content="NonVotante" Height="210" Width="300"  Margin="50,0,0,0"
                                 Style="{StaticResource btn-primary}" VerticalAlignment="Center"
                                 FontWeight="DemiBold" FontSize="24"
@@ -121,9 +144,14 @@
                     </StackPanel>
                     <TextBlock Text="Oppure:" FontSize="30" FontWeight="DemiBold" Margin="0,30,0,30" Foreground="DimGray"
                                VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <Button Content="Vota i singoli articoli" Height="210" Width="330"
+                    <Button  Height="210" Width="330"
                             Style="{StaticResource btn-primary}" VerticalAlignment="Center"
-                            FontWeight="DemiBold" FontSize="24" Command="{Binding VotaSingoliPunti}" />
+                            FontWeight="DemiBold" FontSize="24" Command="{Binding VotaSingoliPunti}" >
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                            <TextBlock Text="Vota i singoli" HorizontalAlignment="Center" Margin="0,0,0,6" FontSize="30" />
+                            <TextBlock Text="articoli" HorizontalAlignment="Center" FontSize="30" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </TabItem>
 
@@ -176,7 +204,5 @@
             </TabItem>
 
         </TabControl>
-
-
     </Grid>
 </local:CBaseVoto_UserControl>
