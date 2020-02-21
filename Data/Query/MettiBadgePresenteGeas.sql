@@ -3,7 +3,7 @@ DECLARE @MozioneReale as int
 DECLARE @ProgMozione as int
 DECLARE @ApVotDate as datetime
 
-set @MozioneReale = (select isnull(GEAS_MatchVot.MozioneReale, -1) as MozioneReale from GEAS_MatchVot
+set @MozioneReale = (select top 1 isnull(GEAS_MatchVot.MozioneReale, -1) as MozioneReale from GEAS_MatchVot
 					where GEAS_MatchVot.VotoSegretoDettaglio > 0)
 set @ProgMozione = (select isnull(GEAS_MatchVot.ProgMozione, 0) as ProgMozione from GEAS_MatchVot
 					where GEAS_MatchVot.MozioneReale = @MozioneReale)

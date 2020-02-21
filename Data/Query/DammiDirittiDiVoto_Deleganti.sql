@@ -2,6 +2,8 @@ SELECT DISTINCT
 	A.CoAz, A.IdAzion, D.ProgDeleg, 
 	CASE WHEN A.FisGiu ='F' THEN A.Cognome+ ' ' + A.Nome ELSE A.Raso END as Raso1,
 	isnull(C.IDAzion, -1) as ConIdAzion, isnull(C.NumVotaz, -1) as ConIDVotaz,
+	isnull(D.Azioni1Ord,0) as AzOrd1, isnull(D.Azioni2Ord,0) as AzOrd2,
+	isnull(D.Azioni1Str,0) as AzStr1, isnull(D.Azioni2Str,0) as AzStr2,
     isnull(D.Voti1Ord,0) as VtOrd1, isnull(D.Voti2Ord,0) as VtOrd2,
 	isnull(D.Voti1Str,0) as VtStr1, isnull(D.Voti2Str,0) as VtStr2
 

@@ -4,7 +4,7 @@ set @ProgMozione = (SELECT GEAS_MatchVot.ProgMozione from GEAS_MatchVot
 					INNER JOIN VS_MatchVot_Gruppo_Totem ON VS_MatchVot_Gruppo_Totem.MozioneRealeGeas = GEAS_MatchVot.MozioneReale
 					WHERE VS_MatchVot_Gruppo_Totem.NumSubVotaz = @NumSubVotaz)
 
-IF NOT EXISTS ( SELECT 1 FROM GEAS_Voti WHERE ProgMozione = @ProgMozione and Badge = @Badge )
+IF NOT EXISTS ( SELECT 1 FROM Geas_VotiDiff WHERE ProgMozione = @ProgMozione and Badge = @Badge and ProgDeleg = 0 )
 BEGIN
 
 	INSERT INTO Geas_VotiDiff with (ROWLOCK) (ProgMozione, ProgSubVotaz, Badge, ProgDeleg, ValAssem, TipoVoto, 

@@ -258,5 +258,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\Query\GeasSalva_InserisciTitolareGeasVotiDiff.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Query\ControllaPresenzeGeasEInserisci.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -306,7 +306,7 @@ namespace VotoTouch.WPF.Models
             // se votazione normale prende il titolare, se differenziata il primo della lista dei voti correnti (che sarà sempre 1)
             if (!AIsVotazioneDifferenziata)
             {
-                if (!Titolare_Badge.HaNonVotato && Titolare_Badge.Voti1 > 0) 
+                if (Titolare_Badge.HaVotato == TListaAzionisti.VOTATO_DBASE && Titolare_Badge.Voti1 > 0) 
                     return Titolare_Badge.RaSo + " (deleghe aggiuntive)";
                 return Titolare_Badge.RaSo;
             }

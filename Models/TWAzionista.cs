@@ -17,6 +17,9 @@ namespace VotoTouch.WPF.Models
         public double NVoti;
         public double Voti1;
         public double Voti2;
+        public double NAzioni;
+        public double Azioni1;
+        public double Azioni2;
         public string Sesso;
         public int HaVotato;
         // dati del voto 
@@ -40,6 +43,7 @@ namespace VotoTouch.WPF.Models
             IDBadge = cp.IDBadge; CoAz = cp.CoAz; IDAzion = cp.IDAzion; ProgDeleg = cp.ProgDeleg;
             RaSo = cp.RaSo; NVoti = cp.NVoti; Sesso = cp.Sesso; HaVotato = cp.HaVotato;
             IDVotaz = cp.IDVotaz; Voti1 = cp.Voti1; Voti2 = cp.Voti2;
+            Azioni1 = cp.Azioni1; Azioni2 = cp.Azioni2;
         }
     }
 }

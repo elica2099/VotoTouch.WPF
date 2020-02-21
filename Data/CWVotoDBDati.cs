@@ -889,6 +889,7 @@ namespace VotoTouch.WPF
 
                     // se sono in geas mode devo controllare se il badge è abilitato a inizio votazione corrente
                     // se non lo è devo mettere il movimento di ingresso uscita all'ora della votazione
+                    /*
                     if (VTConfig.ControllaPresenze == VSDecl.PRES_MODO_GEAS)
                     {
                         BAbilitato = false;
@@ -915,6 +916,7 @@ namespace VotoTouch.WPF
                         BAbilitato = true;
                     }
                     else
+                    */
                         BAbilitato = true;
 
                     // ok ora testo se è presente a questo momento
@@ -1077,6 +1079,9 @@ namespace VotoTouch.WPF
                         // TODO: GEAS VERSIONE
                         if (VTConfig.IsOrdinaria) // becca O, O/S o S/O
                         {
+                            c.Azioni1 = Convert.ToDouble(a["AzOrd1"]);
+                            c.Azioni2 = Convert.ToDouble(a["AzOrd2"]);
+                            c.NAzioni = c.Azioni1 + c.Azioni2;
                             c.Voti1 = Convert.ToDouble(a["VtOrd1"]);
                             c.Voti2 = Convert.ToDouble(a["VtOrd2"]);
                             c.NVoti = c.Voti1 + c.Voti2;
@@ -1085,6 +1090,9 @@ namespace VotoTouch.WPF
                         {
                             if (!VTConfig.IsOrdinaria && VTConfig.IsStraordinaria) // BECCA S
                             {
+                                c.Azioni1 = Convert.ToDouble(a["AzStr1"]);
+                                c.Azioni2 = Convert.ToDouble(a["AzStr2"]);
+                                c.NAzioni = c.Azioni1 + c.Azioni2;
                                 c.Voti1 = Convert.ToDouble(a["VtStr1"]);
                                 c.Voti2 = Convert.ToDouble(a["VtStr2"]);
                                 c.NVoti = c.Voti1 + c.Voti2;   
@@ -1131,6 +1139,9 @@ namespace VotoTouch.WPF
                                 // TODO: GEAS VERSIONE
                                 if (VTConfig.IsOrdinaria)
                                 {
+                                    c.Azioni1 = Convert.ToDouble(a["AzOrd1"]);
+                                    c.Azioni2 = Convert.ToDouble(a["AzOrd2"]);
+                                    c.NAzioni = c.Azioni1 + c.Azioni2;
                                     c.Voti1 = Convert.ToDouble(a["VtOrd1"]);
                                     c.Voti2 = Convert.ToDouble(a["VtOrd2"]);
                                     c.NVoti = c.Voti1 + c.Voti2;                                    
@@ -1139,6 +1150,9 @@ namespace VotoTouch.WPF
                                 {
                                     if (!VTConfig.IsOrdinaria && VTConfig.IsStraordinaria)
                                     {
+                                        c.Azioni1 = Convert.ToDouble(a["AzStr1"]);
+                                        c.Azioni2 = Convert.ToDouble(a["AzStr2"]);
+                                        c.NAzioni = c.Azioni1 + c.Azioni2;
                                         c.Voti1 = Convert.ToDouble(a["VtStr1"]);
                                         c.Voti2 = Convert.ToDouble(a["VtStr2"]);
                                         c.NVoti = c.Voti1 + c.Voti2;
@@ -1535,6 +1549,15 @@ namespace VotoTouch.WPF
                     }
                 }
 
+                // verifico la presenza del titolare su geas
+                qryStd.Parameters.Clear();
+                qryStd.CommandText = getModelsQueryProcedure("ControllaPresenzeGeasEInserisci.sql");
+                qryStd.Parameters.Add("@Votodigruppo", System.Data.SqlDbType.Bit).Value = true;
+                qryStd.Parameters.Add("@Badge", System.Data.SqlDbType.VarChar).Value = AIDBadge.ToString();
+                qryStd.Parameters.Add("@NumVotaz", System.Data.SqlDbType.Int).Value = VotoCorr.NumVotaz;
+                qryStd.Parameters.Add("@Sala", System.Data.SqlDbType.Int).Value = VTConfig.Sala;
+                qryStd.ExecuteNonQuery();
+
                 // salvo il titolare in geas_voti con voto 6, lo salvo comunque anche se ha azioni 0
                 foreach (CMatchVoteGeas voteGeas in MatchVoteGeasList)
                 {
@@ -1550,6 +1573,8 @@ namespace VotoTouch.WPF
                         qryStd.CommandText = getModelsQueryProcedure("GeasSalva_InserisciTitolareGeasVotiDiff.sql");
                         qryStd.Parameters.Add("@Badge", System.Data.SqlDbType.VarChar).Value = AIDBadge.ToString();
                         qryStd.Parameters.Add("@NumSubVotaz", System.Data.SqlDbType.Int).Value = voteGeas.VS_NumSubvotaz;
+                        qryStd.Parameters.Add("@ValAssem", System.Data.SqlDbType.VarChar).Value = voteGeas.GEAS_TipoAsse;
+                        qryStd.ExecuteNonQuery();
                     }
                 }
 
@@ -1568,27 +1593,27 @@ namespace VotoTouch.WPF
                             //Fav e anche le liste
                             case 1:
                             case int n when (n >= 129 && n <= 140 ):
-                                ASi = az.NVoti;
-                                VSi = 1;
+                                ASi = az.NAzioni;
+                                VSi = az.NVoti;
                                 PSi = 100;
                                 break;
                             // contr
                             case 2: case 227:
-                                ANo = az.NVoti;
-                                VNo = 1;
+                                ANo = az.NAzioni;
+                                VNo = az.NVoti;
                                 PNo = 100;
                                 break;
                             // ast
                             case 3: case 226:
-                                AAst = az.NVoti;
-                                VAst = 1;
+                                AAst = az.NAzioni;
+                                VAst = az.NVoti;
                                 PAst = 100;
                                 break;
                             // nv
                             case -2: case -3: case -4:
                                 TipoVoto = 0;
-                                ANv = az.NVoti;
-                                VNv = 1;
+                                ANv = az.NAzioni;
+                                VNv = az.NVoti;
                                 PNv = 100;
                                 break;
                         }

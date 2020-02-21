@@ -1,6 +1,8 @@
 SELECT	A.CoAz, A.IdAzion, A.Sesso,
 		CASE WHEN A.FisGiu ='F' THEN A.Cognome+ ' ' + A.Nome ELSE A.Raso END as Raso1,
 		isnull(C.IDAzion, -1) as TitIdAzion, isnull(C.NumVotaz, -1) as TitIDVotaz,
+		isnull(T.Azioni1Ord,0) as AzOrd1, isnull(T.Azioni2Ord,0) as AzOrd2,
+		isnull(T.Azioni1Str,0) as AzStr1, isnull(T.Azioni2Str,0) as AzStr2,
 		isnull(T.Voti1Ord,0) as VtOrd1, isnull(T.Voti2Ord,0) as VtOrd2,
 		isnull(T.Voti1Str,0) as VtStr1, isnull(T.Voti2Str,0) as VtStr2
 
