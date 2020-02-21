@@ -249,9 +249,14 @@
     <EmbeddedResource Include="Data\Query\DammiVotazioniTotem.sql" />
     <EmbeddedResource Include="Data\Query\MettiBadgePresenteGeas.sql" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Query\GeasSalva_InserisciTitolareGeasVoti.sql" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\CPLogo_purple.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Query\GeasSalva_InserisciTitolareGeasVotiDiff.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

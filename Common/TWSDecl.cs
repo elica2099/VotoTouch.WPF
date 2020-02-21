@@ -86,6 +86,12 @@ namespace VotoTouch.WPF
         public int TipoCarica;
         public int VotoExp_IDScheda;
 
+        // parametri geas che userò nel salvataggio votazione geas
+        public int GeasMozioneReale = 0;
+        public int GeasProgMozione = 0;
+        public string GeasTipoAsse = "";
+
+
         public CVotoEspresso()
         {
             NumSubVotaz = 0;

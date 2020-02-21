@@ -156,7 +156,7 @@ namespace VotoTouch.WPF.Models
                 {
                     // carico i subvoti
                     votazione.SubVotazioni = (from CDB_Votazione a in 
-                            dbSubVotaz.Where(x => x.DB_IDGruppoVoto == votazione.IDGruppoVoto).OrderBy(x => x.DB_NumVotaz)
+                            dbSubVotaz.Where(x => x.DB_IDNumVotazPerGruppi == votazione.IDGruppoVoto).OrderBy(x => x.DB_NumVotaz)
                             select new CSubVotazione(a)).ToList();
                 }
 

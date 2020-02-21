@@ -82,7 +82,7 @@ namespace VotoTouch.WPF.Models
         {
             NumVotaz = AVotaz.DB_NumVotaz;
             MozioneRealeGeas = AVotaz.DB_MozioneRealeGeas;
-            IDGruppoVoto = AVotaz.DB_IDGruppoVoto;
+            IDGruppoVoto = AVotaz.DB_IDNumVotazPerGruppi;
             Argomento = AVotaz.DB_Argomento;
             TipoVoto = AVotaz.DB_TipoVoto;
             TipoSubVoto = AVotaz.DB_TipoSubVoto;
@@ -198,7 +198,7 @@ namespace VotoTouch.WPF.Models
     {
         public int NumSubVotaz;
         public int MozioneRealeGeas;
-        public int IDGruppoVoto;
+        public int NumVotaz;
         public int TipoSubVoto;                
         public string Argomento;
         public string Descrizione_aggiuntiva;
@@ -213,7 +213,7 @@ namespace VotoTouch.WPF.Models
         {
             NumSubVotaz = AVotaz.DB_NumVotaz;
             MozioneRealeGeas = AVotaz.DB_MozioneRealeGeas;
-            IDGruppoVoto = AVotaz.DB_IDGruppoVoto;
+            NumVotaz = AVotaz.DB_IDNumVotazPerGruppi;
             TipoSubVoto = AVotaz.DB_TipoVoto;
             Argomento = AVotaz.DB_Argomento;
             Descrizione_aggiuntiva = AVotaz.DB_Descrizione_aggiuntiva;
@@ -247,7 +247,7 @@ namespace VotoTouch.WPF.Models
         // classe che mi serve come "ponte" per il db verso lista votazioni
         public int DB_NumVotaz;
         public int DB_MozioneRealeGeas;
-        public int DB_IDGruppoVoto;
+        public int DB_IDNumVotazPerGruppi;
         public string DB_Argomento;
         public string DB_Descrizione_aggiuntiva;
         public int DB_TipoVoto;

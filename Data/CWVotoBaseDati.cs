@@ -155,7 +155,7 @@ namespace VotoTouch.WPF
             return 0;
         }
 
-        public virtual int SalvaTuttoInGeas(int AIDBadge, ref TListaAzionisti FAzionisti)
+        public virtual int SalvaTuttoInGeas(int AIDBadge, ref TListaAzionisti FAzionisti, CVotazione VotoCorr)
         {
             return 0;
         }

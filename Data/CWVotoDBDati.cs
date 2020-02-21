@@ -6,10 +6,12 @@ using System.Collections;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Data.Common;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Microsoft.Win32;
 using System.Threading;
+using System.Windows.Documents;
 using VotoTouch.WPF.Models;
 
 // -----------------------------------------------------------------------
@@ -550,7 +552,7 @@ namespace VotoTouch.WPF
                         {
                             DB_NumVotaz = Convert.ToInt32(a["NumVotaz"]),
                             DB_MozioneRealeGeas = Convert.ToInt32(a["MozioneRealeGeas"]),
-                            DB_IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
+                            DB_IDNumVotazPerGruppi = Convert.ToInt32(a["GruppoVotaz"]),
                             DB_TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
                             DB_TipoSubVoto = Convert.ToInt32(a["TipoSubVotaz"]),
                             DB_Argomento = a["Argomento"].ToString(),
@@ -597,7 +599,7 @@ namespace VotoTouch.WPF
                 qryStd.CommandText = qry_DammiVotazioniTotem;
                 qryStd.CommandText = @"select *, (select VotoNonVotante from CONFIG_CfgVotoSegreto) as VotoNonVotante
                                         from VS_MatchVot_Gruppo_Totem 
-                                        where attivo = 1 order by gruppovotaz, numsubvotaz";
+                                        where attivo = 1 order by numvotaz, numsubvotaz";
                 SqlDataReader a = qryStd.ExecuteReader();
                 if (a.HasRows)
                 {
@@ -607,7 +609,7 @@ namespace VotoTouch.WPF
                         CDB_Votazione v = new CDB_Votazione
                         {
                             DB_NumVotaz = Convert.ToInt32(a["NumSubVotaz"]),
-                            DB_IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
+                            DB_IDNumVotazPerGruppi = Convert.ToInt32(a["NumVotaz"]),
                             DB_MozioneRealeGeas = Convert.ToInt32(a["MozioneRealeGeas"]),
                             DB_TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
                             DB_Argomento = a["Argomento"].ToString().TrimEnd(),
@@ -1272,8 +1274,17 @@ namespace VotoTouch.WPF
             return result;
         }
 
-        public override int SalvaTuttoInGeas(int AIDBadge, ref TListaAzionisti AAzionisti)
+        public override int SalvaTuttoInGeas(int AIDBadge, ref TListaAzionisti AAzionisti, CVotazione AVotoCorr)
         {
+            // verifico che tipo di voto è 
+            return AVotoCorr.TipoVoto != VSDecl.VOTO_GRUPPO_VOTO ? 
+                SalvaSingoloVotoInGeas(AIDBadge, ref AAzionisti, AVotoCorr) : 
+                SalvaGruppoVotoInGeas(AIDBadge, ref AAzionisti, AVotoCorr);
+        }
+
+        private int SalvaSingoloVotoInGeas(int AIDBadge, ref TListaAzionisti AAzionisti, CVotazione VotoCorr)
+        {
+
             SqlTransaction traStd = null;
             int result = 0;
             string TipoAsse = "";
@@ -1281,12 +1292,13 @@ namespace VotoTouch.WPF
             // TODO: GEAS VERSIONE (Salvataggio voti Geas NOTA: FUNZIONA SOLO CON UN VOTO)
 
             // testo la connessione
-            if (!OpenConnection("SalvaTuttoInGeas")) return 0;
+            if (!OpenConnection("SalvaSingoloVotoInGeas")) return 0;
 
             SqlCommand qryStd = new SqlCommand { Connection = STDBConn };
             SqlCommand qryVoti = new SqlCommand { Connection = STDBConn };
             try
             {
+       
                 //  1. Mi calcolo il progmozione
                 int ProgMozione = -1;
                 qryStd.Parameters.Clear();
@@ -1454,6 +1466,176 @@ namespace VotoTouch.WPF
             return result;
         }
 
+        private class CMatchVoteGeas
+        {
+            public int VS_Numvotaz = 0;
+            public int VS_NumSubvotaz = 0;
+            public int GEAS_MozioneReale = 0;
+            public int GEAS_ProgMozione = 0;
+            public string GEAS_TipoAsse = "";
+        }
+
+        private int SalvaGruppoVotoInGeas(int AIDBadge, ref TListaAzionisti AAzionisti, CVotazione VotoCorr)
+        {
+            int result = 0;
+            if (!OpenConnection("SalvaGruppoVotoInGeas")) return 0;
+
+            List<CMatchVoteGeas> MatchVoteGeasList = new List<CMatchVoteGeas>();
+
+            SqlCommand qryStd = new SqlCommand { Connection = STDBConn };
+            SqlTransaction traStd = STDBConn.BeginTransaction();;
+            try
+            {
+                qryStd.Transaction = traStd;
+                // per prima cosa mi calcolo i progmozione, mozione reale di geas per ogni votazione di geas
+                qryStd.CommandText = @"select t.NumVotaz, t.NumSubVotaz, t.MozioneRealeGeas, g.MozioneReale, 
+                                            g.ProgMozione, g.TipoAsse from VS_MatchVot_Gruppo_Totem t
+                                        INNER JOIN GEAS_MatchVot g ON t.MozioneRealeGeas = g.MozioneReale 
+                                        where t.NumVotaz = @NumVotaz and t.Attivo = 1 order by t.NumSubVotaz";
+                qryStd.Parameters.Add("@NumVotaz", System.Data.SqlDbType.Int).Value = VotoCorr.NumVotaz;
+                SqlDataReader a = qryStd.ExecuteReader();
+                if (a.HasRows)
+                {
+                    while (a.Read())
+                    {
+                        MatchVoteGeasList.Add(new CMatchVoteGeas()
+                        {
+                            VS_Numvotaz = Convert.ToInt32(a["NumVotaz"]),
+                            VS_NumSubvotaz = Convert.ToInt32(a["NumSubVotaz"]),
+                            GEAS_MozioneReale = Convert.ToInt32(a["MozioneRealeGeas"]),
+                            GEAS_ProgMozione = Convert.ToInt32(a["ProgMozione"]),
+                            GEAS_TipoAsse = a["TipoAsse"].ToString().TrimEnd(),
+                        });
+
+                    }
+                }
+                a.Close();
+                // Ora li metto nei voti, così al salvataggio ho tutto
+                foreach (TAzionista az in AAzionisti.Azionisti)
+                {
+                    foreach (CVotoEspresso vt in az.VotiEspressi)
+                    {
+                        CMatchVoteGeas mv = MatchVoteGeasList.FirstOrDefault(x => x.VS_NumSubvotaz == vt.NumSubVotaz);
+                        if (mv == null) continue;
+                        vt.GeasMozioneReale = mv.GEAS_MozioneReale;
+                        vt.GeasProgMozione = mv.GEAS_ProgMozione;
+                        vt.GeasTipoAsse = mv.GEAS_TipoAsse;
+                    }
+                }
+
+                // salvo il titolare in geas_voti con voto 6, lo salvo comunque anche se ha azioni 0
+                foreach (CMatchVoteGeas voteGeas in MatchVoteGeasList)
+                {
+                    qryStd.Parameters.Clear();
+                    qryStd.CommandText = getModelsQueryProcedure("GeasSalva_InserisciTitolareGeasVoti.sql");
+                    qryStd.Parameters.Add("@Badge", System.Data.SqlDbType.VarChar).Value = AIDBadge.ToString();
+                    qryStd.Parameters.Add("@NumSubVotaz", System.Data.SqlDbType.Int).Value = voteGeas.VS_NumSubvotaz;
+                    qryStd.ExecuteNonQuery();
+                    // occhio che devo inserire il titolare se ha azioni 0
+                    if (AAzionisti.Titolare_Badge.NVoti == 0)
+                    {
+                        qryStd.Parameters.Clear();
+                        qryStd.CommandText = getModelsQueryProcedure("GeasSalva_InserisciTitolareGeasVotiDiff.sql");
+                        qryStd.Parameters.Add("@Badge", System.Data.SqlDbType.VarChar).Value = AIDBadge.ToString();
+                        qryStd.Parameters.Add("@NumSubVotaz", System.Data.SqlDbType.Int).Value = voteGeas.VS_NumSubvotaz;
+                    }
+                }
+
+                // 3 . ok ora salvo i singoli voti in geas_diff
+                foreach (TAzionista az in AAzionisti.Azionisti)
+                {
+                    foreach (CVotoEspresso vt in az.VotiEspressi)
+                    {
+                        double ASi = 0, VSi = 0, PSi = 0, ANo = 0, VNo = 0, PNo = 0, AAst = 0, VAst = 0,
+                               PAst = 0, ANv = 0, VNv = 0, PNv = 0;
+                        
+                        int TipoVoto = vt.VotoExp_IDScheda;
+                        switch (vt.VotoExp_IDScheda)
+                        {
+                            // li metto hardcoded
+                            //Fav e anche le liste
+                            case 1:
+                            case int n when (n >= 129 && n <= 140 ):
+                                ASi = az.NVoti;
+                                VSi = 1;
+                                PSi = 100;
+                                break;
+                            // contr
+                            case 2: case 227:
+                                ANo = az.NVoti;
+                                VNo = 1;
+                                PNo = 100;
+                                break;
+                            // ast
+                            case 3: case 226:
+                                AAst = az.NVoti;
+                                VAst = 1;
+                                PAst = 100;
+                                break;
+                            // nv
+                            case -2: case -3: case -4:
+                                TipoVoto = 0;
+                                ANv = az.NVoti;
+                                VNv = 1;
+                                PNv = 100;
+                                break;
+                        }
+
+                        qryStd.Parameters.Clear();
+                        qryStd.CommandText = @"insert into GEAS_VotiDiff with (rowlock)
+                                                    (ProgMozione, ProgSubVotaz, Badge, ProgDeleg, ValAssem, TipoVoto, AzioniSi, VotiSi,
+                                                        PercSi, AzioniNo, VotiNo, PercNo, AzioniAst, VotiAst, PercAst,AzioniCi, VotiCi,
+                                                        AzioniNv, VotiNv, PercNv, AzioniNq, VotiNq, PercNq)
+                                                Values
+                                                    (@ProgMozione, -1, @Badge, @ProgDeleg, @ValAssem, @TipoVoto, @Azionisi, @VotiSi,
+                                                        @PercSi, @AzioniNo, @VotiNo, @PercNo, @AzioniAst, @VotiAst, @PercAst, 0, 0,
+                                                        @AzioniNv, @VotiNv, @PercNv, 0, 0, 0)";
+
+                        qryStd.Parameters.Add("@ProgMozione", System.Data.SqlDbType.Int).Value = vt.GeasProgMozione;
+                        qryStd.Parameters.Add("@Badge", System.Data.SqlDbType.VarChar).Value = AIDBadge.ToString();
+                        qryStd.Parameters.Add("@ProgDeleg", System.Data.SqlDbType.Int).Value = az.ProgDeleg;
+                        qryStd.Parameters.Add("@ValAssem", System.Data.SqlDbType.VarChar).Value = vt.GeasTipoAsse;
+                        qryStd.Parameters.Add("@TipoVoto", System.Data.SqlDbType.Int).Value = TipoVoto; // vt.VotoExp_IDScheda;
+
+                        qryStd.Parameters.Add("@AzioniSi", System.Data.SqlDbType.Decimal).Value = ASi;
+                        qryStd.Parameters.Add("@VotiSi", System.Data.SqlDbType.Decimal).Value = VSi;
+                        qryStd.Parameters.Add("@PercSi", System.Data.SqlDbType.Decimal).Value = PSi;
+
+                        qryStd.Parameters.Add("@AzioniNo", System.Data.SqlDbType.Decimal).Value = ANo;
+                        qryStd.Parameters.Add("@VotiNo", System.Data.SqlDbType.Decimal).Value = VNo;
+                        qryStd.Parameters.Add("@PercNo", System.Data.SqlDbType.Decimal).Value = PNo;
+
+                        qryStd.Parameters.Add("@AzioniAst", System.Data.SqlDbType.Decimal).Value = AAst;
+                        qryStd.Parameters.Add("@VotiAst", System.Data.SqlDbType.Decimal).Value = VAst;
+                        qryStd.Parameters.Add("@PercAst", System.Data.SqlDbType.Decimal).Value = PAst;
+
+                        qryStd.Parameters.Add("@AzioniNv", System.Data.SqlDbType.Decimal).Value = ANv;
+                        qryStd.Parameters.Add("@VotiNv", System.Data.SqlDbType.Decimal).Value = VNv;
+                        qryStd.Parameters.Add("@PercNv", System.Data.SqlDbType.Decimal).Value = PNv;
+
+                        qryStd.ExecuteNonQuery();
+                    }
+                }
+
+                // chiudo la transazione
+                traStd.Commit();
+                result = 1;
+            }
+            catch (Exception objExc)
+            {
+                traStd?.Rollback();
+                result = 0;
+                Utils.errorCall("SalvaGruppoVotoInGeas", objExc.Message);
+            }
+            finally
+            {
+                qryStd.Dispose();
+                traStd?.Dispose();
+                CloseConnection("");
+            }
+            return result;
+        }
+
         #endregion
 
         //  ALTRE FUNZIONI DELLA VOTAZIONE  --------------------------------------------------------------------------
@@ -1463,20 +1645,21 @@ namespace VotoTouch.WPF
         public override int NumAzTitolare(int AIDBadge)
         {
             //  mi da quante azioni ha un titolare
-            SqlDataReader ab;
-            SqlCommand qryStd1;
             int result = 0;
 
             // testo la connessione
             if (!OpenConnection("NumAzTitolare")) return 0;
 
-            qryStd1 = new SqlCommand();
-            qryStd1.Connection = STDBConn;
+            SqlCommand qryStd1 = new SqlCommand
+            {
+                Connection = STDBConn,
+                CommandText =
+                    " SELECT A.TipoAssemblea,COALESCE(Azioni1Ord,0)+COALESCE(Azioni2Ord,0) AS AzOrd,COALESCE(Azioni1Str,0)+COALESCE(Azioni2Str,0) AS AzStr " +
+                    " FROM GEAS_Titolari AS T with (nolock), CONFIG_AppoggioR AS A with (nolock) WHERE (T.ValAssem Like '%'+A.TipoAssemblea + '%') " +
+                    " AND T.Badge='" + AIDBadge.ToString() + "' AND T.Reale=1"
+            };
             // apro la query
-            qryStd1.CommandText = " SELECT A.TipoAssemblea,COALESCE(Azioni1Ord,0)+COALESCE(Azioni2Ord,0) AS AzOrd,COALESCE(Azioni1Str,0)+COALESCE(Azioni2Str,0) AS AzStr " +
-                                 " FROM GEAS_Titolari AS T with (nolock), CONFIG_AppoggioR AS A with (nolock) WHERE (T.ValAssem Like '%'+A.TipoAssemblea + '%') " +
-                                 " AND T.Badge='" + AIDBadge.ToString() + "' AND T.Reale=1";
-            ab = qryStd1.ExecuteReader();
+            SqlDataReader ab = qryStd1.ExecuteReader();
             if (ab.HasRows)
             {
                 ab.Read();

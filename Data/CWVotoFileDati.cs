@@ -166,7 +166,7 @@ namespace VotoTouch.WPF
             select new CDB_Votazione
             {
                 DB_NumVotaz = Convert.ToInt32(a["NumVotaz"]),
-                DB_IDGruppoVoto = Convert.ToInt32(a["GruppoVotaz"]),
+                DB_IDNumVotazPerGruppi = Convert.ToInt32(a["GruppoVotaz"]),
                 DB_TipoVoto = Convert.ToInt32(a["TipoVotaz"]),
                 DB_TipoSubVoto = 0,
                 DB_Argomento = a["Argomento"].ToString(),
@@ -365,7 +365,7 @@ namespace VotoTouch.WPF
             return 0;
         }
 
-        public override int SalvaTuttoInGeas(int AIDBadge, ref TListaAzionisti AAzionisti)
+        public override int SalvaTuttoInGeas(int AIDBadge, ref TListaAzionisti AAzionisti, CVotazione VotoCorr)
         {
             return 0;
         }
