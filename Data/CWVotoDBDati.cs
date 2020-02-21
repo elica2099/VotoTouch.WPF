@@ -104,11 +104,23 @@ namespace VotoTouch.WPF
 
         public override string DammiStringaConnessione()
         {
+            System.Data.SqlClient.SqlConnectionStringBuilder connstr = new SqlConnectionStringBuilder()
+            {
+                DataSource = FDBConfig.DB_Server,
+                InitialCatalog = FDBConfig.DB_Name,
+                UserID = FDBConfig.DB_Uid,
+                Password = FDBConfig.DB_Pwd,
+                ConnectTimeout = 10,
+                //Encrypt = true,
+                //TrustServerCertificate = true,
+                MultipleActiveResultSets = true
+            };
+            return connstr.ConnectionString;
             // devo aggiungere dei controlli
             // compone la stringa di connessione in funzione di TSTConfig
-            string ssconn = "server=" + FDBConfig.DB_Server + ";database=" + FDBConfig.DB_Name +
-                ";uid=" + FDBConfig.DB_Uid + ";pwd=" + FDBConfig.DB_Pwd;
-            return ssconn;
+            //string ssconn = "server=" + FDBConfig.DB_Server + ";database=" + FDBConfig.DB_Name +
+            //    ";uid=" + FDBConfig.DB_Uid + ";pwd=" + FDBConfig.DB_Pwd;
+            //return ssconn;
         }
 
         public bool OpenConnection(string NomeFunzione)
@@ -1582,7 +1594,9 @@ namespace VotoTouch.WPF
                         }
 
                         qryStd.Parameters.Clear();
-                        qryStd.CommandText = @"insert into GEAS_VotiDiff with (rowlock)
+                        qryStd.CommandText = @" delete from GEAS_VotiDiff 
+                                                    where ProgMozione= @ProgMozione and Badge = @Badge and ProgDeleg = @ProgDeleg 
+                                                insert into GEAS_VotiDiff with (rowlock)
                                                     (ProgMozione, ProgSubVotaz, Badge, ProgDeleg, ValAssem, TipoVoto, AzioniSi, VotiSi,
                                                         PercSi, AzioniNo, VotiNo, PercNo, AzioniAst, VotiAst, PercAst,AzioniCi, VotiCi,
                                                         AzioniNv, VotiNv, PercNv, AzioniNq, VotiNq, PercNq)
