@@ -261,5 +261,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\Query\ControllaPresenzeGeasEInserisci.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\geas_new.png" />
+    <Resource Include="Images\geas_new_post.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
