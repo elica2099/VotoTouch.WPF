@@ -101,7 +101,7 @@ namespace VotoTouch.WPF
     public class VSDecl
     {
         // Classe che mantiene tutte le costanti
-        public const string VTS_VERSION = "5.0  31/01/2020 vs19/WPF";
+        public const string VTS_VERSION = "5.0  31/01/2020 vs19/WPFe";
 
         #region InterClassMessages Messages
         internal const string ICM_MAIN_BADGEREAD = "ICM_MainBadgeRead";
