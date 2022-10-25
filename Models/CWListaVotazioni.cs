@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace VotoTouch.WPF.Models
 {
-    // DR16 - Classe intera
+    // DR16 - Classe intera modif
     public class CListaVotazioni
     {
         // oggetto lista votazioni
